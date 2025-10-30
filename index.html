@@ -30,9 +30,8 @@
         }
         
         @layer components {
-            /* NEW CARD STYLES (Adapted from user code) */
+            /* CARD STYLES */
             .image-card {
-                /* Removed fixed width and height, added aspect-ratio */
                 @apply relative w-full aspect-[2/3] rounded-lg overflow-hidden shadow-lg bg-gray-300 dark:bg-gray-800 text-white font-body;
             }
 
@@ -41,17 +40,14 @@
                 filter: brightness(75%);
             }
 
-            /* Top Row */
             .top-row {
                 @apply absolute top-2.5 right-2.5;
             }
 
-            /* Bottom Row */
             .bottom-row {
                 @apply absolute bottom-2.5 left-0 right-0 flex justify-between items-end px-3;
             }
 
-            /* Text Group */
             .text-group {
                 @apply flex flex-col leading-tight;
             }
@@ -71,16 +67,14 @@
 
             .icon-btn {
                 @apply bg-black/50 text-white p-1.5 rounded-md cursor-pointer transition-colors duration-200 text-base;
-                /* Use text-base for 16px font-size */
             }
             
             .icon-btn:hover {
                 @apply bg-white/30;
             }
             
-            /* Ensure iconify icons inside buttons are sized correctly */
             .icon-btn iconify-icon {
-                @apply text-lg leading-none block; /* ~18px, gives a bit more presence */
+                @apply text-lg leading-none block;
             }
             
             a.icon-btn {
@@ -91,25 +85,12 @@
             .dropdown-item {
                 @apply block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer;
             }
-
-            /* Special "All" item styles based on images */
-            .dropdown-item-all-sections {
-                @apply bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium;
-            }
             
             .dropdown-item-all-albums {
                 @apply bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium;
             }
 
-            /* New Sidebar Button Styles */
-            .sidebar-btn {
-                @apply flex items-center w-full text-left px-4 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors;
-            }
-            .sidebar-btn-active {
-                @apply bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold;
-            }
-            
-            /* New Table Styles for Manage Modal */
+            /* Table Styles */
             .category-table {
                 @apply w-full text-sm text-left text-gray-500 dark:text-gray-400;
             }
@@ -156,16 +137,11 @@
             }
 
             /* Custom scrollbar for dropdowns */
-            #sections-dropdown-list::-webkit-scrollbar,
             #albums-dropdown-list::-webkit-scrollbar {
                 @apply w-1.5;
             }
-            #sections-dropdown-list::-webkit-scrollbar-track,
             #albums-dropdown-list::-webkit-scrollbar-track {
                 @apply bg-transparent;
-            }
-            #sections-dropdown-list::-webkit-scrollbar-thumb {
-                @apply bg-red-300 dark:bg-red-700 rounded-full;
             }
             #albums-dropdown-list::-webkit-scrollbar-thumb {
                 @apply bg-yellow-300 dark:bg-yellow-700 rounded-full;
@@ -233,7 +209,7 @@
     </nav>
 
     <!-- ================================== -->
-    <!--         GALLERY CONTENT          -->
+    <!--        GALLERY CONTENT         -->
     <!-- ================================== -->
     <div class="container max-w-7xl mx-auto px-4 py-12">
 
@@ -254,38 +230,19 @@
                 <input 
                     id="search-input"
                     type="text" 
-                    placeholder="Search images by title, description..." 
+                    placeholder="Search images by title, album..." 
                     class="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition
                            dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500"
                 >
             </div>
 
             <!-- Filter Buttons -->
-            <!-- Updated for responsiveness: grid on mobile, flex on desktop -->
-            <div class="flex-shrink-0 grid grid-cols-3 md:flex gap-3 w-full md:w-auto">
+            <div class="flex-shrink-0 grid grid-cols-1 md:flex gap-3 w-full md:w-auto">
                 
-                <!-- Sections Dropdown -->
-                <!-- Updated for responsiveness: w-full (of grid col) on mobile -->
-                <div class="relative w-full md:w-auto">
-                    <button id="sections-filter-btn" data-dropdown-toggle="sections-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
-                                        dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
-                        <iconify-icon icon="mdi:filter-variant" class="text-red-500"></iconify-icon>
-                        <span id="sections-filter-text">Sections</span>
-                        <iconify-icon icon="mdi:chevron-down"></iconify-icon>
-                    </button>
-                    <!-- Dropdown Menu -->
-                    <div id="sections-dropdown" class="absolute top-full left-0 mt-2 w-full md:w-38 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
-                        <div id="sections-dropdown-list" class="py-1 max-h-60 overflow-y-auto">
-                            <span class="dropdown-item">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Albums Dropdown -->
-                <!-- Updated for responsiveness: w-full (of grid col) on mobile -->
                 <div class="relative w-full md:w-auto">
                     <button id="albums-filter-btn" data-dropdown-toggle="albums-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
-                                        dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
+                                    dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
                         <iconify-icon icon="mdi:image-album" class="text-yellow-500"></iconify-icon>
                         <span id="albums-filter-text">Albums</span>
                         <iconify-icon icon="mdi:chevron-down"></iconify-icon>
@@ -298,27 +255,6 @@
                     </div>
                 </div>
                 
-                <!-- NEW: Sort By Dropdown -->
-                <div class="relative w-full md:w-auto">
-                    <button id="sort-by-btn" data-dropdown-toggle="sort-by-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
-                                        dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
-                        <iconify-icon icon="mdi:sort" class="text-blue-500"></iconify-icon>
-                        <span id="sort-by-text" class="text-sm">Newest First</span>
-                        <iconify-icon icon="mdi:chevron-down"></iconify-icon>
-                    </button>
-                    <!-- Dropdown Menu -->
-                    <div id="sort-by-dropdown" class="absolute top-full left-0 md:left-auto md:right-0 mt-2 w-full md:w-48 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
-                        <div id="sort-by-list" class="py-1 max-h-60 overflow-y-auto">
-                             <button class="dropdown-item" data-sort-value="newest" data-sort-name="Newest First">
-                                Newest First
-                            </button>
-                            <button class="dropdown-item" data-sort-value="oldest" data-sort-name="Oldest First">
-                                Oldest First
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -332,7 +268,7 @@
 
 
     <!-- ================================== -->
-    <!--            MODALS                -->
+    <!--            MODALS              -->
     <!-- ================================== -->
 
     <!-- Modal Overlay -->
@@ -347,7 +283,7 @@
                 <div class="flex items-center gap-2">
                     <button id="customize-btn" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 transition text-sm text-gray-700 font-medium dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
                         <iconify-icon icon="mdi:cog-outline" class="text-lg"></iconify-icon>
-                        <span>Customize</span>
+                        <span>Customize Albums</span>
                     </button>
                     <button data-close-modal="add-image-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
                 </div>
@@ -355,23 +291,22 @@
             <!-- Modal Body -->
             <form id="upload-form" class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Left Column: Album & Section Dropdowns -->
+                    <!-- Left Column: Album & Title -->
                     <div class="space-y-4">
                         <!-- Album Dropdown -->
                         <div>
                             <label for="album-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Album</label>
-                            <select id="album-select" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="album-select" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                                 <option value="" disabled selected>Loading albums...</option>
                             </select>
                         </div>
                         
-                        <!-- Section Dropdown -->
+                        <!-- NEW: Title Input -->
                         <div>
-                            <label for="section-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Section</label>
-                            <select id="section-select" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected>Loading sections...</option>
-                            </select>
+                            <label for="image-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+                            <input id="image-title" type="text" placeholder="e.g., 'Works'" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         </div>
+                        
                         <div id="upload-error" class="text-red-500 text-sm hidden"></div>
                     </div>
 
@@ -383,7 +318,7 @@
                                 <iconify-icon icon="mdi:cloud-upload-outline" class="file-input-label-icon"></iconify-icon>
                                 <span id="file-upload-text" class="file-input-label-text">Click to choose a file</span>
                             </label>
-                            <input id="file-upload" type="file" class="file-input" accept="image/*">
+                            <input id="file-upload" type="file" class="file-input" accept="image/*" required>
                         </div>
                         <p id="file-upload-filename" class=""></p>
                     </div>
@@ -401,96 +336,51 @@
         </div>
     </div>
 
-    <!-- 2. Manage Categories Modal -->
+    <!-- 2. Manage Albums Modal -->
     <div id="manage-categories-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl transform transition-all scale-95 opacity-0">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-lg transform transition-all scale-95 opacity-0">
             <!-- Modal Header -->
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 class="font-heading text-lg">Manage Categories</h3>
+                <h3 class="font-heading text-lg">Manage Albums</h3>
                 <button data-close-modal="manage-categories-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
             </div>
             <!-- Modal Body -->
-            <!-- Updated for responsiveness: flex-col on mobile -->
-            <div class="flex flex-col md:flex-row">
-                <!-- Sidebar -->
-                <!-- Updated for responsiveness: w-full on mobile, borders -->
-                <div class="w-full md:w-1/3 p-4 border-b md:border-r md:border-b-0 dark:border-gray-700 space-y-2">
-                    <button id="sidebar-btn-albums" class="sidebar-btn sidebar-btn-active">
-                        <iconify-icon icon="mdi:image-album" class="mr-2 text-lg flex-shrink-0"></iconify-icon>
-                        Manage Albums
-                    </button>
-                    <button id="sidebar-btn-sections" class="sidebar-btn">
-                        <iconify-icon icon="mdi:filter-variant" class="mr-2 text-lg flex-shrink-0"></iconify-icon>
-                        Manage Sections
-                    </button>
-                </div>
+            <div id="tab-content-albums" class="tab-content space-y-4 p-6">
+                <h4 class="font-heading text-base mb-2">Add New Album</h4>
+                <form id="add-album-form" class="flex gap-2">
+                    <input id="new-album-name" type="text" placeholder="New album name..." class="flex-grow p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[60px]">Add</button>
+                </form>
                 
-                <!-- Content Area -->
-                <!-- Updated for responsiveness: w-full on mobile -->
-                <div class="w-full md:w-2/3 p-6">
-                    <!-- Tab Content -->
-                    <div id="tab-content-albums" class="tab-content space-y-4">
-                        <h4 class="font-heading text-base mb-2">Add New Album</h4>
-                        <form id="add-album-form" class="flex gap-2">
-                            <input id="new-album-name" type="text" placeholder="New album name..." class="flex-grow p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[60px]">Add</button>
-                        </form>
-                        
-                        <h4 class="font-heading text-base pt-4 border-t dark:border-gray-700 mt-4">Existing Albums</h4>
-                        <div id="albums-list-container" class="max-h-60 overflow-y-auto relative rounded-lg border dark:border-gray-700">
-                            <table class="category-table">
-                                <thead class="sticky top-0">
-                                    <tr>
-                                        <th scope="col">Name</th>
-                                        <th scope="col" class="text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="albums-list-body">
-                                    <!-- Album items will be dynamically inserted here -->
-                                    <tr><td colspan="2" class="text-center p-4 text-gray-500 dark:text-gray-400">Loading albums...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div id="tab-content-sections" class="tab-content space-y-4 hidden">
-                        <h4 class="font-heading text-base mb-2">Add New Section</h4>
-                        <form id="add-section-form" class="flex gap-2">
-                            <input id="new-section-name" type="text" placeholder="New section name..." class="flex-grow p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[60px]">Add</button>
-                        </form>
-                        
-                        <h4 class="font-heading text-base pt-4 border-t dark:border-gray-700 mt-4">Existing Sections</h4>
-                        <div id="sections-list-container" class="max-h-60 overflow-y-auto relative rounded-lg border dark:border-gray-700">
-                            <table class="category-table">
-                                <thead class="sticky top-0">
-                                    <tr>
-                                        <th scope="col">Name</th>
-                                        <th scope="col" class="text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="sections-list-body">
-                                    <!-- Section items will be dynamically inserted here -->
-                                    <tr><td colspan="2" class="text-center p-4 text-gray-500 dark:text-gray-400">Loading sections...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <h4 class="font-heading text-base pt-4 border-t dark:border-gray-700 mt-4">Existing Albums</h4>
+                <div id="albums-list-container" class="max-h-60 overflow-y-auto relative rounded-lg border dark:border-gray-700">
+                    <table class="category-table">
+                        <thead class="sticky top-0">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col" class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="albums-list-body">
+                            <!-- Album items will be dynamically inserted here -->
+                            <tr><td colspan="2" class="text-center p-4 text-gray-500 dark:text-gray-400">Loading albums...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 3. Edit Category Modal -->
+    <!-- 3. Edit Album Modal -->
     <div id="edit-category-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 id="edit-modal-title" class="font-heading text-lg">Edit Name</h3>
+                <h3 id="edit-modal-title" class="font-heading text-lg">Edit Album Name</h3>
                 <button data-close-modal="edit-category-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
             </div>
             <form id="edit-category-form" class="p-6 space-y-4">
                 <input id="edit-category-id" type="hidden">
-                <input id="edit-category-type" type="hidden">
+                <input id="edit-category-type" type="hidden" value="albums"> <!-- Hardcode type -->
                 <div>
                     <label for="edit-category-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
                     <input id="edit-category-name" type="text" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
@@ -530,7 +420,7 @@
         <button data-close-modal="lightbox-modal" class="absolute top-4 right-4 text-white/70 hover:text-white text-4xl">&times;</button>
     </div>
 
-    <!-- 6. NEW: Passcode Modal -->
+    <!-- 6. Passcode Modal -->
     <div id="passcode-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
@@ -554,7 +444,7 @@
 
 
     <!-- ================================== -->
-    <!--           JAVASCRIPT             -->
+    <!--            JAVASCRIPT            -->
     <!-- ================================== -->
     <!-- Firebase SDKs -->
     <script type="module">
@@ -578,17 +468,15 @@
             onSnapshot, 
             query, 
             where, 
-            serverTimestamp 
+            serverTimestamp,
+            orderBy // Import orderBy
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONSTANTS ---
-        // Cloudinary details (already set from your previous info)
         const CLOUDINARY_CLOUD_NAME = "duexban9y";
         const CLOUDINARY_UPLOAD_PRESET = "imageuploader";
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
         
-        // Use provided Firebase config or a fallback for local testing
-        // UPDATED with your new "mvs-link" project details
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : JSON.stringify({
             apiKey: "AIzaSyDNW_gRO5yY1AhNTWD6ctpELUijCdxspeg",
             authDomain: "mvs-link.firebaseapp.com",
@@ -599,30 +487,24 @@
             measurementId: "G-K1P30KHGYC"
         }));
         
-        // Use provided App ID or a fallback
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-gallery-app';
         
-        // NEW: Passcode
         const ADMIN_PASSCODE = "340";
 
         // --- FIREBASE GLOBALS ---
         let app, auth, db, userId;
         let albums = [];
-        let sections = [];
         
         // --- APP STATE ---
         let confirmCallback = null;
-        let passcodeCallback = null; // NEW: Stores the action to run after passcode success
-        // UPDATED: isAdminAuthenticated is no longer used, passcode is checked every time.
+        let passcodeCallback = null; 
         
         let currentFilters = {
-            albumId: null,
-            sectionId: null
+            albumId: null
         };
-        let currentSort = "newest"; // "newest" or "oldest"
         let allImages = []; // Cache for search filtering
 
-        // --- MODAL UTILITIES (defined globally) ---
+        // --- MODAL UTILITIES ---
         function openModal(modal) {
             const modalBackdrop = document.getElementById('modal-backdrop');
             if (!modalBackdrop || !modal) return;
@@ -631,10 +513,8 @@
             modal.classList.remove('hidden');
             setTimeout(() => {
                 if (modal.id !== 'lightbox-modal') {
-                    // Standard modal animation
                     modal.querySelector('div').classList.remove('scale-95', 'opacity-0');
                 } else {
-                    // Lightbox fade-in
                      modal.classList.remove('opacity-0');
                 }
             }, 10);
@@ -645,20 +525,16 @@
             if (!modalBackdrop || !modal) return;
 
             if (modal.id !== 'lightbox-modal') {
-                // Standard modal animation
                 modal.querySelector('div').classList.add('scale-95', 'opacity-0');
             } else {
-                // Lightbox fade-out
-                 modal.classList.add('opacity-0');
+               modal.classList.add('opacity-0');
             }
             
             setTimeout(() => {
                 modal.classList.add('hidden');
                 
-                // Get all modals by their IDs
                 const allModals = document.querySelectorAll('#add-image-modal, #manage-categories-modal, #edit-category-modal, #confirm-modal, #lightbox-modal, #passcode-modal');
                 
-                // Check if *any* modal is *still* visible (i.e., does NOT have 'hidden')
                 let aModalIsStillOpen = false;
                 allModals.forEach(m => {
                     if (!m.classList.contains('hidden')) {
@@ -666,15 +542,13 @@
                     }
                 });
 
-                // If no modals are left open, hide the backdrop
                 if (!aModalIsStillOpen) {
                     modalBackdrop.classList.add('hidden');
                 }
-            }, 200); // Wait for animation
+            }, 200);
         }
         
         function openConfirmModal(title, text, onConfirm) {
-            // UPDATED: Passcode check is now run *before* calling this function.
             const confirmModal = document.getElementById('confirm-modal');
             const confirmModalTitle = document.getElementById('confirm-modal-title');
             const confirmModalText = document.getElementById('confirm-modal-text');
@@ -683,11 +557,10 @@
 
             confirmModalTitle.textContent = title;
             confirmModalText.textContent = text;
-            confirmCallback = onConfirm; // confirmCallback is a global variable
+            confirmCallback = onConfirm;
             openModal(confirmModal);
         }
         
-        // NEW: Passcode Modal Functions
         function openPasscodeModal(onSuccess) {
             const passcodeModal = document.getElementById('passcode-modal');
             const passcodeError = document.getElementById('passcode-error');
@@ -696,26 +569,21 @@
             if (passcodeError) passcodeError.classList.add('hidden');
             if (passcodeForm) passcodeForm.reset();
             
-            passcodeCallback = onSuccess; // Store the function to run on success
+            passcodeCallback = onSuccess; 
             openModal(passcodeModal);
             
-            // Focus the input
             setTimeout(() => document.getElementById('passcode-input')?.focus(), 100);
         }
 
-        // NEW: Check if admin, if not, ask for passcode
         function runWithPasscodeCheck(actionToPerform) {
-            // This is the function that is now called by all admin buttons.
-            // It *always* opens the passcode modal.
             openPasscodeModal(actionToPerform);
         }
 
 
-        // --- FIREBASE FUNCTIONS (defined globally) ---
-
+        // --- FIREBASE FUNCTIONS ---
         async function initializeFirebase() {
             try {
-                // setLogLevel('Debug'); // Uncomment for verbose Firebase logs
+                // setLogLevel('Debug');
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
@@ -724,9 +592,7 @@
                     if (user) {
                         console.log('User is signed in:', user.uid);
                         userId = user.uid;
-                        // Once authenticated, load all data
-                        loadCategories('albums');
-                        loadCategories('sections');
+                        loadAlbums();
                         loadImages();
                     } else {
                         console.log('User is signed out, signing in...');
@@ -752,13 +618,11 @@
             }
         }
 
-        // --- CATEGORY (ALBUM/SECTION) FUNCTIONS ---
-
-        function loadCategories(type) { // type is 'albums' or 'sections'
+        // --- ALBUM FUNCTIONS ---
+        function loadAlbums() {
             if (!db || !userId) return;
             
-            // UPDATED: Changed from private 'users/{userId}' path to public path
-            const collectionPath = `artifacts/${appId}/public/data/${type}`;
+            const collectionPath = `artifacts/${appId}/public/data/albums`;
             const q = query(collection(db, collectionPath));
             
             onSnapshot(q, (querySnapshot) => {
@@ -767,46 +631,38 @@
                     list.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Sort by name
                 list.sort((a, b) => a.name.localeCompare(b.name));
                 
-                if (type === 'albums') {
-                    albums = list;
-                } else {
-                    sections = list;
-                }
+                albums = list;
                 
-                renderCategoryList(type, list); // Update manage modal
-                populateDropdowns(); // Update add image modal
-                renderFilterDropdown(type, list); // Update filter dropdown
+                renderCategoryList(list); 
+                populateDropdowns();
+                renderFilterDropdown(list);
             }, (error) => {
-                console.error(`Error loading ${type}: `, error);
+                console.error(`Error loading albums: `, error);
             });
         }
         
-        function renderCategoryList(type, list) {
+        function renderCategoryList(list) {
             const albumsListBody = document.getElementById('albums-list-body');
-            const sectionsListBody = document.getElementById('sections-list-body');
-            const tableBody = (type === 'albums') ? albumsListBody : sectionsListBody;
-
-            if (!tableBody) return; // Exit if element not found
+            if (!albumsListBody) return;
 
             if (list.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="2" class="text-center p-4 text-gray-500 dark:text-gray-400">No ${type} found. Add one above!</td></tr>`;
+                albumsListBody.innerHTML = `<tr><td colspan="2" class="text-center p-4 text-gray-500 dark:text-gray-400">No albums found. Add one above!</td></tr>`;
                 return;
             }
             
-            tableBody.innerHTML = list.map(item => `
+            albumsListBody.innerHTML = list.map(item => `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <td class="px-4 py-3 font-medium text-gray-900 dark:text-white truncate" title="${item.name}">
                         ${item.name}
                     </td>
                     <td class="px-4 py-3">
                         <div class="flex gap-3 text-lg justify-end">
-                            <button data-edit-id="${item.id}" data-edit-name="${item.name}" data-edit-type="${type}" class="text-gray-500 hover:text-blue-600 dark:hover:text-blue-400" title="Edit">
+                            <button data-edit-id="${item.id}" data-edit-name="${item.name}" class="text-gray-500 hover:text-blue-600 dark:hover:text-blue-400" title="Edit">
                                 <iconify-icon icon="mdi:pencil-outline"></iconify-icon>
                             </button>
-                            <button data-delete-id="${item.id}" data-delete-name="${item.name}" data-delete-type="${type}" class="text-gray-500 hover:text-red-600 dark:hover:text-red-400" title="Delete">
+                            <button data-delete-id="${item.id}" data-delete-name="${item.name}" class="text-gray-500 hover:text-red-600 dark:hover:text-red-400" title="Delete">
                                 <iconify-icon icon="mdi:delete-outline"></iconify-icon>
                             </button>
                         </div>
@@ -815,10 +671,9 @@
             `).join('');
         }
         
-        async function addCategory(type, name) {
-            if (!db || !userId) return; // Still check for auth, as only auth'd users can write
-            // UPDATED: Changed from private 'users/{userId}' path to public path
-            const collectionPath = `artifacts/${appId}/public/data/${type}`;
+        async function addAlbum(name) {
+            if (!db || !userId) return;
+            const collectionPath = `artifacts/${appId}/public/data/albums`;
             try {
                 await addDoc(collection(db, collectionPath), { name });
             } catch (e) {
@@ -826,10 +681,9 @@
             }
         }
         
-        async function updateCategory(type, id, newName) {
-            if (!db || !userId) return; // Still check for auth
-            // UPDATED: Changed from private 'users/{userId}' path to public path
-            const docPath = `artifacts/${appId}/public/data/${type}/${id}`;
+        async function updateAlbum(id, newName) {
+            if (!db || !userId) return;
+            const docPath = `artifacts/${appId}/public/data/albums/${id}`;
             try {
                 await updateDoc(doc(db, docPath), { name: newName });
             } catch (e) {
@@ -837,10 +691,9 @@
             }
         }
 
-        async function deleteCategory(type, id) {
-            if (!db || !userId) return; // Still check for auth
-            // UPDATED: Changed from private 'users/{userId}' path to public path
-            const docPath = `artifacts/${appId}/public/data/${type}/${id}`;
+        async function deleteAlbum(id) {
+            if (!db || !userId) return;
+            const docPath = `artifacts/${appId}/public/data/albums/${id}`;
             try {
                 await deleteDoc(doc(db, docPath));
             } catch (e) {
@@ -858,28 +711,12 @@
             const galleryLoading = document.getElementById('gallery-loading');
             if (!searchInput || !galleryGrid || !galleryLoading) return;
 
-            // UPDATED: Changed from private 'users/{userId}' path to public path
             const collectionPath = `artifacts/${appId}/public/data/images`;
-            let q = query(collection(db, collectionPath));
-            let jsFilter = () => true; // A function that returns true by default
+            let q = query(collection(db, collectionPath), orderBy("createdAt", "desc"));
 
-            // --- THIS IS THE FILTERING LOGIC ---
-            // This is what makes your category selection work.
-            if (currentFilters.albumId && currentFilters.sectionId) {
-                // If BOTH are set, only query by ONE in Firestore to avoid compound index error.
-                // We'll query by albumId.
+            // --- FILTERING LOGIC ---
+            if (currentFilters.albumId) {
                 q = query(q, where("albumId", "==", currentFilters.albumId));
-                
-                // We'll filter by sectionId in JavaScript.
-                jsFilter = (image) => image.sectionId === currentFilters.sectionId;
-
-            } else if (currentFilters.albumId) {
-                // Only albumId is set
-                q = query(q, where("albumId", "==", currentFilters.albumId));
-
-            } else if (currentFilters.sectionId) {
-                // Only sectionId is set
-                q = query(q, where("sectionId", "==", currentFilters.sectionId));
             }
             // --- END OF FILTERING LOGIC ---
 
@@ -889,28 +726,17 @@
                     imageList.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Apply the JavaScript-based filter (if any)
-                let jsFilteredImages = imageList.filter(jsFilter);
-                
-                // --- THIS IS THE SORTING LOGIC ---
-                if (currentSort === "newest") {
-                    jsFilteredImages.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                } else { // "oldest"
-                    jsFilteredImages.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
-                }
-                
                 // Store this filtered AND sorted list for searching
-                allImages = jsFilteredImages; 
+                allImages = imageList; 
                 
                 const searchTerm = searchInput.value.trim().toLowerCase();
                 if (searchTerm) {
-                    const filteredImages = allImages.filter(image => { // allImages is now sorted
+                    const filteredImages = allImages.filter(image => {
                         const album = albums.find(a => a.id === image.albumId);
-                        const section = sections.find(s => s.id === image.sectionId);
                         const albumName = album ? album.name.toLowerCase() : "";
-                        const sectionName = section ? section.name.toLowerCase() : "";
-                        // Simple search: checks album or section name
-                        return albumName.includes(searchTerm) || sectionName.includes(searchTerm);
+                        const title = image.title ? image.title.toLowerCase() : "";
+                        
+                        return albumName.includes(searchTerm) || title.includes(searchTerm);
                     });
                     renderGallery(filteredImages);
                 } else {
@@ -920,7 +746,6 @@
                 galleryLoading.classList.add('hidden');
             }, (error) => {
                 console.error("Error loading images: ", error);
-                // Updated error message to be more helpful
                 galleryGrid.innerHTML = `<p class="text-red-500 col-span-full text-center">Error loading images. (Have you enabled Firestore and added data?)</p>`;
             });
         }
@@ -936,16 +761,15 @@
             
             galleryGrid.innerHTML = images.map(image => {
                 const album = albums.find(a => a.id === image.albumId);
-                const section = sections.find(s => s.id === image.sectionId);
                 
                 const albumName = album ? album.name : "Uncategorized";
-                const sectionName = section ? section.name : "Uncategorized";
+                const titleName = image.title || "Untitled"; // Use image title
                 
                 return `
                 <div class="image-card">
                     <img 
                         src="${image.imageUrl}" 
-                        alt="Gallery image"
+                        alt="${titleName}"
                         loading="lazy"
                         onerror="this.src='https://placehold.co/276x418/cccccc/333333?text=Image+Not+Found'"
                     >
@@ -956,14 +780,13 @@
                     </div>
                     <div class="bottom-row">
                         <div class="text-group">
-                            <span class="title">${sectionName}</span>
+                            <span class="title">${titleName}</span>
                             <span class="subtitle">${albumName}</span>
                         </div>
                         <div class="icon-group">
                             <button class="icon-btn trash" title="Delete" data-delete-image-id="${image.id}">
                                 <iconify-icon icon="mdi:delete-outline"></iconify-icon>
                             </button>
-                            <!-- UPDATED: Changed from <a> tag to <button> tag with data attribute -->
                             <button class="icon-btn download" title="Download" data-download-image-url="${image.imageUrl}">
                                 <iconify-icon icon="mdi:download-outline"></iconify-icon>
                             </button>
@@ -975,8 +798,7 @@
         }
         
         async function deleteImage(id) {
-            if (!db || !userId) return; // Still check for auth
-            // UPDATED: Changed from private 'users/{userId}' path to public path
+            if (!db || !userId) return;
             const docPath = `artifacts/${appId}/public/data/images/${id}`;
             try {
                 await deleteDoc(doc(db, docPath));
@@ -989,8 +811,7 @@
         
         function populateDropdowns() {
             const albumSelect = document.getElementById('album-select');
-            const sectionSelect = document.getElementById('section-select');
-            if (!albumSelect || !sectionSelect) return;
+            if (!albumSelect) return;
 
             // Populate Album Dropdown (for Add Image Modal)
             albumSelect.innerHTML = '<option value="" disabled selected>Select an album</option>';
@@ -1000,89 +821,60 @@
             if (albums.length === 0) {
                  albumSelect.innerHTML = '<option value="" disabled>No albums found. Please add one.</option>';
             }
-
-            // Populate Section Dropdown (for Add Image Modal)
-            sectionSelect.innerHTML = '<option value="" disabled selected>Select a section</option>';
-            sections.forEach(section => {
-                sectionSelect.innerHTML += `<option value="${section.id}">${section.name}</option>`;
-            });
-            if (sections.length === 0) {
-                 sectionSelect.innerHTML = '<option value="" disabled>No sections found. Please add one.</option>';
-            }
         }
         
-        function renderFilterDropdown(type, list) {
+        function renderFilterDropdown(list) {
             const albumsDropdownList = document.getElementById('albums-dropdown-list');
-            const sectionsDropdownList = document.getElementById('sections-dropdown-list');
-            const listEl = (type === 'albums') ? albumsDropdownList : sectionsDropdownList;
-            
-            if (!listEl) return; // Exit if element not found
+            if (!albumsDropdownList) return;
 
-            const allItemClass = (type === 'albums') 
-                ? 'dropdown-item dropdown-item-all-albums' 
-                : 'dropdown-item dropdown-item-all-sections';
-
-            listEl.innerHTML = `
-                <button class="${allItemClass}" data-filter-type="${type}" data-filter-id="" data-filter-name="All ${type}">
-                    All ${type.charAt(0).toUpperCase() + type.slice(1)}
+            albumsDropdownList.innerHTML = `
+                <button class="dropdown-item dropdown-item-all-albums" data-filter-type="albums" data-filter-id="" data-filter-name="All Albums">
+                    All Albums
                 </button>
             `;
             
             list.forEach(item => {
-                listEl.innerHTML += `
-                    <button class="dropdown-item" data-filter-type="${type}" data-filter-id="${item.id}" data-filter-name="${item.name}">
+                albumsDropdownList.innerHTML += `
+                    <button class="dropdown-item" data-filter-type="albums" data-filter-id="${item.id}" data-filter-name="${item.name}">
                         ${item.name}
                     </button>
                 `;
             });
         }
 
-        // NEW HELPER FUNCTION for forcing cross-origin download
         async function forceDownload(imageUrl, filename = 'gallery-image.jpg') {
             try {
-                // 1. Fetch the image
                 const response = await fetch(imageUrl);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch image: ${response.statusText}`);
                 }
                 
-                // 2. Convert to Blob
                 const blob = await response.blob();
-                
-                // 3. Create Object URL
                 const url = window.URL.createObjectURL(blob);
-                
-                // 4. Create temporary <a> tag
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
                 
-                // 5. Set download attribute
-                // Try to get a better filename from the URL
                 const name = imageUrl.split('/').pop().split('?')[0] || filename;
                 a.download = name;
                 
-                // 6. Append, click, and remove
                 document.body.appendChild(a);
                 a.click();
                 
-                // 7. Cleanup
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
                 
             } catch (err) {
                 console.error('Download failed:', err);
-                // We can't use alert, so we'll just log the error.
             }
         }
 
-        // This is the correct, updated function with detailed error handling
         async function handleImageUpload(e) {
             e.preventDefault();
             
             const fileUpload = document.getElementById('file-upload');
             const albumSelect = document.getElementById('album-select');
-            const sectionSelect = document.getElementById('section-select');
+            const imageTitle = document.getElementById('image-title'); // Get new title input
             const uploadError = document.getElementById('upload-error');
             const uploadBtnText = document.getElementById('upload-btn-text');
             const uploadSpinner = document.getElementById('upload-spinner');
@@ -1092,14 +884,14 @@
             const fileUploadText = document.getElementById('file-upload-text');
             const addImageModal = document.getElementById('add-image-modal');
             
-            if (!fileUpload || !albumSelect || !sectionSelect || !uploadError || !uploadBtnText || !uploadSpinner || !submitUploadBtn) return;
+            if (!fileUpload || !albumSelect || !imageTitle || !uploadError || !uploadBtnText || !uploadSpinner || !submitUploadBtn) return;
 
             const file = fileUpload.files[0];
             const albumId = albumSelect.value;
-            const sectionId = sectionSelect.value;
+            const title = imageTitle.value.trim(); // Get title value
             
-            if (!file || !albumId || !sectionId) {
-                uploadError.textContent = "Please select a file, album, and section.";
+            if (!file || !albumId || !title) { // Validate title
+                uploadError.textContent = "Please select a file, an album, and enter a title.";
                 uploadError.classList.remove('hidden');
                 return;
             }
@@ -1122,23 +914,19 @@
             try {
                 const response = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
                 if (!response.ok) {
-                    // Try to parse the error response from Cloudinary
                     const errorData = await response.json().catch(() => ({})); 
-                    // Get the specific error message if available, otherwise use HTTP status
                     const errorMsg = (errorData.error && errorData.error.message) ? errorData.error.message : `HTTP status ${response.status}`;
                     console.error('Cloudinary error details:', errorData);
-                    // Throw a more informative error
                     throw new Error(`Cloudinary upload failed: ${errorMsg}`);
                 }
                 const data = await response.json();
                 const imageUrl = data.secure_url;
 
-                // UPDATED: Changed from private 'users/{userId}' path to public path
                 const collectionPath = `artifacts/${appId}/public/data/images`;
                 await addDoc(collection(db, collectionPath), {
                     imageUrl,
                     albumId,
-                    sectionId,
+                    title, // Save the new title
                     createdAt: serverTimestamp()
                 });
                 
@@ -1148,7 +936,6 @@
                 if (addImageModal) closeModal(addImageModal);
             } catch (err) {
                 console.error("Upload failed: ", err);
-                // Display the more specific error message in the UI
                 uploadError.textContent = `${err.message}. Please check your Cloudinary settings (cloud name, upload preset) and console for details.`;
                 uploadError.classList.remove('hidden');
             } finally {
@@ -1160,10 +947,9 @@
 
 
         // --- MAIN SCRIPT EXECUTION ---
-        // This is the core fix: Wait for the DOM to be ready before finding elements and attaching listeners.
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- DOM ELEMENTS (Now safely inside DOMContentLoaded) ---
+            // --- DOM ELEMENTS ---
             const modalBackdrop = document.getElementById('modal-backdrop');
             
             // Add Image Modal
@@ -1177,16 +963,9 @@
             
             // Manage Categories Modal
             const manageCategoriesModal = document.getElementById('manage-categories-modal');
-            const sidebarBtnAlbums = document.getElementById('sidebar-btn-albums');
-            const sidebarBtnSections = document.getElementById('sidebar-btn-sections');
-            const tabContentAlbums = document.getElementById('tab-content-albums');
-            const tabContentSections = document.getElementById('tab-content-sections');
             const addAlbumForm = document.getElementById('add-album-form');
             const newAlbumNameInput = document.getElementById('new-album-name');
             const albumsListBody = document.getElementById('albums-list-body');
-            const addSectionForm = document.getElementById('add-section-form');
-            const newSectionNameInput = document.getElementById('new-section-name');
-            const sectionsListBody = document.getElementById('sections-list-body');
 
             // Edit Category Modal
             const editCategoryModal = document.getElementById('edit-category-modal');
@@ -1205,7 +984,7 @@
             const lightboxModal = document.getElementById('lightbox-modal');
             const lightboxImage = document.getElementById('lightbox-image');
 
-            // NEW Passcode Modal
+            // Passcode Modal
             const passcodeModal = document.getElementById('passcode-modal');
             const passcodeForm = document.getElementById('passcode-form');
             const passcodeError = document.getElementById('passcode-error');
@@ -1215,13 +994,8 @@
             
             // Filters
             const searchInput = document.getElementById('search-input');
-            const sectionsFilterText = document.getElementById('sections-filter-text');
-            const sectionsDropdownList = document.getElementById('sections-dropdown-list');
             const albumsFilterText = document.getElementById('albums-filter-text');
             const albumsDropdownList = document.getElementById('albums-dropdown-list');
-            // NEW Sort elements
-            const sortByText = document.getElementById('sort-by-text');
-            const sortBydropdownList = document.getElementById('sort-by-list');
 
             // Theme & Fullscreen
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
@@ -1231,7 +1005,7 @@
             const fullscreenIconEnter = document.getElementById('fullscreen-icon-enter');
             const fullscreenIconExit = document.getElementById('fullscreen-icon-exit');
             
-            // --- INITIALIZE FIREBASE (now that DOM is ready) ---
+            // --- INITIALIZE FIREBASE ---
             initializeFirebase();
 
             // --- Theme & Fullscreen Listeners ---
@@ -1284,20 +1058,23 @@
             }
 
             // --- Modal Listeners ---
-            // UPDATED to use passcode check
+            
+            // Add Image button (Requires Passcode)
             if (addImageBtn) addImageBtn.addEventListener('click', () => {
                 runWithPasscodeCheck(() => openModal(addImageModal));
             });
+            
+            // Customize Albums button (No Passcode)
             if (customizeBtn) customizeBtn.addEventListener('click', () => {
-                runWithPasscodeCheck(() => {
-                    closeModal(addImageModal); // Close add image modal first
-                    openModal(manageCategoriesModal); // Then open manage categories modal
-                });
+                closeModal(addImageModal); // Close add image modal first
+                openModal(manageCategoriesModal); // Then open manage categories modal
             });
+            
             if (confirmModalCancel) confirmModalCancel.addEventListener('click', () => {
                 closeModal(confirmModal);
                 confirmCallback = null;
             });
+            
             if (confirmModalConfirm) confirmModalConfirm.addEventListener('click', () => {
                 if (typeof confirmCallback === 'function') {
                     confirmCallback();
@@ -1314,7 +1091,6 @@
                     const modalToClose = document.getElementById(modalId);
                     if (modalToClose) {
                         closeModal(modalToClose);
-                        // NEW: Reset callbacks if closing passcode/confirm modals
                         if (modalId === 'confirm-modal') confirmCallback = null;
                         if (modalId === 'passcode-modal') passcodeCallback = null;
                     }
@@ -1334,45 +1110,33 @@
             });
 
             // --- Form Submissions ---
-            // UPDATED: handleImageUpload is an admin action, check happens on button click
             if (uploadForm) uploadForm.addEventListener('submit', handleImageUpload); 
             
-            // UPDATED: Category forms are inside a passcode-protected modal, so check happens on modal open.
             if (addAlbumForm) addAlbumForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const name = newAlbumNameInput.value.trim();
                 if (name) {
-                    addCategory('albums', name);
+                    addAlbum(name);
                     newAlbumNameInput.value = '';
-                }
-            });
-            
-            if (addSectionForm) addSectionForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const name = newSectionNameInput.value.trim();
-                if (name) {
-                    addCategory('sections', name);
-                    newSectionNameInput.value = '';
                 }
             });
             
             if (editCategoryForm) editCategoryForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const id = editCategoryId.value;
-                const type = editCategoryType.value;
+                const type = editCategoryType.value; // Will be 'albums'
                 const newName = editCategoryName.value.trim();
-                if (id && type && newName) {
-                    updateCategory(type, id, newName);
+                if (id && type === 'albums' && newName) {
+                    updateAlbum(id, newName);
                     closeModal(editCategoryModal);
                 }
             });
             
-            // NEW: Passcode Form Submission
+            // Passcode Form Submission
             if (passcodeForm) passcodeForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const input = document.getElementById('passcode-input');
                 if (input.value === ADMIN_PASSCODE) {
-                    // UPDATED: Do not set global admin flag.
                     if (passcodeError) passcodeError.classList.add('hidden');
                     closeModal(passcodeModal);
                     
@@ -1386,53 +1150,32 @@
             });
 
 
-            // --- Manage Categories Tabs ---
-            if (sidebarBtnAlbums) sidebarBtnAlbums.addEventListener('click', () => {
-                if (tabContentAlbums) tabContentAlbums.classList.remove('hidden');
-                if (tabContentSections) tabContentSections.classList.add('hidden');
-                if (sidebarBtnAlbums) sidebarBtnAlbums.classList.add('sidebar-btn-active');
-                if (sidebarBtnSections) sidebarBtnSections.classList.remove('sidebar-btn-active');
-            });
-
-            if (sidebarBtnSections) sidebarBtnSections.addEventListener('click', () => {
-                if (tabContentSections) tabContentSections.classList.remove('hidden');
-                if (tabContentAlbums) tabContentAlbums.classList.add('hidden');
-                if (sidebarBtnSections) sidebarBtnSections.classList.add('sidebar-btn-active');
-                if (sidebarBtnAlbums) sidebarBtnAlbums.classList.remove('sidebar-btn-active');
-            });
-            
             // --- Dynamic Event Listeners for Edit/Delete ---
-            [albumsListBody, sectionsListBody].forEach(listBody => {
-                if (listBody) listBody.addEventListener('click', (e) => {
-                    const editBtn = e.target.closest('[data-edit-id]');
-                    const deleteBtn = e.target.closest('[data-delete-id]');
-                    
-                    if (editBtn) {
-                        const { editId, editName, editType } = editBtn.dataset;
-                        // Action: Open the edit modal
-                        runWithPasscodeCheck(() => {
-                            if (editModalTitle) editModalTitle.textContent = `Edit ${editType.slice(0, -1)}`;
-                            if (editCategoryId) editCategoryId.value = editId;
-                            if (editCategoryType) editCategoryType.value = editType;
-                            if (editCategoryName) editCategoryName.value = editName;
-                            if (editCategoryModal) openModal(editCategoryModal);
-                        });
-                    }
-                    
-                    if (deleteBtn) {
-                        const { deleteId, deleteName, deleteType } = deleteBtn.dataset;
-                        // Action: Open the confirm modal
-                        runWithPasscodeCheck(() => {
-                            openConfirmModal(
-                                `Delete ${deleteType.slice(0, -1)}`,
-                                `Are you sure you want to delete "${deleteName}"? This cannot be undone.`,
-                                () => {
-                                    deleteCategory(deleteType, deleteId);
-                                }
-                            );
-                        });
-                    }
-                });
+            if (albumsListBody) albumsListBody.addEventListener('click', (e) => {
+                const editBtn = e.target.closest('[data-edit-id]');
+                const deleteBtn = e.target.closest('[data-delete-id]');
+                
+                if (editBtn) {
+                    const { editId, editName } = editBtn.dataset;
+                    // Action: Open edit modal (NO passcode)
+                    if (editModalTitle) editModalTitle.textContent = `Edit Album`;
+                    if (editCategoryId) editCategoryId.value = editId;
+                    if (editCategoryType) editCategoryType.value = 'albums';
+                    if (editCategoryName) editCategoryName.value = editName;
+                    if (editCategoryModal) openModal(editCategoryModal);
+                }
+                
+                if (deleteBtn) {
+                    const { deleteId, deleteName } = deleteBtn.dataset;
+                    // Action: Open confirm modal (WITH passcode)
+                    runWithPasscodeCheck(() => {
+                        openConfirmModal(
+                            `Delete Album`,
+                            `Are you sure you want to delete "${deleteName}"? This cannot be undone.`,
+                            () => { deleteAlbum(deleteId); }
+                        );
+                    });
+                }
             });
             
             // For Gallery Grid
@@ -1443,14 +1186,12 @@
 
                 if (deleteBtn) {
                     const { deleteImageId } = deleteBtn.dataset;
-                    // UPDATED: Use the confirm modal *with* a passcode check
+                    // Use the confirm modal *with* a passcode check
                     runWithPasscodeCheck(() => {
                         openConfirmModal(
                             'Delete Image',
                             'Are you sure you want to delete this image? This action cannot be undone.',
-                            () => {
-                                deleteImage(deleteImageId);
-                            }
+                            () => { deleteImage(deleteImageId); }
                         );
                     });
                 }
@@ -1486,34 +1227,17 @@
             });
             
             // --- Dropdown Filter Click Logic ---
-            [sectionsDropdownList, albumsDropdownList].forEach(list => {
-                if (list) list.addEventListener('click', (e) => {
-                    const filterBtn = e.target.closest('[data-filter-id]');
-                    if (filterBtn) {
-                        const { filterType, filterId, filterName } = filterBtn.dataset;
-                        
-                        if (filterType === 'sections') {
-                            currentFilters.sectionId = filterId || null;
-                            if (sectionsFilterText) sectionsFilterText.textContent = filterId ? filterName : "Sections";
-                        } else if (filterType === 'albums') {
-                            currentFilters.albumId = filterId || null;
-                            if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "Albums";
-                        }
-                        
-                        loadImages();
-                    }
-                });
-            });
-            
-            // --- Sort By Click Logic ---
-            if (sortBydropdownList) sortBydropdownList.addEventListener('click', (e) => {
-                const sortBtn = e.target.closest('[data-sort-value]');
-                if (sortBtn) {
-                    const { sortValue, sortName } = sortBtn.dataset;
-                    currentSort = sortValue;
-                    if (sortByText) sortByText.textContent = sortName;
+            if (albumsDropdownList) albumsDropdownList.addEventListener('click', (e) => {
+                const filterBtn = e.target.closest('[data-filter-id]');
+                if (filterBtn) {
+                    const { filterType, filterId, filterName } = filterBtn.dataset;
                     
-                    loadImages(); // Re-load images with new sorting
+                    if (filterType === 'albums') {
+                        currentFilters.albumId = filterId || null;
+                        if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "Albums";
+                    }
+                    
+                    loadImages();
                 }
             });
 
@@ -1528,4 +1252,3 @@
 
 </body>
 </html>
-
