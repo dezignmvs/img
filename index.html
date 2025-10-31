@@ -183,7 +183,7 @@
             </span>
             <span class="font-heading text-xl sm:text-2xl font-semibold tracking-wide">Dezign.mvs</span>
         </div>
-    
+        
         <!-- Right Side: Icons -->
         <div class="flex items-center gap-2 sm:gap-3">
             <!-- Theme Toggle -->
@@ -192,14 +192,14 @@
                 <iconify-icon id="theme-icon-light" icon="mdi:weather-sunny"></iconify-icon>
                 <iconify-icon id="theme-icon-dark" icon="mdi:moon-waning-crescent" class="hidden"></iconify-icon>
             </button>
-    
+            
             <!-- Fullscreen -->
             <button id="fullscreen-toggle-btn" title="Toggle fullscreen"
                 class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
                 <iconify-icon id="fullscreen-icon-enter" icon="mdi:arrow-expand"></iconify-icon>
                 <iconify-icon id="fullscreen-icon-exit" icon="mdi:arrow-collapse" class="hidden"></iconify-icon>
             </button>
-    
+            
             <!-- Add Image -->
             <button id="add-image-btn" title="Add Image"
                 class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-blue-500/80 dark:bg-blue-600/80 text-white hover:scale-105 hover:bg-blue-500 dark:hover:bg-blue-500 transition-all duration-300 shadow-sm">
@@ -209,7 +209,7 @@
     </nav>
 
     <!-- ================================== -->
-    <!--        GALLERY CONTENT         -->
+    <!--         GALLERY CONTENT          -->
     <!-- ================================== -->
     <div class="container max-w-7xl mx-auto px-4 py-12">
 
@@ -268,7 +268,7 @@
 
 
     <!-- ================================== -->
-    <!--            MODALS              -->
+    <!--            MODALS                -->
     <!-- ================================== -->
 
     <!-- Modal Overlay -->
@@ -444,7 +444,7 @@
 
 
     <!-- ================================== -->
-    <!--            JAVASCRIPT            -->
+    <!--           JAVASCRIPT             -->
     <!-- ================================== -->
     <!-- Firebase SDKs -->
     <script type="module">
@@ -477,14 +477,15 @@
         const CLOUDINARY_UPLOAD_PRESET = "imageuploader";
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
         
+        // *** UPDATED FIREBASE CONFIG ***
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : JSON.stringify({
-            apiKey: "AIzaSyDNW_gRO5yY1AhNTWD6ctpELUijCdxspeg",
-            authDomain: "mvs-link.firebaseapp.com",
-            projectId: "mvs-link",
-            storageBucket: "mvs-link.firebasestorage.app",
-            messagingSenderId: "11522467266",
-            appId: "1:11522467266:web:d9b2174a6eca647423225b",
-            measurementId: "G-K1P30KHGYC"
+            apiKey: "AIzaSyDbaF6Gb1lNGY9PQbV_9FXa9oOpC7ZiQRU",
+            authDomain: "nodemailer-445010.firebaseapp.com",
+            projectId: "nodemailer-445010",
+            storageBucket: "nodemailer-445010.firebasestorage.app",
+            messagingSenderId: "785480577605",
+            appId: "1:785480577605:web:7eae72bd79866cc4d4692c",
+            measurementId: "G-LYWBWSNP3Y"
         }));
         
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-gallery-app';
@@ -608,13 +609,13 @@
         
         async function signInUser() {
              try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                     await signInWithCustomToken(auth, __initial_auth_token);
+                 } else {
+                     await signInAnonymously(auth);
+                 }
             } catch (error) {
-                console.error("Firebase sign-in error:", error);
+                 console.error("Firebase sign-in error:", error);
             }
         }
 
@@ -1252,4 +1253,3 @@
 
 </body>
 </html>
-
