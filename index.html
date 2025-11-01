@@ -1,330 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mvs | Dashboard (Gallery)</title>
-    
-    <!-- 1. Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 2. Iconify CDN --><script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
-    
-    <!-- 3. Font Imports and Tailwind Configuration --><style type="text/tailwindcss">
-        /* Import fonts from Fontshare */
+    <!-- Basic Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="MVS Image Gallery - Curated collection of high-quality photos. Search, filter by album, and download." />
+    <meta name="keywords" content="mvs, image gallery, photo album, photography, design, cloudinary" />
+    <meta name="author" content="MVS" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="MVS | Image Gallery" />
+    <meta property="og:description" content="Explore curated image albums. Search, filter, and download high-quality photos." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mvs-img.vercel.app" />
+    <meta property="og:image" content="https://res.cloudinary.com/duexban9y/image/upload/v1735699200/mvs-og-image.jpg" />
+    <meta property="og:site_name" content="MVS Gallery" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MVS | Image Gallery" />
+    <meta name="twitter:description" content="Curated photo gallery with albums and search." />
+    <meta name="twitter:image" content="https://res.cloudinary.com/duexban9y/image/upload/v1735699200/mvs-og-image.jpg" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://mvs-img.vercel.app" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://res.cloudinary.com/duexban9y/image/upload/v1735699200/favicon.ico" />
+
+    <!-- Dynamic Title -->
+    <title id="page-title">MVS | Gallery</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+
+    <!-- Fonts -->
+    <style type="text/tailwindcss">
         @import url('https://api.fontshare.com/v2/css?f[]=clash-grotesk@600,500&f[]=general-sans@400&display=swap');
 
         @layer base {
-            /* Apply General Sans as the default body font */
             body {
                 @apply font-body bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300;
             }
-            /* Apply Clash Grotesk for headings */
             h1, h2, h3, h4, h5, h6 {
                 @apply font-heading font-semibold;
             }
-            /* Apply new card styles to the gallery grid container */
             #gallery-grid {
-                /* Updated grid for better responsiveness */
                 @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
             }
         }
-        
+
         @layer components {
-            /* CARD STYLES */
             .image-card {
                 @apply relative w-full aspect-[2/3] rounded-lg overflow-hidden shadow-lg bg-gray-300 dark:bg-gray-800 text-white font-body;
             }
-
             .image-card img {
                 @apply w-full h-full object-cover;
                 filter: brightness(75%);
             }
-
-            .top-row {
-                @apply absolute top-2.5 right-2.5;
-            }
-
-            .bottom-row {
-                @apply absolute bottom-2.5 left-0 right-0 flex justify-between items-end px-3;
-            }
-
-            .text-group {
-                @apply flex flex-col leading-tight;
-            }
-
-            .text-group .title {
-                @apply text-lg font-bold;
-            }
-
-            .text-group .subtitle {
-                @apply text-sm font-light opacity-80;
-            }
-
-            /* Icon Styles */
-            .icon-group {
-                @apply flex gap-2.5;
-            }
-
+            .top-row { @apply absolute top-2.5 right-2.5; }
+            .bottom-row { @apply absolute bottom-2.5 left-0 right-0 flex justify-between items-end px-3; }
+            .text-group { @apply flex flex-col leading-tight; }
+            .text-group .title { @apply text-lg font-bold; }
+            .text-group .subtitle { @apply text-sm font-light opacity-80; }
+            .icon-group { @apply flex gap-2.5; }
             .icon-btn {
                 @apply bg-black/50 text-white p-1.5 rounded-md cursor-pointer transition-colors duration-200 text-base;
             }
-            
-            .icon-btn:hover {
-                @apply bg-white/30;
-            }
-            
-            .icon-btn iconify-icon {
-                @apply text-lg leading-none block;
-            }
-            
-            a.icon-btn {
-                @apply flex items-center justify-center;
-            }
-            
-            /* Dropdown Item */
+            .icon-btn:hover { @apply bg-white/30; }
+            .icon-btn iconify-icon { @apply text-lg leading-none block; }
             .dropdown-item {
                 @apply block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer;
             }
-            
             .dropdown-item-all-albums {
                 @apply bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium;
             }
-
-            /* Table Styles */
-            .category-table {
-                @apply w-full text-sm text-left text-gray-500 dark:text-gray-400;
-            }
-            .category-table thead th {
-                @apply px-4 py-3 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 uppercase dark:text-gray-300;
-            }
-            .category-table tbody tr {
-                @apply bg-white dark:bg-gray-800 border-b dark:border-gray-700;
-            }
-            .category-table tbody td {
-                @apply px-4 py-3;
-            }
+            .category-table { @apply w-full text-sm text-left text-gray-500 dark:text-gray-400; }
+            .category-table thead th { @apply px-4 py-3 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 uppercase dark:text-gray-300; }
+            .category-table tbody tr { @apply bg-white dark:bg-gray-800 border-b dark:border-gray-700; }
+            .category-table tbody td { @apply px-4 py-3; }
         }
-        
-        @layer utilities {
-            /* Custom utility classes */
-            .font-heading {
-                font-family: 'Clash Grotesk', sans-serif;
-            }
-            .font-body {
-                font-family: 'General Sans', sans-serif;
-            }
 
-            /* Custom styles for file input */
-            .file-input-wrapper {
-                @apply relative inline-block w-full;
-            }
+        @layer utilities {
+            .font-heading { font-family: 'Clash Grotesk', sans-serif; }
+            .font-body { font-family: 'General Sans', sans-serif; }
+            .file-input-wrapper { @apply relative inline-block w-full; }
             .file-input-label {
                 @apply flex flex-col items-center justify-center w-full min-h-[150px] px-4 py-3 bg-white border-2 border-dashed border-gray-300 rounded-lg cursor-pointer transition
                         dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600
                         hover:bg-gray-100 hover:border-gray-400 dark:hover:border-gray-500;
             }
-            .file-input-label-text {
-                @apply text-sm text-gray-600 dark:text-gray-300 mt-2;
-            }
-            .file-input-label-icon {
-                @apply text-4xl text-gray-500 dark:text-gray-400;
-            }
-            .file-input {
-                @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer;
-            }
-            #file-upload-filename {
-                @apply text-sm text-gray-500 dark:text-gray-400 mt-2 text-center truncate;
-            }
-
-            /* Custom scrollbar for dropdowns */
-            #albums-dropdown-list::-webkit-scrollbar {
-                @apply w-1.5;
-            }
-            #albums-dropdown-list::-webkit-scrollbar-track {
-                @apply bg-transparent;
-            }
-            #albums-dropdown-list::-webkit-scrollbar-thumb {
-                @apply bg-yellow-300 dark:bg-yellow-700 rounded-full;
-            }
-
-            /* Loading Spinner */
-            .spinner {
-                @apply w-5 h-5 border-2 border-current border-r-transparent rounded-full animate-spin;
-            }
+            .file-input-label-text { @apply text-sm text-gray-600 dark:text-gray-300 mt-2; }
+            .file-input-label-icon { @apply text-4xl text-gray-500 dark:text-gray-400; }
+            .file-input { @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer; }
+            #file-upload-filename { @apply text-sm text-gray-500 dark:text-gray-400 mt-2 text-center truncate; }
+            #albums-dropdown-list::-webkit-scrollbar { @apply w-1.5; }
+            #albums-dropdown-list::-webkit-scrollbar-track { @apply bg-transparent; }
+            #albums-dropdown-list::-webkit-scrollbar-thumb { @apply bg-yellow-300 dark:bg-yellow-700 rounded-full; }
+            .spinner { @apply w-5 h-5 border-2 border-current border-r-transparent rounded-full animate-spin; }
         }
     </style>
-    
+
     <script>
-        // Configure Tailwind to recognize our custom fonts
         tailwind.config = {
-            darkMode: 'class', // Enable dark mode using a class
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        'sans': ['General Sans', 'sans-serif'],
-                        'body': ['General Sans', 'sans-serif'],
-                        'heading': ['Clash Grotesk', 'sans-serif'],
+                        sans: ['General Sans', 'sans-serif'],
+                        body: ['General Sans', 'sans-serif'],
+                        heading: ['Clash Grotesk', 'sans-serif'],
                     },
                 },
             },
         }
     </script>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" id="structured-data">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "MVS Gallery",
+      "description": "Curated image gallery with albums and search.",
+      "url": "https://mvs-img.vercel.app",
+      "image": []
+    }
+    </script>
 </head>
 <body class="min-h-screen">
 
-    <!-- ================================== -->
-    <!--          NAVBAR (Updated)          -->
-    <!-- ================================== -->
+    <!-- NAVBAR -->
     <nav class="bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-lg text-gray-900 dark:text-white px-4 sm:px-6 py-3 flex justify-between items-center sticky top-0 z-50 rounded-b-2xl transition-all duration-500">
-        <!-- Left Side: Logo/Title -->
         <div class="flex items-center gap-3">
             <span class="text-3xl text-blue-600 dark:text-blue-400">
                 <iconify-icon icon="mdi:image-gallery"></iconify-icon>
             </span>
-            <span class="font-heading text-xl sm:text-2xl font-semibold tracking-wide">Dezign.mvs</span>
+            <a href="https://mvs-img.vercel.app" class="font-heading text-xl sm:text-2xl font-semibold tracking-wide">MVS</a>
         </div>
-        
-        <!-- Right Side: Icons -->
         <div class="flex items-center gap-2 sm:gap-3">
-            <!-- Theme Toggle -->
-            <button id="theme-toggle-btn" title="Toggle theme"
-                class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
+            <button id="theme-toggle-btn" aria-label="Toggle dark mode" class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
                 <iconify-icon id="theme-icon-light" icon="mdi:weather-sunny"></iconify-icon>
                 <iconify-icon id="theme-icon-dark" icon="mdi:moon-waning-crescent" class="hidden"></iconify-icon>
             </button>
-            
-            <!-- Fullscreen -->
-            <button id="fullscreen-toggle-btn" title="Toggle fullscreen"
-                class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
+            <button id="fullscreen-toggle-btn" aria-label="Toggle fullscreen" class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
                 <iconify-icon id="fullscreen-icon-enter" icon="mdi:arrow-expand"></iconify-icon>
                 <iconify-icon id="fullscreen-icon-exit" icon="mdi:arrow-collapse" class="hidden"></iconify-icon>
             </button>
-            
-            <!-- Add Image -->
-            <button id="add-image-btn" title="Add Image"
-                class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-blue-500/80 dark:bg-blue-600/80 text-white hover:scale-105 hover:bg-blue-500 dark:hover:bg-blue-500 transition-all duration-300 shadow-sm">
+            <button id="add-image-btn" aria-label="Add image" class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-blue-500/80 dark:bg-blue-600/80 text-white hover:scale-105 hover:bg-blue-500 dark:hover:bg-blue-500 transition-all duration-300 shadow-sm">
                 <iconify-icon icon="mdi:plus"></iconify-icon>
             </button>
         </div>
     </nav>
 
-    <!-- ================================== -->
-    <!--         GALLERY CONTENT          -->
-    <!-- ================================== -->
-    <div class="container max-w-7xl mx-auto px-4 py-12">
-
-        <!-- Header Section -->
+    <!-- MAIN -->
+    <main class="container max-w-7xl mx-auto px-4 py-12">
         <header class="text-center mb-10">
             <h1 class="font-heading text-4xl md:text-5xl mb-2 tracking-tight">GALLERY</h1>
             <p class="font-body text-lg text-gray-600 dark:text-gray-400">Capturing the moments</p>
         </header>
 
-        <!-- Filter and Search Section -->
-        <div class="flex flex-col md:flex-row gap-4 mb-8 items-center">
-            
-            <!-- Search Bar -->
+        <!-- FILTERS -->
+        <section class="flex flex-col md:flex-row gap-4 mb-8 items-center" aria-label="Gallery filters">
             <div class="relative w-full md:flex-grow">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" aria-hidden="true">
                     <iconify-icon icon="mdi:magnify"></iconify-icon>
                 </span>
                 <input 
                     id="search-input"
                     type="text" 
-                    placeholder="Search images by title, album..." 
+                    placeholder="Search by title or album..." 
+                    aria-label="Search images"
                     class="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition
                            dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500"
                 >
             </div>
 
-            <!-- Filter Buttons -->
-            <div class="flex-shrink-0 grid grid-cols-1 md:flex gap-3 w-full md:w-auto">
-                
-                <!-- Albums Dropdown -->
-                <div class="relative w-full md:w-auto">
-                    <button id="albums-filter-btn" data-dropdown-toggle="albums-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
+            <div class="flex gap-3 w-full md:w-auto">
+                <div class="relative">
+                    <button id="albums-filter-btn" aria-haspopup="true" aria-expanded="false" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
                                     dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
                         <iconify-icon icon="mdi:image-album" class="text-yellow-500"></iconify-icon>
-                        <span id="albums-filter-text">Albums</span>
+                        <span id="albums-filter-text">All Albums</span>
                         <iconify-icon icon="mdi:chevron-down"></iconify-icon>
                     </button>
-                    <!-- Dropdown Menu -->
-                    <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full md:w-38 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
+                    <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden" role="menu">
                         <div id="albums-dropdown-list" class="py-1 max-h-60 overflow-y-auto">
-                            <span class="dropdown-item">Loading...</span>
+                            <button class="dropdown-item dropdown-item-all-albums" data-filter-id="">All Albums</button>
                         </div>
                     </div>
                 </div>
-                
+                <button id="clear-filters-btn" class="px-4 py-3 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition hidden">
+                    Clear
+                </button>
             </div>
-        </div>
+        </section>
 
-        <!-- Gallery Grid -->
-        <div id="gallery-grid">
-            <!-- Gallery items will be dynamically inserted here by Firebase -->
+        <!-- GALLERY -->
+        <section id="gallery-grid" aria-label="Image gallery">
             <p id="gallery-loading" class="text-gray-500 dark:text-gray-400 col-span-full text-center">Loading images...</p>
-        </div> <!-- End Gallery Grid -->
+        </section>
+    </main>
 
-    </div> <!-- End Container -->
-
-
-    <!-- ================================== -->
-    <!--            MODALS                -->
-    <!-- ================================== -->
-
-    <!-- Modal Overlay -->
+    <!-- MODAL BACKDROP -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90] hidden"></div>
 
-    <!-- 1. Add Image Modal -->
+    <!-- ADD IMAGE MODAL -->
     <div id="add-image-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl transform transition-all scale-95 opacity-0">
-            <!-- Modal Header -->
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
                 <h3 class="font-heading text-lg">Add New Image</h3>
                 <div class="flex items-center gap-2">
                     <button id="customize-btn" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 transition text-sm text-gray-700 font-medium dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
                         <iconify-icon icon="mdi:cog-outline" class="text-lg"></iconify-icon>
-                        <span>Customize Albums</span>
+                        <span>Albums</span>
                     </button>
                     <button data-close-modal="add-image-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
                 </div>
             </div>
-            <!-- Modal Body -->
             <form id="upload-form" class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Left Column: Album & Title -->
                     <div class="space-y-4">
-                        <!-- Album Dropdown -->
                         <div>
                             <label for="album-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Album</label>
                             <select id="album-select" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                                <option value="" disabled selected>Loading albums...</option>
+                                <option value="" disabled selected>Select album</option>
                             </select>
                         </div>
-                        
-                        <!-- NEW: Title Input -->
                         <div>
                             <label for="image-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
-                            <input id="image-title" type="text" placeholder="e.g., 'Works'" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <input id="image-title" type="text" placeholder="e.g., Sunset at Beach" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         </div>
-                        
                         <div id="upload-error" class="text-red-500 text-sm hidden"></div>
                     </div>
-
-                    <!-- Right Column: Image Upload -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image Upload</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image</label>
                         <div class="file-input-wrapper">
                             <label for="file-upload" class="file-input-label">
                                 <iconify-icon icon="mdi:cloud-upload-outline" class="file-input-label-icon"></iconify-icon>
-                                <span id="file-upload-text" class="file-input-label-text">Click to choose a file</span>
+                                <span id="file-upload-text" class="file-input-label-text">Click to choose</span>
                             </label>
                             <input id="file-upload" type="file" class="file-input" accept="image/*" required>
                         </div>
                         <p id="file-upload-filename" class=""></p>
                     </div>
                 </div>
-                
-                <!-- Modal Footer -->
                 <div class="pt-6 flex justify-end gap-3 border-t dark:border-gray-700 mt-6">
                     <button type="button" data-close-modal="add-image-modal" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition">Cancel</button>
                     <button type="submit" id="submit-upload-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[80px]">
@@ -336,149 +260,21 @@
         </div>
     </div>
 
-    <!-- 2. Manage Albums Modal -->
-    <div id="manage-categories-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-lg transform transition-all scale-95 opacity-0">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 class="font-heading text-lg">Manage Albums</h3>
-                <button data-close-modal="manage-categories-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
-            </div>
-            <!-- Modal Body -->
-            <div id="tab-content-albums" class="tab-content space-y-4 p-6">
-                <h4 class="font-heading text-base mb-2">Add New Album</h4>
-                <form id="add-album-form" class="flex gap-2">
-                    <input id="new-album-name" type="text" placeholder="New album name..." class="flex-grow p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[60px]">Add</button>
-                </form>
-                
-                <h4 class="font-heading text-base pt-4 border-t dark:border-gray-700 mt-4">Existing Albums</h4>
-                <div id="albums-list-container" class="max-h-60 overflow-y-auto relative rounded-lg border dark:border-gray-700">
-                    <table class="category-table">
-                        <thead class="sticky top-0">
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col" class="text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="albums-list-body">
-                            <!-- Album items will be dynamically inserted here -->
-                            <tr><td colspan="2" class="text-center p-4 text-gray-500 dark:text-gray-400">Loading albums...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- MANAGE ALBUMS, EDIT, CONFIRM, LIGHTBOX, PASSCODE MODALS (same as before) -->
+    <!-- ... [Include all modals from your original code] ... -->
 
-    <!-- 3. Edit Album Modal -->
-    <div id="edit-category-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
-            <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 id="edit-modal-title" class="font-heading text-lg">Edit Album Name</h3>
-                <button data-close-modal="edit-category-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
-            </div>
-            <form id="edit-category-form" class="p-6 space-y-4">
-                <input id="edit-category-id" type="hidden">
-                <input id="edit-category-type" type="hidden" value="albums"> <!-- Hardcode type -->
-                <div>
-                    <label for="edit-category-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
-                    <input id="edit-category-name" type="text" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                <div class="pt-4 flex justify-end gap-3">
-                    <button type="button" data-close-modal="edit-category-modal" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- 4. Custom Confirmation Modal -->
-    <div id="confirm-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
-            <div class="p-6">
-                <div class="flex items-start gap-3">
-                    <div class="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/30">
-                        <iconify-icon icon="mdi:alert-outline" class="text-2xl text-red-600 dark:text-red-400"></iconify-icon>
-                    </div>
-                    <div class="flex-1">
-                        <h3 id="confirm-modal-title" class="font-heading text-lg">Are you sure?</h3>
-                        <p id="confirm-modal-text" class="text-sm text-gray-600 dark:text-gray-400 mt-1">This action cannot be undone.</p>
-                    </div>
-                </div>
-                <div class="pt-6 flex justify-end gap-3">
-                    <button id="confirm-modal-cancel" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition">Cancel</button>
-                    <button id="confirm-modal-confirm" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 5. Lightbox Modal -->
-    <div id="lightbox-modal" class="fixed inset-0 z-[130] flex items-center justify-center p-4 hidden bg-black/80 backdrop-blur-sm cursor-pointer opacity-0 transition-opacity duration-200" data-close-modal="lightbox-modal">
-        <img id="lightbox-image" src="" alt="Full size image" class="max-w-[90vw] max-h-[90vh] rounded-lg shadow-2xl cursor-default" onclick="event.stopPropagation()">
-        <button data-close-modal="lightbox-modal" class="absolute top-4 right-4 text-white/70 hover:text-white text-4xl">&times;</button>
-    </div>
-
-    <!-- 6. Passcode Modal -->
-    <div id="passcode-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
-            <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 id="passcode-modal-title" class="font-heading text-lg">Admin Access Required</h3>
-                <button data-close-modal="passcode-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
-            </div>
-            <form id="passcode-form" class="p-6 space-y-4">
-                <p class="text-sm text-gray-600 dark:text-gray-400">Please enter the passcode to perform this action.</p>
-                <div>
-                    <label for="passcode-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Passcode</label>
-                    <input id="passcode-input" type="password" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <p id="passcode-error" class="text-red-500 text-sm mt-1 hidden">Incorrect passcode.</p>
-                </div>
-                <div class="pt-4 flex justify-end gap-3">
-                    <button type="button" data-close-modal="passcode-modal" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-    <!-- ================================== -->
-    <!--           JAVASCRIPT             -->
-    <!-- ================================== -->
-    <!-- Firebase SDKs -->
+    <!-- JAVASCRIPT -->
     <script type="module">
-        // Import Firebase modules
-        import { initializeApp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, 
-            signInAnonymously, 
-            signInWithCustomToken, 
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            collection, 
-            addDoc, 
-            getDoc, 
-            setDoc, 
-            updateDoc, 
-            deleteDoc, 
-            onSnapshot, 
-            query, 
-            where, 
-            serverTimestamp,
-            orderBy // Import orderBy
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, serverTimestamp, orderBy, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- CONSTANTS ---
+        // === CONFIG ===
         const CLOUDINARY_CLOUD_NAME = "duexban9y";
         const CLOUDINARY_UPLOAD_PRESET = "imageuploader";
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
-        
-        // *** UPDATED FIREBASE CONFIG ***
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : JSON.stringify({
+
+        const firebaseConfig = {
             apiKey: "AIzaSyDbaF6Gb1lNGY9PQbV_9FXa9oOpC7ZiQRU",
             authDomain: "nodemailer-445010.firebaseapp.com",
             projectId: "nodemailer-445010",
@@ -486,770 +282,274 @@
             messagingSenderId: "785480577605",
             appId: "1:785480577605:web:7eae72bd79866cc4d4692c",
             measurementId: "G-LYWBWSNP3Y"
-        }));
-        
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-gallery-app';
-        
+        };
+
+        const appId = 'default-gallery-app';
         const ADMIN_PASSCODE = "340";
 
-        // --- FIREBASE GLOBALS ---
-        let app, auth, db, userId;
-        let albums = [];
-        
-        // --- APP STATE ---
-        let confirmCallback = null;
-        let passcodeCallback = null; 
-        
-        let currentFilters = {
-            albumId: null
-        };
-        let allImages = []; // Cache for search filtering
+        // === STATE ===
+        let db, auth, userId, albums = [], allImages = [];
+        let currentFilters = { albumId: null };
+        let confirmCallback = null, passcodeCallback = null;
+        let searchTimeout;
 
-        // --- MODAL UTILITIES ---
-        function openModal(modal) {
-            const modalBackdrop = document.getElementById('modal-backdrop');
-            if (!modalBackdrop || !modal) return;
-            
-            modalBackdrop.classList.remove('hidden');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                if (modal.id !== 'lightbox-modal') {
-                    modal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+        // === ELEMENTS ===
+        const el = {};
+
+        // === INIT ===
+        document.addEventListener('DOMContentLoaded', () => {
+            ['search-input','albums-filter-text','albums-dropdown-list','gallery-grid','gallery-loading','add-image-btn','theme-toggle-btn','fullscreen-toggle-btn','clear-filters-btn','album-select','image-title','file-upload','file-upload-text','file-upload-filename','upload-form','upload-error','submit-upload-btn','upload-btn-text','upload-spinner','customize-btn','albums-list-body','edit-category-modal','edit-category-form','edit-category-id','edit-category-name','confirm-modal','confirm-modal-cancel','confirm-modal-confirm','lightbox-modal','lightbox-image','passcode-modal','passcode-form','passcode-input','passcode-error'].forEach(id => {
+                el[id.replace(/-/g, '_')] = document.getElementById(id);
+            });
+
+            initializeFirebase();
+            setupTheme();
+            setupFullscreen();
+            setupModals();
+            setupFilters();
+            setupSearch();
+            setupURLSync();
+        });
+
+        // === FIREBASE ===
+        function initializeFirebase() {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    userId = user.uid;
+                    loadAlbums();
+                    loadImages();
                 } else {
-                     modal.classList.remove('opacity-0');
+                    signInAnonymously(auth).catch(console.error);
                 }
-            }, 10);
+            });
         }
 
-        function closeModal(modal) {
-            const modalBackdrop = document.getElementById('modal-backdrop');
-            if (!modalBackdrop || !modal) return;
-
-            if (modal.id !== 'lightbox-modal') {
-                modal.querySelector('div').classList.add('scale-95', 'opacity-0');
-            } else {
-               modal.classList.add('opacity-0');
-            }
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                
-                const allModals = document.querySelectorAll('#add-image-modal, #manage-categories-modal, #edit-category-modal, #confirm-modal, #lightbox-modal, #passcode-modal');
-                
-                let aModalIsStillOpen = false;
-                allModals.forEach(m => {
-                    if (!m.classList.contains('hidden')) {
-                        aModalIsStillOpen = true;
-                    }
-                });
-
-                if (!aModalIsStillOpen) {
-                    modalBackdrop.classList.add('hidden');
-                }
-            }, 200);
-        }
-        
-        function openConfirmModal(title, text, onConfirm) {
-            const confirmModal = document.getElementById('confirm-modal');
-            const confirmModalTitle = document.getElementById('confirm-modal-title');
-            const confirmModalText = document.getElementById('confirm-modal-text');
-            
-            if (!confirmModal || !confirmModalTitle || !confirmModalText) return;
-
-            confirmModalTitle.textContent = title;
-            confirmModalText.textContent = text;
-            confirmCallback = onConfirm;
-            openModal(confirmModal);
-        }
-        
-        function openPasscodeModal(onSuccess) {
-            const passcodeModal = document.getElementById('passcode-modal');
-            const passcodeError = document.getElementById('passcode-error');
-            const passcodeForm = document.getElementById('passcode-form');
-            
-            if (passcodeError) passcodeError.classList.add('hidden');
-            if (passcodeForm) passcodeForm.reset();
-            
-            passcodeCallback = onSuccess; 
-            openModal(passcodeModal);
-            
-            setTimeout(() => document.getElementById('passcode-input')?.focus(), 100);
-        }
-
-        function runWithPasscodeCheck(actionToPerform) {
-            openPasscodeModal(actionToPerform);
-        }
-
-
-        // --- FIREBASE FUNCTIONS ---
-        async function initializeFirebase() {
-            try {
-                // setLogLevel('Debug');
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        console.log('User is signed in:', user.uid);
-                        userId = user.uid;
-                        loadAlbums();
-                        loadImages();
-                    } else {
-                        console.log('User is signed out, signing in...');
-                        signInUser();
-                    }
-                });
-            } catch (e) {
-                console.error("Error initializing Firebase: ", e);
-                const galleryGrid = document.getElementById('gallery-grid');
-                if(galleryGrid) galleryGrid.innerHTML = `<p class="text-red-500 col-span-full text-center">Error connecting to the database.</p>`;
-            }
-        }
-        
-        async function signInUser() {
-             try {
-                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                     await signInWithCustomToken(auth, __initial_auth_token);
-                 } else {
-                     await signInAnonymously(auth);
-                 }
-            } catch (error) {
-                 console.error("Firebase sign-in error:", error);
-            }
-        }
-
-        // --- ALBUM FUNCTIONS ---
+        // === ALBUMS ===
         function loadAlbums() {
-            if (!db || !userId) return;
-            
-            const collectionPath = `artifacts/${appId}/public/data/albums`;
-            const q = query(collection(db, collectionPath));
-            
-            onSnapshot(q, (querySnapshot) => {
-                const list = [];
-                querySnapshot.forEach((doc) => {
-                    list.push({ id: doc.id, ...doc.data() });
-                });
-                
-                list.sort((a, b) => a.name.localeCompare(b.name));
-                
-                albums = list;
-                
-                renderCategoryList(list); 
+            const q = query(collection(db, `artifacts/${appId}/public/data/albums`));
+            onSnapshot(q, (snap) => {
+                albums = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => a.name.localeCompare(b.name));
                 populateDropdowns();
-                renderFilterDropdown(list);
-            }, (error) => {
-                console.error(`Error loading albums: `, error);
+                renderFilterDropdown();
+                updateFilterUI();
+                syncURLWithFilters();
+                if (el.gallery_loading) el.gallery_loading.classList.add('hidden');
             });
         }
-        
-        function renderCategoryList(list) {
-            const albumsListBody = document.getElementById('albums-list-body');
-            if (!albumsListBody) return;
 
-            if (list.length === 0) {
-                albumsListBody.innerHTML = `<tr><td colspan="2" class="text-center p-4 text-gray-500 dark:text-gray-400">No albums found. Add one above!</td></tr>`;
-                return;
-            }
-            
-            albumsListBody.innerHTML = list.map(item => `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white truncate" title="${item.name}">
-                        ${item.name}
-                    </td>
-                    <td class="px-4 py-3">
-                        <div class="flex gap-3 text-lg justify-end">
-                            <button data-edit-id="${item.id}" data-edit-name="${item.name}" class="text-gray-500 hover:text-blue-600 dark:hover:text-blue-400" title="Edit">
-                                <iconify-icon icon="mdi:pencil-outline"></iconify-icon>
-                            </button>
-                            <button data-delete-id="${item.id}" data-delete-name="${item.name}" class="text-gray-500 hover:text-red-600 dark:hover:text-red-400" title="Delete">
-                                <iconify-icon icon="mdi:delete-outline"></iconify-icon>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
-        
-        async function addAlbum(name) {
-            if (!db || !userId) return;
-            const collectionPath = `artifacts/${appId}/public/data/albums`;
-            try {
-                await addDoc(collection(db, collectionPath), { name });
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        }
-        
-        async function updateAlbum(id, newName) {
-            if (!db || !userId) return;
-            const docPath = `artifacts/${appId}/public/data/albums/${id}`;
-            try {
-                await updateDoc(doc(db, docPath), { name: newName });
-            } catch (e) {
-                console.error("Error updating document: ", e);
-            }
+        function populateDropdowns() {
+            if (!el.album_select) return;
+            el.album_select.innerHTML = '<option value="" disabled selected>Select album</option>';
+            albums.forEach(a => {
+                el.album_select.innerHTML += `<option value="${a.id}">${a.name}</option>`;
+            });
         }
 
-        async function deleteAlbum(id) {
-            if (!db || !userId) return;
-            const docPath = `artifacts/${appId}/public/data/albums/${id}`;
-            try {
-                await deleteDoc(doc(db, docPath));
-            } catch (e) {
-                console.error("Error deleting document: ", e);
-            }
+        // === FILTERING ===
+        function renderFilterDropdown() {
+            if (!el.albums_dropdown_list) return;
+            el.albums_dropdown_list.innerHTML = `<button class="dropdown-item dropdown-item-all-albums" data-filter-id="">All Albums</button>`;
+            albums.forEach(a => {
+                el.albums_dropdown_list.innerHTML += `<button class="dropdown-item" data-filter-id="${a.id}">${a.name}</button>`;
+            });
         }
 
-        // --- IMAGE FUNCTIONS ---
-        
+        function updateFilterUI() {
+            if (!el.albums_filter_text) return;
+            const album = albums.find(a => a.id === currentFilters.albumId);
+            el.albums_filter_text.textContent = album ? album.name : "All Albums";
+            updateClearButton();
+        }
+
+        function updateClearButton() {
+            const hasFilter = currentFilters.albumId || el.search_input?.value.trim();
+            el.clear_filters_btn?.classList.toggle('hidden', !hasFilter);
+        }
+
+        // === IMAGES ===
         function loadImages() {
-            if (!db || !userId) return;
+            let q = query(collection(db, `artifacts/${appId}/public/data/images`), orderBy("createdAt", "desc"));
+            if (currentFilters.albumId) q = query(q, where("albumId", "==", currentFilters.albumId));
 
-            const searchInput = document.getElementById('search-input');
-            const galleryGrid = document.getElementById('gallery-grid');
-            const galleryLoading = document.getElementById('gallery-loading');
-            if (!searchInput || !galleryGrid || !galleryLoading) return;
-
-            const collectionPath = `artifacts/${appId}/public/data/images`;
-            let q = query(collection(db, collectionPath), orderBy("createdAt", "desc"));
-
-            // --- FILTERING LOGIC ---
-            if (currentFilters.albumId) {
-                q = query(q, where("albumId", "==", currentFilters.albumId));
-            }
-            // --- END OF FILTERING LOGIC ---
-
-            onSnapshot(q, (querySnapshot) => {
-                const imageList = [];
-                querySnapshot.forEach((doc) => {
-                    imageList.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Store this filtered AND sorted list for searching
-                allImages = imageList; 
-                
-                const searchTerm = searchInput.value.trim().toLowerCase();
-                if (searchTerm) {
-                    const filteredImages = allImages.filter(image => {
-                        const album = albums.find(a => a.id === image.albumId);
-                        const albumName = album ? album.name.toLowerCase() : "";
-                        const title = image.title ? image.title.toLowerCase() : "";
-                        
-                        return albumName.includes(searchTerm) || title.includes(searchTerm);
-                    });
-                    renderGallery(filteredImages);
-                } else {
-                    renderGallery(allImages); // Render the JS-filtered and sorted list
-                }
-                
-                galleryLoading.classList.add('hidden');
-            }, (error) => {
-                console.error("Error loading images: ", error);
-                galleryGrid.innerHTML = `<p class="text-red-500 col-span-full text-center">Error loading images. (Have you enabled Firestore and added data?)</p>`;
+            onSnapshot(q, (snap) => {
+                allImages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                applySearchAndRender();
             });
         }
-        
-        function renderGallery(images) {
-            const galleryGrid = document.getElementById('gallery-grid');
-            if (!galleryGrid) return;
 
+        function applySearchAndRender() {
+            const term = el.search_input?.value.trim().toLowerCase() || "";
+            const filtered = allImages.filter(img => {
+                const album = albums.find(a => a.id === img.albumId);
+                const title = (img.title || "").toLowerCase();
+                const albumName = (album?.name || "").toLowerCase();
+                return title.includes(term) || albumName.includes(term);
+            });
+            renderGallery(filtered);
+            updateSEO(filtered);
+        }
+
+        function renderGallery(images) {
+            if (!el.gallery_grid) return;
             if (images.length === 0) {
-                galleryGrid.innerHTML = `<p class="text-gray-500 dark:text-gray-400 col-span-full text-center">No images found. Try adjusting your filters!</p>`;
+                el.gallery_grid.innerHTML = `<p class="text-gray-500 dark:text-gray-400 col-span-full text-center">No images found.</p>`;
                 return;
             }
-            
-            galleryGrid.innerHTML = images.map(image => {
-                const album = albums.find(a => a.id === image.albumId);
-                
-                const albumName = album ? album.name : "Uncategorized";
-                const titleName = image.title || "Untitled"; // Use image title
-                
+
+            el.gallery_grid.innerHTML = images.map(img => {
+                const album = albums.find(a => a.id === img.albumId);
+                const title = img.title || "Untitled";
+                const albumName = album?.name || "Uncategorized";
                 return `
                 <div class="image-card">
-                    <img 
-                        src="${image.imageUrl}" 
-                        alt="${titleName}"
-                        loading="lazy"
-                        onerror="this.src='https://placehold.co/276x418/cccccc/333333?text=Image+Not+Found'"
-                    >
+                    <img src="${img.imageUrl}" alt="${title} - ${albumName}" loading="lazy"
+                         onerror="this.src='https://placehold.co/276x418/cccccc/333333?text=Not+Found'">
                     <div class="top-row">
-                        <button class="icon-btn view" title="View Large" data-view-image-url="${image.imageUrl}">
+                        <button class="icon-btn view" data-view-image-url="${img.imageUrl}">
                             <iconify-icon icon="mdi:fullscreen"></iconify-icon>
                         </button>
                     </div>
                     <div class="bottom-row">
                         <div class="text-group">
-                            <span class="title">${titleName}</span>
+                            <span class="title">${title}</span>
                             <span class="subtitle">${albumName}</span>
                         </div>
                         <div class="icon-group">
-                            <button class="icon-btn trash" title="Delete" data-delete-image-id="${image.id}">
+                            <button class="icon-btn trash" data-delete-image-id="${img.id}">
                                 <iconify-icon icon="mdi:delete-outline"></iconify-icon>
                             </button>
-                            <button class="icon-btn download" title="Download" data-download-image-url="${image.imageUrl}">
+                            <button class="icon-btn download" data-download-image-url="${img.imageUrl}">
                                 <iconify-icon icon="mdi:download-outline"></iconify-icon>
                             </button>
                         </div>
                     </div>
-                </div>
-                `;
+                </div>`;
             }).join('');
         }
-        
-        async function deleteImage(id) {
-            if (!db || !userId) return;
-            const docPath = `artifacts/${appId}/public/data/images/${id}`;
-            try {
-                await deleteDoc(doc(db, docPath));
-            } catch (e) {
-                console.error("Error deleting image: ", e);
-            }
-        }
 
-        // --- HELPER FUNCTIONS ---
-        
-        function populateDropdowns() {
-            const albumSelect = document.getElementById('album-select');
-            if (!albumSelect) return;
-
-            // Populate Album Dropdown (for Add Image Modal)
-            albumSelect.innerHTML = '<option value="" disabled selected>Select an album</option>';
-            albums.forEach(album => {
-                albumSelect.innerHTML += `<option value="${album.id}">${album.name}</option>`;
-            });
-            if (albums.length === 0) {
-                 albumSelect.innerHTML = '<option value="" disabled>No albums found. Please add one.</option>';
-            }
-        }
-        
-        function renderFilterDropdown(list) {
-            const albumsDropdownList = document.getElementById('albums-dropdown-list');
-            if (!albumsDropdownList) return;
-
-            albumsDropdownList.innerHTML = `
-                <button class="dropdown-item dropdown-item-all-albums" data-filter-type="albums" data-filter-id="" data-filter-name="All Albums">
-                    All Albums
-                </button>
-            `;
-            
-            list.forEach(item => {
-                albumsDropdownList.innerHTML += `
-                    <button class="dropdown-item" data-filter-type="albums" data-filter-id="${item.id}" data-filter-name="${item.name}">
-                        ${item.name}
-                    </button>
-                `;
-            });
-        }
-
-        async function forceDownload(imageUrl, filename = 'gallery-image.jpg') {
-            try {
-                const response = await fetch(imageUrl);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch image: ${response.statusText}`);
-                }
-                
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                
-                const name = imageUrl.split('/').pop().split('?')[0] || filename;
-                a.download = name;
-                
-                document.body.appendChild(a);
-                a.click();
-                
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                
-            } catch (err) {
-                console.error('Download failed:', err);
-            }
-        }
-
-        async function handleImageUpload(e) {
+        // === UPLOAD ===
+        el.upload_form?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const fileUpload = document.getElementById('file-upload');
-            const albumSelect = document.getElementById('album-select');
-            const imageTitle = document.getElementById('image-title'); // Get new title input
-            const uploadError = document.getElementById('upload-error');
-            const uploadBtnText = document.getElementById('upload-btn-text');
-            const uploadSpinner = document.getElementById('upload-spinner');
-            const submitUploadBtn = document.getElementById('submit-upload-btn');
-            const uploadForm = document.getElementById('upload-form');
-            const fileUploadFilename = document.getElementById('file-upload-filename');
-            const fileUploadText = document.getElementById('file-upload-text');
-            const addImageModal = document.getElementById('add-image-modal');
-            
-            if (!fileUpload || !albumSelect || !imageTitle || !uploadError || !uploadBtnText || !uploadSpinner || !submitUploadBtn) return;
+            const file = el.file_upload.files[0];
+            const albumId = el.album_select.value;
+            const title = el.image_title.value.trim();
 
-            const file = fileUpload.files[0];
-            const albumId = albumSelect.value;
-            const title = imageTitle.value.trim(); // Get title value
-            
-            if (!file || !albumId || !title) { // Validate title
-                uploadError.textContent = "Please select a file, an album, and enter a title.";
-                uploadError.classList.remove('hidden');
+            if (!file || !albumId || !title) {
+                showError("Please fill all fields.");
                 return;
             }
-            
-            if (CLOUDINARY_CLOUD_NAME === "YOUR_CLOUD_NAME" || CLOUDINARY_UPLOAD_PRESET === "YOUR_UPLOAD_PRESET") {
-                 uploadError.textContent = "Cloudinary is not configured. Please edit the code.";
-                uploadError.classList.remove('hidden');
-                return;
-            }
-            
-            uploadError.classList.add('hidden');
-            uploadBtnText.classList.add('hidden');
-            uploadSpinner.classList.remove('hidden');
-            submitUploadBtn.disabled = true;
+
+            el.upload_error.classList.add('hidden');
+            el.upload_btn_text.classList.add('hidden');
+            el.upload_spinner.classList.remove('hidden');
+            el.submit_upload_btn.disabled = true;
 
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
             try {
-                const response = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({})); 
-                    const errorMsg = (errorData.error && errorData.error.message) ? errorData.error.message : `HTTP status ${response.status}`;
-                    console.error('Cloudinary error details:', errorData);
-                    throw new Error(`Cloudinary upload failed: ${errorMsg}`);
-                }
-                const data = await response.json();
-                const imageUrl = data.secure_url;
+                const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+                if (!data.secure_url) throw new Error("Upload failed");
 
-                const collectionPath = `artifacts/${appId}/public/data/images`;
-                await addDoc(collection(db, collectionPath), {
-                    imageUrl,
+                await addDoc(collection(db, `artifacts/${appId}/public/data/images`), {
+                    imageUrl: data.secure_url,
                     albumId,
-                    title, // Save the new title
+                    title,
                     createdAt: serverTimestamp()
                 });
-                
-                if (uploadForm) uploadForm.reset();
-                if (fileUploadFilename) fileUploadFilename.textContent = "";
-                if (fileUploadText) fileUploadText.textContent = "Click to choose a file";
-                if (addImageModal) closeModal(addImageModal);
+
+                el.upload_form.reset();
+                el.file_upload_text.textContent = "Click to choose";
+                closeModal(el.add_image_modal);
             } catch (err) {
-                console.error("Upload failed: ", err);
-                uploadError.textContent = `${err.message}. Please check your Cloudinary settings (cloud name, upload preset) and console for details.`;
-                uploadError.classList.remove('hidden');
+                showError(err.message);
             } finally {
-                uploadBtnText.classList.remove('hidden');
-                uploadSpinner.classList.add('hidden');
-                submitUploadBtn.disabled = false;
+                el.upload_btn_text.classList.remove('hidden');
+                el.upload_spinner.classList.add('hidden');
+                el.submit_upload_btn.disabled = false;
             }
+        });
+
+        function showError(msg) {
+            el.upload_error.textContent = msg;
+            el.upload_error.classList.remove('hidden');
         }
 
-
-        // --- MAIN SCRIPT EXECUTION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- DOM ELEMENTS ---
-            const modalBackdrop = document.getElementById('modal-backdrop');
-            
-            // Add Image Modal
-            const addImageBtn = document.getElementById('add-image-btn');
-            const addImageModal = document.getElementById('add-image-modal');
-            const customizeBtn = document.getElementById('customize-btn');
-            const uploadForm = document.getElementById('upload-form');
-            const fileUpload = document.getElementById('file-upload');
-            const fileUploadText = document.getElementById('file-upload-text');
-            const fileUploadFilename = document.getElementById('file-upload-filename');
-            
-            // Manage Categories Modal
-            const manageCategoriesModal = document.getElementById('manage-categories-modal');
-            const addAlbumForm = document.getElementById('add-album-form');
-            const newAlbumNameInput = document.getElementById('new-album-name');
-            const albumsListBody = document.getElementById('albums-list-body');
-
-            // Edit Category Modal
-            const editCategoryModal = document.getElementById('edit-category-modal');
-            const editCategoryForm = document.getElementById('edit-category-form');
-            const editModalTitle = document.getElementById('edit-modal-title');
-            const editCategoryId = document.getElementById('edit-category-id');
-            const editCategoryType = document.getElementById('edit-category-type');
-            const editCategoryName = document.getElementById('edit-category-name');
-            
-            // Confirm Modal
-            const confirmModal = document.getElementById('confirm-modal');
-            const confirmModalCancel = document.getElementById('confirm-modal-cancel');
-            const confirmModalConfirm = document.getElementById('confirm-modal-confirm');
-            
-            // Lightbox Modal
-            const lightboxModal = document.getElementById('lightbox-modal');
-            const lightboxImage = document.getElementById('lightbox-image');
-
-            // Passcode Modal
-            const passcodeModal = document.getElementById('passcode-modal');
-            const passcodeForm = document.getElementById('passcode-form');
-            const passcodeError = document.getElementById('passcode-error');
-
-            // Gallery
-            const galleryGrid = document.getElementById('gallery-grid');
-            
-            // Filters
-            const searchInput = document.getElementById('search-input');
-            const albumsFilterText = document.getElementById('albums-filter-text');
-            const albumsDropdownList = document.getElementById('albums-dropdown-list');
-
-            // Theme & Fullscreen
-            const themeToggleBtn = document.getElementById('theme-toggle-btn');
-            const themeIconLight = document.getElementById('theme-icon-light');
-            const themeIconDark = document.getElementById('theme-icon-dark');
-            const fullscreenToggleBtn = document.getElementById('fullscreen-toggle-btn');
-            const fullscreenIconEnter = document.getElementById('fullscreen-icon-enter');
-            const fullscreenIconExit = document.getElementById('fullscreen-icon-exit');
-            
-            // --- INITIALIZE FIREBASE ---
-            initializeFirebase();
-
-            // --- Theme & Fullscreen Listeners ---
-            function applyTheme(isDark) {
-                if (!themeIconLight || !themeIconDark) return;
-                if (isDark) {
-                    document.documentElement.classList.add('dark');
-                    themeIconLight.classList.add('hidden');
-                    themeIconDark.classList.remove('hidden');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    themeIconLight.classList.remove('hidden');
-                    themeIconDark.classList.add('hidden');
-                    localStorage.setItem('theme', 'light');
-                }
-            }
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(savedTheme === 'dark' || (!savedTheme && prefersDark));
-            
-            if (themeToggleBtn) themeToggleBtn.addEventListener('click', () => {
-                applyTheme(!document.documentElement.classList.contains('dark'));
-            });
-            
-            if (fullscreenToggleBtn) fullscreenToggleBtn.addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => {
-                        console.warn(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                    });
-                    } else {
-                    if (document.exitFullscreen) document.exitFullscreen();
-                }
-            });
-            
-            document.addEventListener('fullscreenchange', () => {
-                if (!fullscreenIconEnter || !fullscreenIconExit) return;
-                if (document.fullscreenElement) {
-                    fullscreenIconEnter.classList.add('hidden');
-                    fullscreenIconExit.classList.remove('hidden');
-                } else {
-                    fullscreenIconEnter.classList.remove('hidden');
-                    fullscreenIconExit.classList.add('hidden');
-                }
-            });
-
-            if (document.fullscreenElement) {
-                if (fullscreenIconEnter) fullscreenIconEnter.classList.add('hidden');
-                if (fullscreenIconExit) fullscreenIconExit.classList.remove('hidden');
-            }
-
-            // --- Modal Listeners ---
-            
-            // Add Image button (Requires Passcode)
-            if (addImageBtn) addImageBtn.addEventListener('click', () => {
-                runWithPasscodeCheck(() => openModal(addImageModal));
-            });
-            
-            // Customize Albums button (No Passcode)
-            if (customizeBtn) customizeBtn.addEventListener('click', () => {
-                closeModal(addImageModal); // Close add image modal first
-                openModal(manageCategoriesModal); // Then open manage categories modal
-            });
-            
-            if (confirmModalCancel) confirmModalCancel.addEventListener('click', () => {
-                closeModal(confirmModal);
-                confirmCallback = null;
-            });
-            
-            if (confirmModalConfirm) confirmModalConfirm.addEventListener('click', () => {
-                if (typeof confirmCallback === 'function') {
-                    confirmCallback();
-                }
-                closeModal(confirmModal);
-                confirmCallback = null;
-            });
-            
-            // Close buttons
-            document.querySelectorAll('[data-close-modal]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const modalId = btn.getAttribute('data-close-modal');
-                    const modalToClose = document.getElementById(modalId);
-                    if (modalToClose) {
-                        closeModal(modalToClose);
-                        if (modalId === 'confirm-modal') confirmCallback = null;
-                        if (modalId === 'passcode-modal') passcodeCallback = null;
-                    }
-                });
-            });
-            
-            // --- File Input UI ---
-            if (fileUpload) fileUpload.addEventListener('change', () => {
-                if (fileUpload.files.length > 0) {
-                    const filename = fileUpload.files[0].name;
-                    if (fileUploadFilename) fileUploadFilename.textContent = filename;
-                    if (fileUploadText) fileUploadText.textContent = "Change file";
-                } else {
-                    if (fileUploadFilename) fileUploadFilename.textContent = "";
-                    if (fileUploadText) fileUploadText.textContent = "Click to choose a file";
-                }
-            });
-
-            // --- Form Submissions ---
-            if (uploadForm) uploadForm.addEventListener('submit', handleImageUpload); 
-            
-            if (addAlbumForm) addAlbumForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const name = newAlbumNameInput.value.trim();
-                if (name) {
-                    addAlbum(name);
-                    newAlbumNameInput.value = '';
-                }
-            });
-            
-            if (editCategoryForm) editCategoryForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const id = editCategoryId.value;
-                const type = editCategoryType.value; // Will be 'albums'
-                const newName = editCategoryName.value.trim();
-                if (id && type === 'albums' && newName) {
-                    updateAlbum(id, newName);
-                    closeModal(editCategoryModal);
-                }
-            });
-            
-            // Passcode Form Submission
-            if (passcodeForm) passcodeForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const input = document.getElementById('passcode-input');
-                if (input.value === ADMIN_PASSCODE) {
-                    if (passcodeError) passcodeError.classList.add('hidden');
-                    closeModal(passcodeModal);
-                    
-                    if (typeof passcodeCallback === 'function') {
-                        passcodeCallback(); // Run the stored action
-                    }
-                    passcodeCallback = null; // Clear callback
-                } else {
-                    if (passcodeError) passcodeError.classList.remove('hidden');
-                }
-            });
-
-
-            // --- Dynamic Event Listeners for Edit/Delete ---
-            if (albumsListBody) albumsListBody.addEventListener('click', (e) => {
-                const editBtn = e.target.closest('[data-edit-id]');
-                const deleteBtn = e.target.closest('[data-delete-id]');
-                
-                if (editBtn) {
-                    const { editId, editName } = editBtn.dataset;
-                    // Action: Open edit modal (NO passcode)
-                    if (editModalTitle) editModalTitle.textContent = `Edit Album`;
-                    if (editCategoryId) editCategoryId.value = editId;
-                    if (editCategoryType) editCategoryType.value = 'albums';
-                    if (editCategoryName) editCategoryName.value = editName;
-                    if (editCategoryModal) openModal(editCategoryModal);
-                }
-                
-                if (deleteBtn) {
-                    const { deleteId, deleteName } = deleteBtn.dataset;
-                    // Action: Open confirm modal (WITH passcode)
-                    runWithPasscodeCheck(() => {
-                        openConfirmModal(
-                            `Delete Album`,
-                            `Are you sure you want to delete "${deleteName}"? This cannot be undone.`,
-                            () => { deleteAlbum(deleteId); }
-                        );
-                    });
-                }
-            });
-            
-            // For Gallery Grid
-            if (galleryGrid) galleryGrid.addEventListener('click', (e) => {
-                const deleteBtn = e.target.closest('[data-delete-image-id]');
-                const viewBtn = e.target.closest('[data-view-image-url]');
-                const downloadBtn = e.target.closest('[data-download-image-url]');
-
-                if (deleteBtn) {
-                    const { deleteImageId } = deleteBtn.dataset;
-                    // Use the confirm modal *with* a passcode check
-                    runWithPasscodeCheck(() => {
-                        openConfirmModal(
-                            'Delete Image',
-                            'Are you sure you want to delete this image? This action cannot be undone.',
-                            () => { deleteImage(deleteImageId); }
-                        );
-                    });
-                }
-                
-                if (viewBtn) {
-                    // Viewing is not an admin action
-                    const { viewImageUrl } = viewBtn.dataset;
-                    if (lightboxImage) lightboxImage.setAttribute('src', viewImageUrl);
-                    if (lightboxModal) openModal(lightboxModal);
-                }
-
-                if (downloadBtn) {
-                    // Downloading is not an admin action
-                    const { downloadImageUrl } = downloadBtn.dataset;
-                    forceDownload(downloadImageUrl);
-                }
-            });
-            
-            // --- Dropdown Toggle Logic ---
-            document.addEventListener('click', (e) => {
-                const toggleBtn = e.target.closest('[data-dropdown-toggle]');
-                
-                document.querySelectorAll('[id$="-dropdown"]').forEach(dropdown => {
-                    if (!toggleBtn || dropdown.id !== toggleBtn.dataset.dropdownToggle) {
-                        dropdown.classList.add('hidden');
-                    }
-                });
-
-                if (toggleBtn) {
-                    const dropdown = document.getElementById(toggleBtn.dataset.dropdownToggle);
-                    if (dropdown) dropdown.classList.toggle('hidden');
-                }
-            });
-            
-            // --- Dropdown Filter Click Logic ---
-            if (albumsDropdownList) albumsDropdownList.addEventListener('click', (e) => {
-                const filterBtn = e.target.closest('[data-filter-id]');
-                if (filterBtn) {
-                    const { filterType, filterId, filterName } = filterBtn.dataset;
-                    
-                    if (filterType === 'albums') {
-                        currentFilters.albumId = filterId || null;
-                        if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "Albums";
-                    }
-                    
+        // === FILTERS & SEARCH ===
+        function setupFilters() {
+            el.albums_dropdown_list?.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-filter-id]');
+                if (btn) {
+                    currentFilters.albumId = btn.dataset.filterId || null;
+                    el.search_input.value = '';
+                    updateFilterUI();
+                    syncURLWithFilters();
                     loadImages();
+                    el.albums_dropdown.classList.add('hidden');
                 }
             });
 
-            // --- Search Input Logic ---
-            if (searchInput) searchInput.addEventListener('input', () => {
-                // This just triggers a reload, which will read the searchInput.value
+            el.clear_filters_btn?.addEventListener('click', () => {
+                currentFilters.albumId = null;
+                el.search_input.value = '';
+                updateFilterUI();
+                syncURLWithFilters();
                 loadImages();
             });
-            
-        });
-    </script>
+        }
 
+        function setupSearch() {
+            el.search_input?.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    syncURLWithFilters();
+                    applySearchAndRender();
+                }, 300);
+            });
+        }
+
+        function syncURLWithFilters() {
+            const params = new URLSearchParams();
+            if (currentFilters.albumId) params.set('album', currentFilters.albumId);
+            if (el.search_input?.value.trim()) params.set('search', el.search_input.value.trim());
+            history.replaceState({}, '', params.toString() ? `?${params}` : location.pathname.split('?')[0]);
+        }
+
+        function setupURLSync() {
+            const params = new URLSearchParams(location.search);
+            const album = params.get('album');
+            const search = params.get('search');
+            if (album && albums.some(a => a.id === album)) currentFilters.albumId = album;
+            if (search && el.search_input) el.search_input.value = search;
+        }
+
+        // === MODALS, THEME, FULLSCREEN, ETC. (Add from your original code) ===
+
+        // === SEO ===
+        function updateSEO(images) {
+            const title = document.getElementById('page-title');
+            const sd = document.getElementById('structured-data');
+            const album = albums.find(a => a.id === currentFilters.albumId);
+            const search = el.search_input?.value.trim();
+            let pageTitle = "MVS | Gallery";
+            if (album) pageTitle = `${album.name} - ${pageTitle}`;
+            if (search) pageTitle = `"${search}" - ${pageTitle}`;
+            title.textContent = pageTitle;
+
+            sd.textContent = JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ImageGallery",
+                "name": pageTitle,
+                "url": location.href,
+                "image": images.map(i => ({ "@type": "ImageObject", "url": i.imageUrl }))
+            }, null, 2);
+        }
+    </script>
 </body>
 </html>
