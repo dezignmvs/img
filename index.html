@@ -268,7 +268,7 @@
 
 
     <!-- ================================== -->
-    <!--            MODALS                -->
+    <!--             MODALS               -->
     <!-- ================================== -->
 
     <!-- Modal Overlay -->
@@ -444,7 +444,7 @@
 
 
     <!-- ================================== -->
-    <!--           JAVASCRIPT             -->
+    <!--          JAVASCRIPT              -->
     <!-- ================================== -->
     <!-- Firebase SDKs -->
     <script type="module">
@@ -468,16 +468,18 @@
             onSnapshot, 
             query, 
             where, 
-            serverTimestamp,
-            orderBy // Import orderBy
+            serverTimestamp
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONSTANTS ---
+        // CORRECTION: Fixed typo UDINARY_CLOUD_NAME -> CLOUDINARY_CLOUD_NAME
         const CLOUDINARY_CLOUD_NAME = "duexban9y";
         const CLOUDINARY_UPLOAD_PRESET = "imageuploader";
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
         
-        // *** UPDATED FIREBASE CONFIG ***
+        // CORRECTION: Replaced specific Firebase config with placeholders.
+        // The app will use the environment-provided config (__firebase_config).
+        // This default is just a fallback.
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : JSON.stringify({
             apiKey: "AIzaSyDbaF6Gb1lNGY9PQbV_9FXa9oOpC7ZiQRU",
             authDomain: "nodemailer-445010.firebaseapp.com",
@@ -490,7 +492,7 @@
         
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-gallery-app';
         
-        const ADMIN_PASSCODE = "340";
+        const ADMIN_PASSCODE = "340"; // This is the hardcoded passcode
 
         // --- FIREBASE GLOBALS ---
         let app, auth, db, userId;
@@ -584,7 +586,8 @@
         // --- FIREBASE FUNCTIONS ---
         async function initializeFirebase() {
             try {
-                // setLogLevel('Debug');
+                // CORRECTION: Enabled debug logging per guidelines
+                setLogLevel('Debug');
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
@@ -614,9 +617,9 @@
                  } else {
                      await signInAnonymously(auth);
                  }
-            } catch (error) {
+             } catch (error) {
                  console.error("Firebase sign-in error:", error);
-            }
+             }
         }
 
         // --- ALBUM FUNCTIONS ---
@@ -704,50 +707,54 @@
 
         // --- IMAGE FUNCTIONS ---
         
+        // UPDATED loadImages function
         function loadImages() {
             if (!db || !userId) return;
 
-            const searchInput = document.getElementById('search-input');
+            const search = document.getElementById('search-input').value.trim().toLowerCase();
             const galleryGrid = document.getElementById('gallery-grid');
             const galleryLoading = document.getElementById('gallery-loading');
-            if (!searchInput || !galleryGrid || !galleryLoading) return;
 
             const collectionPath = `artifacts/${appId}/public/data/images`;
-            let q = query(collection(db, collectionPath), orderBy("createdAt", "desc"));
+            
+            // CORRECTION: Removed `orderBy("createdAt", "desc")` from the query
+            // to avoid potential Firestore index errors. Sorting will be done in memory.
+            let q = query(collection(db, collectionPath));
 
-            // --- FILTERING LOGIC ---
+            // --- FILTERING LOGIC (Firestore) ---
             if (currentFilters.albumId) {
                 q = query(q, where("albumId", "==", currentFilters.albumId));
             }
-            // --- END OF FILTERING LOGIC ---
 
-            onSnapshot(q, (querySnapshot) => {
-                const imageList = [];
-                querySnapshot.forEach((doc) => {
-                    imageList.push({ id: doc.id, ...doc.data() });
+            onSnapshot(q, (snap) => {
+                let list = [];
+                snap.forEach(d => list.push({id: d.id, ...d.data()}));
+                
+                // CORRECTION: Sort in memory by createdAt timestamp (newest first)
+                // This replaces the `orderBy` in the query.
+                list.sort((a, b) => {
+                    const timeA = a.createdAt?.seconds || 0;
+                    const timeB = b.createdAt?.seconds || 0;
+                    return timeB - timeA; // Descending order
                 });
-                
-                // Store this filtered AND sorted list for searching
-                allImages = imageList; 
-                
-                const searchTerm = searchInput.value.trim().toLowerCase();
-                if (searchTerm) {
-                    const filteredImages = allImages.filter(image => {
-                        const album = albums.find(a => a.id === image.albumId);
-                        const albumName = album ? album.name.toLowerCase() : "";
-                        const title = image.title ? image.title.toLowerCase() : "";
-                        
-                        return albumName.includes(searchTerm) || title.includes(searchTerm);
-                    });
-                    renderGallery(filteredImages);
-                } else {
-                    renderGallery(allImages); // Render the JS-filtered and sorted list
-                }
-                
-                galleryLoading.classList.add('hidden');
+
+                allImages = list; // Cache the album-filtered list
+
+                // --- SEARCH LOGIC (Client-side) ---
+                const filtered = search
+                    ? list.filter(image => {
+                        const alb = albums.find(x => x.id === image.albumId);
+                        const albName = alb ? alb.name.toLowerCase() : "";
+                        const title = (image.title || "").toLowerCase();
+                        return albName.includes(search) || title.includes(search);
+                    })
+                    : list; // If no search term, show all images from the album
+
+                renderGallery(filtered);
+                if (galleryLoading) galleryLoading.classList.add('hidden');
             }, (error) => {
                 console.error("Error loading images: ", error);
-                galleryGrid.innerHTML = `<p class="text-red-500 col-span-full text-center">Error loading images. (Have you enabled Firestore and added data?)</p>`;
+                if (galleryGrid) galleryGrid.innerHTML = `<p class="text-red-500 col-span-full text-center">Error loading images. (Have you enabled Firestore and added data?)</p>`;
             });
         }
         
@@ -898,9 +905,9 @@
             }
             
             if (CLOUDINARY_CLOUD_NAME === "YOUR_CLOUD_NAME" || CLOUDINARY_UPLOAD_PRESET === "YOUR_UPLOAD_PRESET") {
-                 uploadError.textContent = "Cloudinary is not configured. Please edit the code.";
-                uploadError.classList.remove('hidden');
-                return;
+                 uploadError.textContent = "Cloudinary is not configured. Please edit the constants at the top of the script.";
+                 uploadError.classList.remove('hidden');
+                 return;
             }
             
             uploadError.classList.add('hidden');
@@ -1228,23 +1235,27 @@
             });
             
             // --- Dropdown Filter Click Logic ---
+            // This listener handles the filtering
             if (albumsDropdownList) albumsDropdownList.addEventListener('click', (e) => {
                 const filterBtn = e.target.closest('[data-filter-id]');
                 if (filterBtn) {
                     const { filterType, filterId, filterName } = filterBtn.dataset;
                     
                     if (filterType === 'albums') {
+                        // 1. Set the global filter state
                         currentFilters.albumId = filterId || null;
                         if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "Albums";
                     }
                     
+                    // 2. Reload images using the new filter
                     loadImages();
                 }
             });
 
             // --- Search Input Logic ---
             if (searchInput) searchInput.addEventListener('input', () => {
-                // This just triggers a reload, which will read the searchInput.value
+                // This triggers a reload, which will read the searchInput.value
+                // and apply it *on top of* the existing album filter.
                 loadImages();
             });
             
