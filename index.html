@@ -1,254 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Basic Meta -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="MVS Image Gallery - Curated collection of high-quality photos. Search, filter by album, and download." />
-    <meta name="keywords" content="mvs, image gallery, photo album, photography, design, cloudinary" />
-    <meta name="author" content="MVS" />
-    <meta name="robots" content="index, follow" />
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="MVS | Image Gallery" />
-    <meta property="og:description" content="Explore curated image albums. Search, filter, and download high-quality photos." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://mvs-img.vercel.app" />
-    <meta property="og:image" content="https://res.cloudinary.com/duexban9y/image/upload/v1735699200/mvs-og-image.jpg" />
-    <meta property="og:site_name" content="MVS Gallery" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="MVS | Image Gallery" />
-    <meta name="twitter:description" content="Curated photo gallery with albums and search." />
-    <meta name="twitter:image" content="https://res.cloudinary.com/duexban9y/image/upload/v1735699200/mvs-og-image.jpg" />
-
-    <!-- Canonical -->
-    <link rel="canonical" href="https://mvs-img.vercel.app" />
-
-    <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/duexban9y/image/upload/v1735699200/favicon.ico" />
-
-    <!-- Dynamic Title -->
-    <title id="page-title">MVS | Gallery</title>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Iconify -->
-    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
-
-    <!-- Fonts -->
-    <style type="text/tailwindcss">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mvs | Dashboard (Gallery)</title>
+    
+    <!-- 1. Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Iconify CDN --><script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+    
+    <!-- 3. Font Imports and Tailwind Configuration --><style type="text/tailwindcss">
+        /* Import fonts from Fontshare */
         @import url('https://api.fontshare.com/v2/css?f[]=clash-grotesk@600,500&f[]=general-sans@400&display=swap');
 
         @layer base {
+            /* Apply General Sans as the default body font */
             body {
                 @apply font-body bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300;
             }
+            /* Apply Clash Grotesk for headings */
             h1, h2, h3, h4, h5, h6 {
                 @apply font-heading font-semibold;
             }
+            /* Apply new card styles to the gallery grid container */
             #gallery-grid {
+                /* Updated grid for better responsiveness */
                 @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
             }
         }
-
+        
         @layer components {
+            /* CARD STYLES */
             .image-card {
                 @apply relative w-full aspect-[2/3] rounded-lg overflow-hidden shadow-lg bg-gray-300 dark:bg-gray-800 text-white font-body;
             }
+
             .image-card img {
                 @apply w-full h-full object-cover;
                 filter: brightness(75%);
             }
-            .top-row { @apply absolute top-2.5 right-2.5; }
-            .bottom-row { @apply absolute bottom-2.5 left-0 right-0 flex justify-between items-end px-3; }
-            .text-group { @apply flex flex-col leading-tight; }
-            .text-group .title { @apply text-lg font-bold; }
-            .text-group .subtitle { @apply text-sm font-light opacity-80; }
-            .icon-group { @apply flex gap-2.5; }
+
+            .top-row {
+                @apply absolute top-2.5 right-2.5;
+            }
+
+            .bottom-row {
+                @apply absolute bottom-2.5 left-0 right-0 flex justify-between items-end px-3;
+            }
+
+            .text-group {
+                @apply flex flex-col leading-tight;
+            }
+
+            .text-group .title {
+                @apply text-lg font-bold;
+            }
+
+            .text-group .subtitle {
+                @apply text-sm font-light opacity-80;
+            }
+
+            /* Icon Styles */
+            .icon-group {
+                @apply flex gap-2.5;
+            }
+
             .icon-btn {
                 @apply bg-black/50 text-white p-1.5 rounded-md cursor-pointer transition-colors duration-200 text-base;
             }
-            .icon-btn:hover { @apply bg-white/30; }
-            .icon-btn iconify-icon { @apply text-lg leading-none block; }
+            
+            .icon-btn:hover {
+                @apply bg-white/30;
+            }
+            
+            .icon-btn iconify-icon {
+                @apply text-lg leading-none block;
+            }
+            
+            a.icon-btn {
+                @apply flex items-center justify-center;
+            }
+            
+            /* Dropdown Item */
             .dropdown-item {
                 @apply block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer;
             }
+            
             .dropdown-item-all-albums {
                 @apply bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium;
             }
-            .category-table { @apply w-full text-sm text-left text-gray-500 dark:text-gray-400; }
-            .category-table thead th { @apply px-4 py-3 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 uppercase dark:text-gray-300; }
-            .category-table tbody tr { @apply bg-white dark:bg-gray-800 border-b dark:border-gray-700; }
-            .category-table tbody td { @apply px-4 py-3; }
-        }
 
+            /* Table Styles */
+            .category-table {
+                @apply w-full text-sm text-left text-gray-500 dark:text-gray-400;
+            }
+            .category-table thead th {
+                @apply px-4 py-3 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 uppercase dark:text-gray-300;
+            }
+            .category-table tbody tr {
+                @apply bg-white dark:bg-gray-800 border-b dark:border-gray-700;
+            }
+            .category-table tbody td {
+                @apply px-4 py-3;
+            }
+        }
+        
         @layer utilities {
-            .font-heading { font-family: 'Clash Grotesk', sans-serif; }
-            .font-body { font-family: 'General Sans', sans-serif; }
-            .file-input-wrapper { @apply relative inline-block w-full; }
+            /* Custom utility classes */
+            .font-heading {
+                font-family: 'Clash Grotesk', sans-serif;
+            }
+            .font-body {
+                font-family: 'General Sans', sans-serif;
+            }
+
+            /* Custom styles for file input */
+            .file-input-wrapper {
+                @apply relative inline-block w-full;
+            }
             .file-input-label {
                 @apply flex flex-col items-center justify-center w-full min-h-[150px] px-4 py-3 bg-white border-2 border-dashed border-gray-300 rounded-lg cursor-pointer transition
                         dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600
                         hover:bg-gray-100 hover:border-gray-400 dark:hover:border-gray-500;
             }
-            .file-input-label-text { @apply text-sm text-gray-600 dark:text-gray-300 mt-2; }
-            .file-input-label-icon { @apply text-4xl text-gray-500 dark:text-gray-400; }
-            .file-input { @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer; }
-            #file-upload-filename { @apply text-sm text-gray-500 dark:text-gray-400 mt-2 text-center truncate; }
-            #albums-dropdown-list::-webkit-scrollbar { @apply w-1.5; }
-            #albums-dropdown-list::-webkit-scrollbar-track { @apply bg-transparent; }
-            #albums-dropdown-list::-webkit-scrollbar-thumb { @apply bg-yellow-300 dark:bg-yellow-700 rounded-full; }
-            .spinner { @apply w-5 h-5 border-2 border-current border-r-transparent rounded-full animate-spin; }
+            .file-input-label-text {
+                @apply text-sm text-gray-600 dark:text-gray-300 mt-2;
+            }
+            .file-input-label-icon {
+                @apply text-4xl text-gray-500 dark:text-gray-400;
+            }
+            .file-input {
+                @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer;
+            }
+            #file-upload-filename {
+                @apply text-sm text-gray-500 dark:text-gray-400 mt-2 text-center truncate;
+            }
+
+            /* Custom scrollbar for dropdowns */
+            #albums-dropdown-list::-webkit-scrollbar {
+                @apply w-1.5;
+            }
+            #albums-dropdown-list::-webkit-scrollbar-track {
+                @apply bg-transparent;
+            }
+            #albums-dropdown-list::-webkit-scrollbar-thumb {
+                @apply bg-yellow-300 dark:bg-yellow-700 rounded-full;
+            }
+
+            /* Loading Spinner */
+            .spinner {
+                @apply w-5 h-5 border-2 border-current border-r-transparent rounded-full animate-spin;
+            }
         }
     </style>
-
+    
     <script>
+        // Configure Tailwind to recognize our custom fonts
         tailwind.config = {
-            darkMode: 'class',
+            darkMode: 'class', // Enable dark mode using a class
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['General Sans', 'sans-serif'],
-                        body: ['General Sans', 'sans-serif'],
-                        heading: ['Clash Grotesk', 'sans-serif'],
+                        'sans': ['General Sans', 'sans-serif'],
+                        'body': ['General Sans', 'sans-serif'],
+                        'heading': ['Clash Grotesk', 'sans-serif'],
                     },
                 },
             },
         }
     </script>
-
-    <!-- Structured Data -->
-    <script type="application/ld+json" id="structured-data">
-    {
-      "@context": "https://schema.org",
-      "@type": "ImageGallery",
-      "name": "MVS Gallery",
-      "description": "Curated image gallery with albums and search.",
-      "url": "https://mvs-img.vercel.app",
-      "image": []
-    }
-    </script>
 </head>
 <body class="min-h-screen">
 
-    <!-- NAVBAR -->
+    <!-- ================================== -->
+    <!--          NAVBAR (Updated)          -->
+    <!-- ================================== -->
     <nav class="bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-lg text-gray-900 dark:text-white px-4 sm:px-6 py-3 flex justify-between items-center sticky top-0 z-50 rounded-b-2xl transition-all duration-500">
+        <!-- Left Side: Logo/Title -->
         <div class="flex items-center gap-3">
             <span class="text-3xl text-blue-600 dark:text-blue-400">
                 <iconify-icon icon="mdi:image-gallery"></iconify-icon>
             </span>
-            <a href="https://mvs-img.vercel.app" class="font-heading text-xl sm:text-2xl font-semibold tracking-wide">MVS</a>
+            <span class="font-heading text-xl sm:text-2xl font-semibold tracking-wide">Dezign.mvs</span>
         </div>
+        
+        <!-- Right Side: Icons -->
         <div class="flex items-center gap-2 sm:gap-3">
-            <button id="theme-toggle-btn" aria-label="Toggle dark mode" class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
+            <!-- Theme Toggle -->
+            <button id="theme-toggle-btn" title="Toggle theme"
+                class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
                 <iconify-icon id="theme-icon-light" icon="mdi:weather-sunny"></iconify-icon>
                 <iconify-icon id="theme-icon-dark" icon="mdi:moon-waning-crescent" class="hidden"></iconify-icon>
             </button>
-            <button id="fullscreen-toggle-btn" aria-label="Toggle fullscreen" class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
+            
+            <!-- Fullscreen -->
+            <button id="fullscreen-toggle-btn" title="Toggle fullscreen"
+                class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm">
                 <iconify-icon id="fullscreen-icon-enter" icon="mdi:arrow-expand"></iconify-icon>
                 <iconify-icon id="fullscreen-icon-exit" icon="mdi:arrow-collapse" class="hidden"></iconify-icon>
             </button>
-            <button id="add-image-btn" aria-label="Add image" class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-blue-500/80 dark:bg-blue-600/80 text-white hover:scale-105 hover:bg-blue-500 dark:hover:bg-blue-500 transition-all duration-300 shadow-sm">
+            
+            <!-- Add Image -->
+            <button id="add-image-btn" title="Add Image"
+                class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-blue-500/80 dark:bg-blue-600/80 text-white hover:scale-105 hover:bg-blue-500 dark:hover:bg-blue-500 transition-all duration-300 shadow-sm">
                 <iconify-icon icon="mdi:plus"></iconify-icon>
             </button>
         </div>
     </nav>
 
-    <!-- MAIN -->
-    <main class="container max-w-7xl mx-auto px-4 py-12">
+    <!-- ================================== -->
+    <!--         GALLERY CONTENT          -->
+    <!-- ================================== -->
+    <div class="container max-w-7xl mx-auto px-4 py-12">
+
+        <!-- Header Section -->
         <header class="text-center mb-10">
             <h1 class="font-heading text-4xl md:text-5xl mb-2 tracking-tight">GALLERY</h1>
             <p class="font-body text-lg text-gray-600 dark:text-gray-400">Capturing the moments</p>
         </header>
 
-        <!-- FILTERS -->
-        <section class="flex flex-col md:flex-row gap-4 mb-8 items-center" aria-label="Gallery filters">
+        <!-- Filter and Search Section -->
+        <div class="flex flex-col md:flex-row gap-4 mb-8 items-center">
+            
+            <!-- Search Bar -->
             <div class="relative w-full md:flex-grow">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" aria-hidden="true">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
                     <iconify-icon icon="mdi:magnify"></iconify-icon>
                 </span>
                 <input 
                     id="search-input"
                     type="text" 
-                    placeholder="Search by title or album..." 
-                    aria-label="Search images"
+                    placeholder="Search images by title, album..." 
                     class="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition
                            dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500"
                 >
             </div>
 
-            <div class="flex gap-3 w-full md:w-auto">
-                <div class="relative">
-                    <button id="albums-filter-btn" aria-haspopup="true" aria-expanded="false" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
+            <!-- Filter Buttons -->
+            <div class="flex-shrink-0 grid grid-cols-1 md:flex gap-3 w-full md:w-auto">
+                
+                <!-- Albums Dropdown -->
+                <div class="relative w-full md:w-auto">
+                    <button id="albums-filter-btn" data-dropdown-toggle="albums-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
                                     dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
                         <iconify-icon icon="mdi:image-album" class="text-yellow-500"></iconify-icon>
-                        <span id="albums-filter-text">All Albums</span>
+                        <span id="albums-filter-text">Albums</span>
                         <iconify-icon icon="mdi:chevron-down"></iconify-icon>
                     </button>
-                    <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden" role="menu">
+                    <!-- Dropdown Menu -->
+                    <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full md:w-38 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
                         <div id="albums-dropdown-list" class="py-1 max-h-60 overflow-y-auto">
-                            <button class="dropdown-item dropdown-item-all-albums" data-filter-id="">All Albums</button>
+                            <span class="dropdown-item">Loading...</span>
                         </div>
                     </div>
                 </div>
-                <button id="clear-filters-btn" class="px-4 py-3 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition hidden">
-                    Clear
-                </button>
+                
             </div>
-        </section>
+        </div>
 
-        <!-- GALLERY -->
-        <section id="gallery-grid" aria-label="Image gallery">
+        <!-- Gallery Grid -->
+        <div id="gallery-grid">
+            <!-- Gallery items will be dynamically inserted here by Firebase -->
             <p id="gallery-loading" class="text-gray-500 dark:text-gray-400 col-span-full text-center">Loading images...</p>
-        </section>
-    </main>
+        </div> <!-- End Gallery Grid -->
 
-    <!-- MODAL BACKDROP -->
+    </div> <!-- End Container -->
+
+
+    <!-- ================================== -->
+    <!--            MODALS                -->
+    <!-- ================================== -->
+
+    <!-- Modal Overlay -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90] hidden"></div>
 
-    <!-- ADD IMAGE MODAL -->
+    <!-- 1. Add Image Modal -->
     <div id="add-image-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl transform transition-all scale-95 opacity-0">
+            <!-- Modal Header -->
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
                 <h3 class="font-heading text-lg">Add New Image</h3>
                 <div class="flex items-center gap-2">
                     <button id="customize-btn" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 transition text-sm text-gray-700 font-medium dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
                         <iconify-icon icon="mdi:cog-outline" class="text-lg"></iconify-icon>
-                        <span>Albums</span>
+                        <span>Customize Albums</span>
                     </button>
                     <button data-close-modal="add-image-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
                 </div>
             </div>
+            <!-- Modal Body -->
             <form id="upload-form" class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Column: Album & Title -->
                     <div class="space-y-4">
+                        <!-- Album Dropdown -->
                         <div>
                             <label for="album-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Album</label>
                             <select id="album-select" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                                <option value="" disabled selected>Select album</option>
+                                <option value="" disabled selected>Loading albums...</option>
                             </select>
                         </div>
+                        
+                        <!-- NEW: Title Input -->
                         <div>
                             <label for="image-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
-                            <input id="image-title" type="text" placeholder="e.g., Sunset at Beach" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <input id="image-title" type="text" placeholder="e.g., 'Works'" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         </div>
+                        
                         <div id="upload-error" class="text-red-500 text-sm hidden"></div>
                     </div>
+
+                    <!-- Right Column: Image Upload -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image Upload</label>
                         <div class="file-input-wrapper">
                             <label for="file-upload" class="file-input-label">
-                                <iconify-icon icon="mdi:cloud-upload-outline" class="file-input-label-icon"></iconify-icon>
-                                <span id="file-upload-text" class="file-input-label-text">Click to choose</span>
+                                <iconify-icon icon="mdi:-upload-outline" class="file-input-label-icon"></iconify-icon>
+                                <span id="file-upload-text" class="file-input-label-text">Click to choose a file</span>
                             </label>
                             <input id="file-upload" type="file" class="file-input" accept="image/*" required>
                         </div>
                         <p id="file-upload-filename" class=""></p>
                     </div>
                 </div>
+                
+                <!-- Modal Footer -->
                 <div class="pt-6 flex justify-end gap-3 border-t dark:border-gray-700 mt-6">
                     <button type="button" data-close-modal="add-image-modal" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition">Cancel</button>
                     <button type="submit" id="submit-upload-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[80px]">
@@ -260,296 +336,50 @@
         </div>
     </div>
 
-    <!-- MANAGE ALBUMS, EDIT, CONFIRM, LIGHTBOX, PASSCODE MODALS (same as before) -->
-    <!-- ... [Include all modals from your original code] ... -->
+    <!-- 2. Manage Albums Modal -->
+    <div id="manage-categories-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-lg transform transition-all scale-95 opacity-0">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
+                <h3 class="font-heading text-lg">Manage Albums</h3>
+                <button data-close-modal="manage-categories-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div id="tab-content-albums" class="tab-content space-y-4 p-6">
+                <h4 class="font-heading text-base mb-2">Add New Album</h4>
+                <form id="add-album-form" class="flex gap-2">
+                    <input id="new-album-name" type="text" placeholder="New album name..." class="flex-grow p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[60px]">Add</button>
+                </form>
+                
+                <h4 class="font-heading text-base pt-4 border-t dark:border-gray-700 mt-4">Existing Albums</h4>
+                <div id="albums-list-container" class="max-h-60 overflow-y-auto relative rounded-lg border dark:border-gray-700">
+                    <table class="category-table">
+                        <thead class="sticky top-0">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col" class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="albums-list-body">
+                            <!-- Album items will be dynamically inserted here -->
+                            <tr><td colspan="2" class="text-center p-4 text-gray-500 dark:text-gray-400">Loading albums...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- JAVASCRIPT -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, serverTimestamp, orderBy, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // === CONFIG ===
-        const CLOUDINARY_CLOUD_NAME = "duexban9y";
-        const CLOUDINARY_UPLOAD_PRESET = "imageuploader";
-        const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDbaF6Gb1lNGY9PQbV_9FXa9oOpC7ZiQRU",
-            authDomain: "nodemailer-445010.firebaseapp.com",
-            projectId: "nodemailer-445010",
-            storageBucket: "nodemailer-445010.firebasestorage.app",
-            messagingSenderId: "785480577605",
-            appId: "1:785480577605:web:7eae72bd79866cc4d4692c",
-            measurementId: "G-LYWBWSNP3Y"
-        };
-
-        const appId = 'default-gallery-app';
-        const ADMIN_PASSCODE = "340";
-
-        // === STATE ===
-        let db, auth, userId, albums = [], allImages = [];
-        let currentFilters = { albumId: null };
-        let confirmCallback = null, passcodeCallback = null;
-        let searchTimeout;
-
-        // === ELEMENTS ===
-        const el = {};
-
-        // === INIT ===
-        document.addEventListener('DOMContentLoaded', () => {
-            ['search-input','albums-filter-text','albums-dropdown-list','gallery-grid','gallery-loading','add-image-btn','theme-toggle-btn','fullscreen-toggle-btn','clear-filters-btn','album-select','image-title','file-upload','file-upload-text','file-upload-filename','upload-form','upload-error','submit-upload-btn','upload-btn-text','upload-spinner','customize-btn','albums-list-body','edit-category-modal','edit-category-form','edit-category-id','edit-category-name','confirm-modal','confirm-modal-cancel','confirm-modal-confirm','lightbox-modal','lightbox-image','passcode-modal','passcode-form','passcode-input','passcode-error'].forEach(id => {
-                el[id.replace(/-/g, '_')] = document.getElementById(id);
-            });
-
-            initializeFirebase();
-            setupTheme();
-            setupFullscreen();
-            setupModals();
-            setupFilters();
-            setupSearch();
-            setupURLSync();
-        });
-
-        // === FIREBASE ===
-        function initializeFirebase() {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    userId = user.uid;
-                    loadAlbums();
-                    loadImages();
-                } else {
-                    signInAnonymously(auth).catch(console.error);
-                }
-            });
-        }
-
-        // === ALBUMS ===
-        function loadAlbums() {
-            const q = query(collection(db, `artifacts/${appId}/public/data/albums`));
-            onSnapshot(q, (snap) => {
-                albums = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => a.name.localeCompare(b.name));
-                populateDropdowns();
-                renderFilterDropdown();
-                updateFilterUI();
-                syncURLWithFilters();
-                if (el.gallery_loading) el.gallery_loading.classList.add('hidden');
-            });
-        }
-
-        function populateDropdowns() {
-            if (!el.album_select) return;
-            el.album_select.innerHTML = '<option value="" disabled selected>Select album</option>';
-            albums.forEach(a => {
-                el.album_select.innerHTML += `<option value="${a.id}">${a.name}</option>`;
-            });
-        }
-
-        // === FILTERING ===
-        function renderFilterDropdown() {
-            if (!el.albums_dropdown_list) return;
-            el.albums_dropdown_list.innerHTML = `<button class="dropdown-item dropdown-item-all-albums" data-filter-id="">All Albums</button>`;
-            albums.forEach(a => {
-                el.albums_dropdown_list.innerHTML += `<button class="dropdown-item" data-filter-id="${a.id}">${a.name}</button>`;
-            });
-        }
-
-        function updateFilterUI() {
-            if (!el.albums_filter_text) return;
-            const album = albums.find(a => a.id === currentFilters.albumId);
-            el.albums_filter_text.textContent = album ? album.name : "All Albums";
-            updateClearButton();
-        }
-
-        function updateClearButton() {
-            const hasFilter = currentFilters.albumId || el.search_input?.value.trim();
-            el.clear_filters_btn?.classList.toggle('hidden', !hasFilter);
-        }
-
-        // === IMAGES ===
-        function loadImages() {
-            let q = query(collection(db, `artifacts/${appId}/public/data/images`), orderBy("createdAt", "desc"));
-            if (currentFilters.albumId) q = query(q, where("albumId", "==", currentFilters.albumId));
-
-            onSnapshot(q, (snap) => {
-                allImages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                applySearchAndRender();
-            });
-        }
-
-        function applySearchAndRender() {
-            const term = el.search_input?.value.trim().toLowerCase() || "";
-            const filtered = allImages.filter(img => {
-                const album = albums.find(a => a.id === img.albumId);
-                const title = (img.title || "").toLowerCase();
-                const albumName = (album?.name || "").toLowerCase();
-                return title.includes(term) || albumName.includes(term);
-            });
-            renderGallery(filtered);
-            updateSEO(filtered);
-        }
-
-        function renderGallery(images) {
-            if (!el.gallery_grid) return;
-            if (images.length === 0) {
-                el.gallery_grid.innerHTML = `<p class="text-gray-500 dark:text-gray-400 col-span-full text-center">No images found.</p>`;
-                return;
-            }
-
-            el.gallery_grid.innerHTML = images.map(img => {
-                const album = albums.find(a => a.id === img.albumId);
-                const title = img.title || "Untitled";
-                const albumName = album?.name || "Uncategorized";
-                return `
-                <div class="image-card">
-                    <img src="${img.imageUrl}" alt="${title} - ${albumName}" loading="lazy"
-                         onerror="this.src='https://placehold.co/276x418/cccccc/333333?text=Not+Found'">
-                    <div class="top-row">
-                        <button class="icon-btn view" data-view-image-url="${img.imageUrl}">
-                            <iconify-icon icon="mdi:fullscreen"></iconify-icon>
-                        </button>
-                    </div>
-                    <div class="bottom-row">
-                        <div class="text-group">
-                            <span class="title">${title}</span>
-                            <span class="subtitle">${albumName}</span>
-                        </div>
-                        <div class="icon-group">
-                            <button class="icon-btn trash" data-delete-image-id="${img.id}">
-                                <iconify-icon icon="mdi:delete-outline"></iconify-icon>
-                            </button>
-                            <button class="icon-btn download" data-download-image-url="${img.imageUrl}">
-                                <iconify-icon icon="mdi:download-outline"></iconify-icon>
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        // === UPLOAD ===
-        el.upload_form?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const file = el.file_upload.files[0];
-            const albumId = el.album_select.value;
-            const title = el.image_title.value.trim();
-
-            if (!file || !albumId || !title) {
-                showError("Please fill all fields.");
-                return;
-            }
-
-            el.upload_error.classList.add('hidden');
-            el.upload_btn_text.classList.add('hidden');
-            el.upload_spinner.classList.remove('hidden');
-            el.submit_upload_btn.disabled = true;
-
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-            try {
-                const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
-                const data = await res.json();
-                if (!data.secure_url) throw new Error("Upload failed");
-
-                await addDoc(collection(db, `artifacts/${appId}/public/data/images`), {
-                    imageUrl: data.secure_url,
-                    albumId,
-                    title,
-                    createdAt: serverTimestamp()
-                });
-
-                el.upload_form.reset();
-                el.file_upload_text.textContent = "Click to choose";
-                closeModal(el.add_image_modal);
-            } catch (err) {
-                showError(err.message);
-            } finally {
-                el.upload_btn_text.classList.remove('hidden');
-                el.upload_spinner.classList.add('hidden');
-                el.submit_upload_btn.disabled = false;
-            }
-        });
-
-        function showError(msg) {
-            el.upload_error.textContent = msg;
-            el.upload_error.classList.remove('hidden');
-        }
-
-        // === FILTERS & SEARCH ===
-        function setupFilters() {
-            el.albums_dropdown_list?.addEventListener('click', (e) => {
-                const btn = e.target.closest('[data-filter-id]');
-                if (btn) {
-                    currentFilters.albumId = btn.dataset.filterId || null;
-                    el.search_input.value = '';
-                    updateFilterUI();
-                    syncURLWithFilters();
-                    loadImages();
-                    el.albums_dropdown.classList.add('hidden');
-                }
-            });
-
-            el.clear_filters_btn?.addEventListener('click', () => {
-                currentFilters.albumId = null;
-                el.search_input.value = '';
-                updateFilterUI();
-                syncURLWithFilters();
-                loadImages();
-            });
-        }
-
-        function setupSearch() {
-            el.search_input?.addEventListener('input', () => {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    syncURLWithFilters();
-                    applySearchAndRender();
-                }, 300);
-            });
-        }
-
-        function syncURLWithFilters() {
-            const params = new URLSearchParams();
-            if (currentFilters.albumId) params.set('album', currentFilters.albumId);
-            if (el.search_input?.value.trim()) params.set('search', el.search_input.value.trim());
-            history.replaceState({}, '', params.toString() ? `?${params}` : location.pathname.split('?')[0]);
-        }
-
-        function setupURLSync() {
-            const params = new URLSearchParams(location.search);
-            const album = params.get('album');
-            const search = params.get('search');
-            if (album && albums.some(a => a.id === album)) currentFilters.albumId = album;
-            if (search && el.search_input) el.search_input.value = search;
-        }
-
-        // === MODALS, THEME, FULLSCREEN, ETC. (Add from your original code) ===
-
-        // === SEO ===
-        function updateSEO(images) {
-            const title = document.getElementById('page-title');
-            const sd = document.getElementById('structured-data');
-            const album = albums.find(a => a.id === currentFilters.albumId);
-            const search = el.search_input?.value.trim();
-            let pageTitle = "MVS | Gallery";
-            if (album) pageTitle = `${album.name} - ${pageTitle}`;
-            if (search) pageTitle = `"${search}" - ${pageTitle}`;
-            title.textContent = pageTitle;
-
-            sd.textContent = JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "ImageGallery",
-                "name": pageTitle,
-                "url": location.href,
-                "image": images.map(i => ({ "@type": "ImageObject", "url": i.imageUrl }))
-            }, null, 2);
-        }
-    </script>
-</body>
-</html>
+    <!-- 3. Edit Album Modal -->
+    <div id="edit-category-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
+            <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
+                <h3 id="edit-modal-title" class="font-heading text-lg">Edit Album Name</h3>
+                <button data-close-modal="edit-category-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
+            </div>
+            <form id="edit-category-form" class="p-6 space-y-4">
+                <input id="edit-category-id" type="hidden">
+                <input id="edit-category-type" type="hidden" value="albums"> <!-- Hardcode type -->
+                <div>
+      
