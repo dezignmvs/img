@@ -10,17 +10,17 @@
     <!-- 2. Iconify CDN --><script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     
     <!-- 3. Font Imports and Tailwind Configuration --><style type="text/tailwindcss">
-        /* Import fonts from Fontshare */
-        @import url('https://api.fontshare.com/v2/css?f[]=clash-grotesk@600,500&f[]=general-sans@400&display=swap');
+        /* NEW: Import Inter font from Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         @layer base {
-            /* Apply General Sans as the default body font */
+            /* Apply Inter as the default body font */
             body {
-                @apply font-body bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300;
+                @apply font-sans bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300;
             }
-            /* Apply Clash Grotesk for headings */
+            /* Apply Inter for headings */
             h1, h2, h3, h4, h5, h6 {
-                @apply font-heading font-semibold;
+                @apply font-sans font-semibold;
             }
             /* Apply new card styles to the gallery grid container */
             #gallery-grid {
@@ -32,7 +32,7 @@
         @layer components {
             /* CARD STYLES */
             .image-card {
-                @apply relative w-full aspect-[2/3] rounded-lg overflow-hidden shadow-lg bg-gray-300 dark:bg-gray-800 text-white font-body;
+                @apply relative w-full aspect-[2/3] rounded-lg overflow-hidden shadow-lg bg-gray-300 dark:bg-gray-800 text-white;
             }
 
             .image-card img {
@@ -86,33 +86,50 @@
                 @apply block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer;
             }
             
+            /* UPDATED: Changed from yellow to primary (violet) */
             .dropdown-item-all-albums {
-                @apply bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium;
+                @apply bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 font-medium;
             }
 
             /* Table Styles */
-            .category-table {
+            .data-table {
                 @apply w-full text-sm text-left text-gray-500 dark:text-gray-400;
             }
-            .category-table thead th {
+            .data-table thead th {
                 @apply px-4 py-3 bg-gray-50 dark:bg-gray-700 text-xs text-gray-700 uppercase dark:text-gray-300;
             }
-            .category-table tbody tr {
+            .data-table tbody tr {
                 @apply bg-white dark:bg-gray-800 border-b dark:border-gray-700;
             }
-            .category-table tbody td {
+            .data-table tbody td {
                 @apply px-4 py-3;
+            }
+            
+            /* RE-STYLED: Stat Card Styles */
+            .stat-card {
+                @apply bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg flex items-center gap-4 border border-gray-200 dark:border-gray-700;
+            }
+            .stat-card-icon {
+                @apply w-12 h-12 rounded-full flex items-center justify-center text-2xl text-white shadow-md;
+            }
+            .stat-card-content {
+                @apply flex flex-col;
+            }
+            .stat-card-title {
+                @apply text-sm font-medium text-gray-500 dark:text-gray-400;
+            }
+            .stat-card-value {
+                @apply text-2xl font-semibold text-gray-900 dark:text-white;
+            }
+            
+            /* Form checkbox */
+            .form-checkbox {
+                @apply w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
             }
         }
         
         @layer utilities {
-            /* Custom utility classes */
-            .font-heading {
-                font-family: 'Clash Grotesk', sans-serif;
-            }
-            .font-body {
-                font-family: 'General Sans', sans-serif;
-            }
+            /* Custom utility classes (REMOVED old font classes) */
 
             /* Custom styles for file input */
             .file-input-wrapper {
@@ -144,26 +161,49 @@
                 @apply bg-transparent;
             }
             #albums-dropdown-list::-webkit-scrollbar-thumb {
-                @apply bg-yellow-300 dark:bg-yellow-700 rounded-full;
+                @apply bg-primary-300 dark:bg-primary-700 rounded-full;
             }
 
             /* Loading Spinner */
             .spinner {
                 @apply w-5 h-5 border-2 border-current border-r-transparent rounded-full animate-spin;
             }
+            
+            /* Toast Notification */
+            #toast-notification {
+                @apply fixed top-0 left-1/2 -translate-x-1/2 z-[200]
+                        mt-4 px-6 py-3 rounded-lg shadow-lg text-white
+                        transform -translate-y-20 opacity-0 transition-all duration-300;
+            }
+            #toast-notification.show {
+                @apply transform-none opacity-100;
+            }
+            /* UPDATED: Success toast is now green */
+            .toast-success {
+                @apply bg-green-600;
+            }
+            .toast-error {
+                @apply bg-red-600;
+            }
         }
     </style>
     
     <script>
+        // NEW: Import Tailwind colors for config
+        const colors = tailwind.colors; // MODIFIED: Changed from `tailwind.presets.default`
+
         // Configure Tailwind to recognize our custom fonts
         tailwind.config = {
             darkMode: 'class', // Enable dark mode using a class
             theme: {
                 extend: {
+                    // NEW: Set primary color to Violet
+                    colors: {
+                        primary: colors.violet
+                    },
+                    // NEW: Set default font to Inter
                     fontFamily: {
-                        'sans': ['General Sans', 'sans-serif'],
-                        'body': ['General Sans', 'sans-serif'],
-                        'heading': ['Clash Grotesk', 'sans-serif'],
+                        'sans': ['Inter', 'sans-serif'],
                     },
                 },
             },
@@ -173,12 +213,13 @@
 <body class="min-h-screen">
 
     <!-- ================================== -->
-    <!--          NAVBAR (Updated)          -->
+    <!--            NAVBAR (Updated)            -->
     <!-- ================================== -->
     <nav class="bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-lg text-gray-900 dark:text-white px-4 sm:px-6 py-3 flex justify-between items-center sticky top-0 z-50 rounded-b-2xl transition-all duration-500">
         <!-- Left Side: Logo/Title -->
         <div class="flex items-center gap-3">
-            <span class="text-3xl text-blue-600 dark:text-blue-400">
+            <!-- UPDATED: Changed color to primary -->
+            <span class="text-3xl text-primary-600 dark:text-primary-400">
                 <iconify-icon icon="mdi:image-gallery"></iconify-icon>
             </span>
             <span class="font-heading text-xl sm:text-2xl font-semibold tracking-wide">Dezign.mvs</span>
@@ -201,15 +242,16 @@
             </button>
             
             <!-- Add Image -->
+            <!-- UPDATED: Changed color to primary -->
             <button id="add-image-btn" title="Add Image"
-                class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-blue-500/80 dark:bg-blue-600/80 text-white hover:scale-105 hover:bg-blue-500 dark:hover:bg-blue-500 transition-all duration-300 shadow-sm">
+                class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-primary-500/80 dark:bg-primary-600/80 text-white hover:scale-105 hover:bg-primary-500 dark:hover:bg-primary-500 transition-all duration-300 shadow-sm">
                 <iconify-icon icon="mdi:plus"></iconify-icon>
             </button>
         </div>
     </nav>
 
     <!-- ================================== -->
-    <!--         GALLERY CONTENT          -->
+    <!--           GALLERY CONTENT           -->
     <!-- ================================== -->
     <div class="container max-w-7xl mx-auto px-4 py-12">
 
@@ -227,12 +269,13 @@
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
                     <iconify-icon icon="mdi:magnify"></iconify-icon>
                 </span>
+                <!-- UPDATED: Changed focus ring to primary -->
                 <input 
                     id="search-input"
                     type="text" 
                     placeholder="Search images by title, album..." 
-                    class="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition
-                           dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500"
+                    class="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition
+                           dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-primary-500"
                 >
             </div>
 
@@ -242,13 +285,14 @@
                 <!-- Albums Dropdown -->
                 <div class="relative w-full md:w-auto">
                     <button id="albums-filter-btn" data-dropdown-toggle="albums-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
-                                    dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
-                        <iconify-icon icon="mdi:image-album" class="text-yellow-500"></iconify-icon>
+                                        dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
+                        <!-- UPDATED: Changed icon color to primary -->
+                        <iconify-icon icon="mdi:image-album" class="text-primary-500"></iconify-icon>
                         <span id="albums-filter-text">Albums</span>
                         <iconify-icon icon="mdi:chevron-down"></iconify-icon>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full md:w-38 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
+                    <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full md:w-48 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
                         <div id="albums-dropdown-list" class="py-1 max-h-60 overflow-y-auto">
                             <span class="dropdown-item">Loading...</span>
                         </div>
@@ -268,19 +312,30 @@
 
 
     <!-- ================================== -->
-    <!--             MODALS               -->
+    <!--              MODALS                 -->
     <!-- ================================== -->
 
     <!-- Modal Overlay -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90] hidden"></div>
+    
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="">
+        <span id="toast-message"></span>
+    </div>
 
     <!-- 1. Add Image Modal -->
     <div id="add-image-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl transform transition-all scale-95 opacity-0">
             <!-- Modal Header -->
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 class="font-heading text-lg">Add New Image</h3>
+                <h3 class="font-heading text-lg">Add New Image(s)</h3>
                 <div class="flex items-center gap-2">
+                    <!-- Global Analytics Button -->
+                    <button id="global-analytics-btn" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 transition text-sm text-gray-700 font-medium dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
+                        <!-- UPDATED: Changed icon color to primary -->
+                        <iconify-icon icon="mdi:chart-pie" class="text-lg text-primary-500"></iconify-icon>
+                        <span>Analytics</span>
+                    </button>
                     <button id="customize-btn" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 transition text-sm text-gray-700 font-medium dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
                         <iconify-icon icon="mdi:cog-outline" class="text-lg"></iconify-icon>
                         <span>Customize Albums</span>
@@ -296,15 +351,18 @@
                         <!-- Album Dropdown -->
                         <div>
                             <label for="album-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Album</label>
-                            <select id="album-select" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <!-- UPDATED: Changed focus ring to primary -->
+                            <select id="album-select" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" required>
                                 <option value="" disabled selected>Loading albums...</option>
                             </select>
                         </div>
                         
-                        <!-- NEW: Title Input -->
-                        <div>
+                        <!-- Title Input (conditionally shown) -->
+                        <div id="image-title-wrapper">
                             <label for="image-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
-                            <input id="image-title" type="text" placeholder="e.g., 'Works'" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <!-- UPDATED: Changed focus ring to primary -->
+                            <input id="image-title" type="text" placeholder="e.g., 'Works'" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Title is required for single image upload. For bulk uploads, the filename will be used as the title.</p>
                         </div>
                         
                         <div id="upload-error" class="text-red-500 text-sm hidden"></div>
@@ -316,9 +374,9 @@
                         <div class="file-input-wrapper">
                             <label for="file-upload" class="file-input-label">
                                 <iconify-icon icon="mdi:cloud-upload-outline" class="file-input-label-icon"></iconify-icon>
-                                <span id="file-upload-text" class="file-input-label-text">Click to choose a file</span>
+                                <span id="file-upload-text" class="file-input-label-text">Click to choose file(s)</span>
                             </label>
-                            <input id="file-upload" type="file" class="file-input" accept="image/*" required>
+                            <input id="file-upload" type="file" class="file-input" accept="image/*" required multiple>
                         </div>
                         <p id="file-upload-filename" class=""></p>
                     </div>
@@ -327,7 +385,8 @@
                 <!-- Modal Footer -->
                 <div class="pt-6 flex justify-end gap-3 border-t dark:border-gray-700 mt-6">
                     <button type="button" data-close-modal="add-image-modal" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition">Cancel</button>
-                    <button type="submit" id="submit-upload-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[80px]">
+                    <!-- UPDATED: Changed button color to primary -->
+                    <button type="submit" id="submit-upload-btn" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition flex items-center justify-center min-w-[80px]">
                         <span id="upload-btn-text">Upload</span>
                         <div id="upload-spinner" class="spinner hidden"></div>
                     </button>
@@ -347,14 +406,23 @@
             <!-- Modal Body -->
             <div id="tab-content-albums" class="tab-content space-y-4 p-6">
                 <h4 class="font-heading text-base mb-2">Add New Album</h4>
-                <form id="add-album-form" class="flex gap-2">
-                    <input id="new-album-name" type="text" placeholder="New album name..." class="flex-grow p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center min-w-[60px]">Add</button>
+                <form id="add-album-form" class="space-y-3">
+                    <div class="flex gap-2">
+                        <!-- UPDATED: Changed focus ring to primary -->
+                        <input id="new-album-name" type="text" placeholder="New album name..." class="flex-grow p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                        <!-- UPDATED: Changed button color to primary -->
+                        <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition flex items-center justify-center min-w-[60px]">Add</button>
+                    </div>
+                    <!-- Checkbox for secret album -->
+                    <div class="flex items-center">
+                        <input id="new-album-secret" type="checkbox" class="form-checkbox">
+                        <label for="new-album-secret" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Make this album secret (requires passcode)</label>
+                    </div>
                 </form>
                 
                 <h4 class="font-heading text-base pt-4 border-t dark:border-gray-700 mt-4">Existing Albums</h4>
                 <div id="albums-list-container" class="max-h-60 overflow-y-auto relative rounded-lg border dark:border-gray-700">
-                    <table class="category-table">
+                    <table class="data-table">
                         <thead class="sticky top-0">
                             <tr>
                                 <th scope="col">Name</th>
@@ -375,7 +443,7 @@
     <div id="edit-category-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 id="edit-modal-title" class="font-heading text-lg">Edit Album Name</h3>
+                <h3 id="edit-modal-title" class="font-heading text-lg">Edit Album</h3>
                 <button data-close-modal="edit-category-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
             </div>
             <form id="edit-category-form" class="p-6 space-y-4">
@@ -383,11 +451,18 @@
                 <input id="edit-category-type" type="hidden" value="albums"> <!-- Hardcode type -->
                 <div>
                     <label for="edit-category-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
-                    <input id="edit-category-name" type="text" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <!-- UPDATED: Changed focus ring to primary -->
+                    <input id="edit-category-name" type="text" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                </div>
+                <!-- Checkbox for secret album -->
+                <div class="flex items-center">
+                    <input id="edit-album-secret" type="checkbox" class="form-checkbox">
+                    <label for="edit-album-secret" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Make this album secret</label>
                 </div>
                 <div class="pt-4 flex justify-end gap-3">
                     <button type="button" data-close-modal="edit-category-modal" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Save</button>
+                    <!-- UPDATED: Changed button color to primary -->
+                    <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition">Save</button>
                 </div>
             </form>
         </div>
@@ -431,20 +506,126 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400">Please enter the passcode to perform this action.</p>
                 <div>
                     <label for="passcode-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Passcode</label>
-                    <input id="passcode-input" type="password" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <!-- UPDATED: Changed focus ring to primary -->
+                    <input id="passcode-input" type="password" class="w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" required>
                     <p id="passcode-error" class="text-red-500 text-sm mt-1 hidden">Incorrect passcode.</p>
                 </div>
                 <div class="pt-4 flex justify-end gap-3">
                     <button type="button" data-close-modal="passcode-modal" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Submit</button>
+                    <!-- UPDATED: Changed button color to primary -->
+                    <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition">Submit</button>
                 </div>
             </form>
+        </div>
+    </div>
+    
+    <!-- 7. Image Details Modal -->
+    <div id="analytics-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl transform transition-all scale-95 opacity-0">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
+                <h3 class="font-heading text-lg">Image Details</h3>
+                <button data-close-modal="analytics-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6">
+                <div class="overflow-x-auto rounded-lg border dark:border-gray-700">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Album (Click to edit)</th>
+                                <th scope="col" class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analytics-table-body">
+                            <!-- Content will be injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 8. Global Analytics Modal -->
+    <div id="global-analytics-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl transform transition-all scale-95 opacity-0">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
+                <h3 class="font-heading text-lg">Gallery Analytics</h3>
+                <button data-close-modal="global-analytics-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+                <!-- Stat Cards (RE-STYLED to match inspiration) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Card 1: Total Images (Green) -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-green-500">
+                            <iconify-icon icon="mdi:image-multiple"></iconify-icon>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-title">Total Images</span>
+                            <span id="stats-total-images" class="stat-card-value">0</span>
+                        </div>
+                    </div>
+                    <!-- Card 2: Total Albums (Violet) -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-violet-500">
+                            <iconify-icon icon="mdi:image-album"></iconify-icon>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-title">Total Albums</span>
+                            <span id="stats-total-albums" class="stat-card-value">0</span>
+                        </div>
+                    </div>
+                    <!-- Card 3: Public Albums (Yellow/Orange) -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-yellow-500">
+                            <iconify-icon icon="mdi:folder-open-outline"></iconify-icon>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-title">Public Albums</span>
+                            <span id="stats-public-albums" class="stat-card-value">0</span>
+                        </div>
+                    </div>
+                    <!-- Card 4: Secret Albums (Red) -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-red-500">
+                            <iconify-icon icon="mdi:lock-outline"></iconify-icon>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-title">Secret Albums</span>
+                            <span id="stats-secret-albums" class="stat-card-value">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- MODIFIED: Replaced 'Images per Album' with 'All Images' table -->
+                <div>
+                    <h4 class="font-heading text-base mb-2">All Images</h4>
+                    <div class="max-h-60 overflow-y-auto relative rounded-lg border dark:border-gray-700">
+                        <table class="data-table">
+                            <thead class="sticky top-0">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Album (Click to edit)</th>
+                                    <th scope="col" class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="global-analytics-all-images-body">
+                                <!-- All images will be injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
 
     <!-- ================================== -->
-    <!--          JAVASCRIPT              -->
+    <!--           JAVASCRIPT               -->
     <!-- ================================== -->
     <!-- Firebase SDKs -->
     <script type="module">
@@ -472,12 +653,10 @@
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONSTANTS ---
-        // CORRECTION: Fixed typo UDINARY_CLOUD_NAME -> CLOUDINARY_CLOUD_NAME
         const CLOUDINARY_CLOUD_NAME = "duexban9y";
         const CLOUDINARY_UPLOAD_PRESET = "imageuploader";
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
         
-        // CORRECTION: Replaced specific Firebase config with placeholders.
         // The app will use the environment-provided config (__firebase_config).
         // This default is just a fallback.
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : JSON.stringify({
@@ -506,8 +685,9 @@
             albumId: null
         };
         let allImages = []; // Cache for search filtering
+        let toastTimeout = null; // For the notification
 
-        // --- MODAL UTILITIES ---
+        // --- MODAL & TOAST UTILITIES ---
         function openModal(modal) {
             const modalBackdrop = document.getElementById('modal-backdrop');
             if (!modalBackdrop || !modal) return;
@@ -536,7 +716,8 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 
-                const allModals = document.querySelectorAll('#add-image-modal, #manage-categories-modal, #edit-category-modal, #confirm-modal, #lightbox-modal, #passcode-modal');
+                // UPDATED: Added new global-analytics-modal to the list
+                const allModals = document.querySelectorAll('#add-image-modal, #manage-categories-modal, #edit-category-modal, #confirm-modal, #lightbox-modal, #passcode-modal, #analytics-modal, #global-analytics-modal');
                 
                 let aModalIsStillOpen = false;
                 allModals.forEach(m => {
@@ -581,12 +762,33 @@
         function runWithPasscodeCheck(actionToPerform) {
             openPasscodeModal(actionToPerform);
         }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
+            if (!toast || !toastMessage) return;
+
+            // Clear existing timeout if one exists
+            if (toastTimeout) {
+                clearTimeout(toastTimeout);
+            }
+
+            toastMessage.textContent = message;
+            toast.className = 'toast-error'; // Reset
+            toast.classList.add(type === 'success' ? 'toast-success' : 'toast-error', 'show');
+
+            // Hide after 3 seconds
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+                toastTimeout = null;
+            }, 3000);
+        }
 
 
         // --- FIREBASE FUNCTIONS ---
         async function initializeFirebase() {
             try {
-                // CORRECTION: Enabled debug logging per guidelines
+                // Enabled debug logging per guidelines
                 setLogLevel('Debug');
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
@@ -659,11 +861,12 @@
             albumsListBody.innerHTML = list.map(item => `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <td class="px-4 py-3 font-medium text-gray-900 dark:text-white truncate" title="${item.name}">
+                        ${item.isSecret ? '<iconify-icon icon="mingcute:safe-lock-fill" class="text-yellow-500 mr-1"></iconify-icon>' : ''}
                         ${item.name}
                     </td>
                     <td class="px-4 py-3">
                         <div class="flex gap-3 text-lg justify-end">
-                            <button data-edit-id="${item.id}" data-edit-name="${item.name}" class="text-gray-500 hover:text-blue-600 dark:hover:text-blue-400" title="Edit">
+                            <button data-edit-id="${item.id}" data-edit-name="${item.name}" data-is-secret="${item.isSecret || false}" class="text-gray-500 hover:text-primary-600 dark:hover:text-primary-400" title="Edit">
                                 <iconify-icon icon="mdi:pencil-outline"></iconify-icon>
                             </button>
                             <button data-delete-id="${item.id}" data-delete-name="${item.name}" class="text-gray-500 hover:text-red-600 dark:hover:text-red-400" title="Delete">
@@ -675,21 +878,21 @@
             `).join('');
         }
         
-        async function addAlbum(name) {
+        async function addAlbum(name, isSecret) {
             if (!db || !userId) return;
             const collectionPath = `artifacts/${appId}/public/data/albums`;
             try {
-                await addDoc(collection(db, collectionPath), { name });
+                await addDoc(collection(db, collectionPath), { name, isSecret });
             } catch (e) {
                 console.error("Error adding document: ", e);
             }
         }
         
-        async function updateAlbum(id, newName) {
+        async function updateAlbum(id, newName, isSecret) {
             if (!db || !userId) return;
             const docPath = `artifacts/${appId}/public/data/albums/${id}`;
             try {
-                await updateDoc(doc(db, docPath), { name: newName });
+                await updateDoc(doc(db, docPath), { name: newName, isSecret: isSecret });
             } catch (e) {
                 console.error("Error updating document: ", e);
             }
@@ -707,7 +910,6 @@
 
         // --- IMAGE FUNCTIONS ---
         
-        // UPDATED loadImages function
         function loadImages() {
             if (!db || !userId) return;
 
@@ -717,8 +919,7 @@
 
             const collectionPath = `artifacts/${appId}/public/data/images`;
             
-            // CORRECTION: Removed `orderBy("createdAt", "desc")` from the query
-            // to avoid potential Firestore index errors. Sorting will be done in memory.
+            // Sorting will be done in memory.
             let q = query(collection(db, collectionPath));
 
             // --- FILTERING LOGIC (Firestore) ---
@@ -730,25 +931,35 @@
                 let list = [];
                 snap.forEach(d => list.push({id: d.id, ...d.data()}));
                 
-                // CORRECTION: Sort in memory by createdAt timestamp (newest first)
-                // This replaces the `orderBy` in the query.
-                list.sort((a, b) => {
+                // NEW LOGIC: Filter out secret images if "All Albums" is selected
+                const secretAlbumIds = new Set(albums.filter(a => a.isSecret).map(a => a.id));
+                let imagesToShow = list;
+
+                if (!currentFilters.albumId) {
+                    // "All Albums" is active. Filter out secret images from the `list`.
+                    imagesToShow = list.filter(image => !secretAlbumIds.has(image.albumId));
+                }
+                // ELSE: A specific album is selected. The 'list' only contains images for that album.
+                // We don't need to filter, as the user passed the passcode check to get here.
+                
+                // Sort in memory by createdAt timestamp (newest first)
+                imagesToShow.sort((a, b) => {
                     const timeA = a.createdAt?.seconds || 0;
                     const timeB = b.createdAt?.seconds || 0;
                     return timeB - timeA; // Descending order
                 });
 
-                allImages = list; // Cache the album-filtered list
+                allImages = imagesToShow; // Cache the (potentially filtered) list
 
                 // --- SEARCH LOGIC (Client-side) ---
                 const filtered = search
-                    ? list.filter(image => {
+                    ? imagesToShow.filter(image => {
                         const alb = albums.find(x => x.id === image.albumId);
                         const albName = alb ? alb.name.toLowerCase() : "";
                         const title = (image.title || "").toLowerCase();
                         return albName.includes(search) || title.includes(search);
                     })
-                    : list; // If no search term, show all images from the album
+                    : imagesToShow; // If no search term, show all images from the album
 
                 renderGallery(filtered);
                 if (galleryLoading) galleryLoading.classList.add('hidden');
@@ -792,6 +1003,10 @@
                             <span class="subtitle">${albumName}</span>
                         </div>
                         <div class="icon-group">
+                            <!-- Image Details/Analytics Button -->
+                            <button class="icon-btn analytics" title="Details" data-analytics-image-id="${image.id}">
+                                <iconify-icon icon="mdi:chart-bar"></iconify-icon>
+                            </button>
                             <button class="icon-btn trash" title="Delete" data-delete-image-id="${image.id}">
                                 <iconify-icon icon="mdi:delete-outline"></iconify-icon>
                             </button>
@@ -810,10 +1025,25 @@
             const docPath = `artifacts/${appId}/public/data/images/${id}`;
             try {
                 await deleteDoc(doc(db, docPath));
+                showToast("Image deleted", "success");
             } catch (e) {
                 console.error("Error deleting image: ", e);
+                showToast("Error deleting image", "error");
             }
         }
+        
+        async function updateImageAlbum(id, newAlbumId) {
+            if (!db || !userId) return;
+            const docPath = `artifacts/${appId}/public/data/images/${id}`;
+            try {
+                await updateDoc(doc(db, docPath), { albumId: newAlbumId });
+                showToast("Image album updated!", "success");
+            } catch (e) {
+                console.error("Error updating image album: ", e);
+                showToast("Error updating album", "error");
+            }
+        }
+
 
         // --- HELPER FUNCTIONS ---
         
@@ -824,7 +1054,7 @@
             // Populate Album Dropdown (for Add Image Modal)
             albumSelect.innerHTML = '<option value="" disabled selected>Select an album</option>';
             albums.forEach(album => {
-                albumSelect.innerHTML += `<option value="${album.id}">${album.name}</option>`;
+                albumSelect.innerHTML += `<option value="${album.id}">${album.name} ${album.isSecret ? '(Secret)' : ''}</option>`;
             });
             if (albums.length === 0) {
                  albumSelect.innerHTML = '<option value="" disabled>No albums found. Please add one.</option>';
@@ -843,8 +1073,9 @@
             
             list.forEach(item => {
                 albumsDropdownList.innerHTML += `
-                    <button class="dropdown-item" data-filter-type="albums" data-filter-id="${item.id}" data-filter-name="${item.name}">
-                        ${item.name}
+                    <button class="dropdown-item flex items-center justify-between" data-filter-type="albums" data-filter-id="${item.id}" data-filter-name="${item.name}" data-is-secret="${item.isSecret || false}">
+                        <span>${item.name}</span>
+                        ${item.isSecret ? '<iconify-icon icon="mingcute:safe-lock-fill" class="text-yellow-500"></iconify-icon>' : ''}
                     </button>
                 `;
             });
@@ -874,7 +1105,120 @@
                 
             } catch (err) {
                 console.error('Download failed:', err);
+                showToast("Download failed", "error");
             }
+        }
+        
+        function showAnalyticsModal(image, album) {
+            const modal = document.getElementById('analytics-modal');
+            const tableBody = document.getElementById('analytics-table-body');
+            if (!modal || !tableBody) return;
+
+            // Create album options
+            const albumOptions = albums.map(a => 
+                `<option value="${a.id}" ${a.id === image.albumId ? 'selected' : ''}>
+                    ${a.name} ${a.isSecret ? '(Secret)' : ''}
+                </option>`
+            ).join('');
+
+            // Create table row
+            tableBody.innerHTML = `
+                <tr>
+                    <td class="font-medium text-gray-900 dark:text-white">${image.title}</td>
+                    <td>
+                        <!-- UPDATED: Changed focus ring to primary -->
+                        <select class="analytics-album-select w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" data-image-id="${image.id}">
+                            ${albumOptions}
+                        </select>
+                    </td>
+                    <td class="text-right">
+                        <div class="flex gap-3 text-lg justify-end">
+                            <button class="icon-btn download text-gray-500 hover:text-primary-600 dark:hover:text-primary-400" title="Download" data-download-image-url="${image.imageUrl}">
+                                <iconify-icon icon="mdi:download-outline"></iconify-icon>
+                            </button>
+                            <button class="icon-btn trash text-gray-500 hover:text-red-600 dark:hover:text-red-400" title="Delete" data-delete-image-id="${image.id}">
+                                <iconify-icon icon="mdi:delete-outline"></iconify-icon>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            
+            openModal(modal);
+        }
+        
+        // NEW: Function to show Global Analytics
+        function showGlobalAnalytics() {
+            const modal = document.getElementById('global-analytics-modal');
+            const totalImagesEl = document.getElementById('stats-total-images');
+            const totalAlbumsEl = document.getElementById('stats-total-albums');
+            const publicAlbumsEl = document.getElementById('stats-public-albums'); // NEW
+            const secretAlbumsEl = document.getElementById('stats-secret-albums'); // NEW
+            const allImagesTableBody = document.getElementById('global-analytics-all-images-body'); // MODIFIED
+            
+            if (!modal || !totalImagesEl || !totalAlbumsEl || !allImagesTableBody || !publicAlbumsEl || !secretAlbumsEl) return; // MODIFIED
+            
+            // 1. Get all images, including secret ones for this count
+            const collectionPath = `artifacts/${appId}/public/data/images`;
+            const q = query(collection(db, collectionPath));
+            
+            onSnapshot(q, (snap) => {
+                const allImagesForStats = [];
+                snap.forEach(d => allImagesForStats.push({id: d.id, ...d.data()}));
+                
+                // Calculate stats
+                const secretAlbumsCount = albums.filter(a => a.isSecret).length;
+                const publicAlbumsCount = albums.length - secretAlbumsCount;
+                
+                totalImagesEl.textContent = allImagesForStats.length;
+                totalAlbumsEl.textContent = albums.length;
+                publicAlbumsEl.textContent = publicAlbumsCount;
+                secretAlbumsEl.textContent = secretAlbumsCount;
+                
+                // --- MODIFIED: Populate 'All Images' table instead of 'Images per Album' ---
+                if (allImagesForStats.length === 0) {
+                    allImagesTableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-gray-500 dark:text-gray-400">No images found in the gallery.</td></tr>`;
+                } else {
+                    // Create album options string once
+                    const albumOptions = albums.map(a => 
+                        `<option value="${a.id}">
+                            ${a.name} ${a.isSecret ? '(Secret)' : ''}
+                        </option>`
+                    ).join('');
+
+                    allImagesTableBody.innerHTML = allImagesForStats.map(image => {
+                        // Set the selected attribute for the correct album
+                        const finalAlbumOptions = albumOptions.replace(`value="${image.albumId}"`, `value="${image.albumId}" selected`);
+
+                        return `
+                            <tr>
+                                <td class="font-medium text-gray-900 dark:text-white">${image.title || 'Untitled'}</td>
+                                <td>
+                                    <select class="analytics-album-select w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" data-image-id="${image.id}">
+                                        ${finalAlbumOptions}
+                                    </select>
+                                </td>
+                                <td class="text-right">
+                                    <div class="flex gap-3 text-lg justify-end">
+                                        <button class="icon-btn download text-gray-500 hover:text-primary-600 dark:hover:text-primary-400" title="Download" data-download-image-url="${image.imageUrl}">
+                                            <iconify-icon icon="mdi:download-outline"></iconify-icon>
+                                        </button>
+                                        <button class="icon-btn trash text-gray-500 hover:text-red-600 dark:hover:text-red-400" title="Delete" data-delete-image-id="${image.id}">
+                                            <iconify-icon icon="mdi:delete-outline"></iconify-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+                
+            }, (error) => {
+                console.error("Error loading all images for stats: ", error);
+                allImagesTableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-red-500">Error loading stats.</td></tr>`; // MODIFIED colspan
+            });
+            
+            openModal(modal);
         }
 
         async function handleImageUpload(e) {
@@ -882,7 +1226,7 @@
             
             const fileUpload = document.getElementById('file-upload');
             const albumSelect = document.getElementById('album-select');
-            const imageTitle = document.getElementById('image-title'); // Get new title input
+            const imageTitleInput = document.getElementById('image-title');
             const uploadError = document.getElementById('upload-error');
             const uploadBtnText = document.getElementById('upload-btn-text');
             const uploadSpinner = document.getElementById('upload-spinner');
@@ -892,16 +1236,24 @@
             const fileUploadText = document.getElementById('file-upload-text');
             const addImageModal = document.getElementById('add-image-modal');
             
-            if (!fileUpload || !albumSelect || !imageTitle || !uploadError || !uploadBtnText || !uploadSpinner || !submitUploadBtn) return;
+            if (!fileUpload || !albumSelect || !imageTitleInput || !uploadError || !uploadBtnText || !uploadSpinner || !submitUploadBtn) return;
 
-            const file = fileUpload.files[0];
+            const files = fileUpload.files;
             const albumId = albumSelect.value;
-            const title = imageTitle.value.trim(); // Get title value
+            const title = imageTitleInput.value.trim();
             
-            if (!file || !albumId || !title) { // Validate title
-                uploadError.textContent = "Please select a file, an album, and enter a title.";
+            const isBulkUpload = files.length > 1;
+
+            if (files.length === 0 || !albumId) {
+                uploadError.textContent = "Please select at least one file and an album.";
                 uploadError.classList.remove('hidden');
                 return;
+            }
+            
+            if (!isBulkUpload && !title) {
+                 uploadError.textContent = "Please enter a title for the image.";
+                 uploadError.classList.remove('hidden');
+                 return;
             }
             
             if (CLOUDINARY_CLOUD_NAME === "YOUR_CLOUD_NAME" || CLOUDINARY_UPLOAD_PRESET === "YOUR_UPLOAD_PRESET") {
@@ -915,37 +1267,59 @@
             uploadSpinner.classList.remove('hidden');
             submitUploadBtn.disabled = true;
 
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            const uploadPromises = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+                const uploadPromise = fetch(CLOUDINARY_URL, { method: 'POST', body: formData })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw new Error(err.error?.message || `HTTP status ${response.status}`) });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // For bulk, use filename as title. For single, use provided title.
+                        const imageTitle = isBulkUpload 
+                            ? file.name.split('.').slice(0, -1).join('.') // Filename without extension
+                            : title;
+                        
+                        return {
+                            imageUrl: data.secure_url,
+                            albumId,
+                            title: imageTitle,
+                            createdAt: serverTimestamp()
+                        };
+                    });
+                
+                uploadPromises.push(uploadPromise);
+            }
 
             try {
-                const response = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({})); 
-                    const errorMsg = (errorData.error && errorData.error.message) ? errorData.error.message : `HTTP status ${response.status}`;
-                    console.error('Cloudinary error details:', errorData);
-                    throw new Error(`Cloudinary upload failed: ${errorMsg}`);
-                }
-                const data = await response.json();
-                const imageUrl = data.secure_url;
-
+                // Wait for all uploads to finish
+                const uploadedImages = await Promise.all(uploadPromises);
+                
+                // Add all to Firestore
                 const collectionPath = `artifacts/${appId}/public/data/images`;
-                await addDoc(collection(db, collectionPath), {
-                    imageUrl,
-                    albumId,
-                    title, // Save the new title
-                    createdAt: serverTimestamp()
-                });
+                for (const imageData of uploadedImages) {
+                    await addDoc(collection(db, collectionPath), imageData);
+                }
                 
                 if (uploadForm) uploadForm.reset();
                 if (fileUploadFilename) fileUploadFilename.textContent = "";
-                if (fileUploadText) fileUploadText.textContent = "Click to choose a file";
+                if (fileUploadText) fileUploadText.textContent = "Click to choose file(s)";
                 if (addImageModal) closeModal(addImageModal);
+                showToast(`${uploadedImages.length} image(s) uploaded successfully!`, 'success');
+
             } catch (err) {
                 console.error("Upload failed: ", err);
-                uploadError.textContent = `${err.message}. Please check your Cloudinary settings (cloud name, upload preset) and console for details.`;
+                uploadError.textContent = `${err.message}. Please check your Cloudinary settings and console.`;
                 uploadError.classList.remove('hidden');
+                showToast("An error occurred during upload", "error");
             } finally {
                 uploadBtnText.classList.remove('hidden');
                 uploadSpinner.classList.add('hidden');
@@ -964,15 +1338,19 @@
             const addImageBtn = document.getElementById('add-image-btn');
             const addImageModal = document.getElementById('add-image-modal');
             const customizeBtn = document.getElementById('customize-btn');
+            const globalAnalyticsBtn = document.getElementById('global-analytics-btn'); // NEW
             const uploadForm = document.getElementById('upload-form');
             const fileUpload = document.getElementById('file-upload');
             const fileUploadText = document.getElementById('file-upload-text');
             const fileUploadFilename = document.getElementById('file-upload-filename');
+            const imageTitleWrapper = document.getElementById('image-title-wrapper');
+            const imageTitleInput = document.getElementById('image-title');
             
             // Manage Categories Modal
             const manageCategoriesModal = document.getElementById('manage-categories-modal');
             const addAlbumForm = document.getElementById('add-album-form');
             const newAlbumNameInput = document.getElementById('new-album-name');
+            const newAlbumSecretInput = document.getElementById('new-album-secret');
             const albumsListBody = document.getElementById('albums-list-body');
 
             // Edit Category Modal
@@ -982,6 +1360,7 @@
             const editCategoryId = document.getElementById('edit-category-id');
             const editCategoryType = document.getElementById('edit-category-type');
             const editCategoryName = document.getElementById('edit-category-name');
+            const editAlbumSecretInput = document.getElementById('edit-album-secret');
             
             // Confirm Modal
             const confirmModal = document.getElementById('confirm-modal');
@@ -996,6 +1375,11 @@
             const passcodeModal = document.getElementById('passcode-modal');
             const passcodeForm = document.getElementById('passcode-form');
             const passcodeError = document.getElementById('passcode-error');
+            
+            // Analytics Modal
+            const analyticsModal = document.getElementById('analytics-modal');
+            const analyticsTableBody = document.getElementById('analytics-table-body');
+            const globalAnalyticsModal = document.getElementById('global-analytics-modal'); // NEW
 
             // Gallery
             const galleryGrid = document.getElementById('gallery-grid');
@@ -1078,6 +1462,12 @@
                 openModal(manageCategoriesModal); // Then open manage categories modal
             });
             
+            // NEW: Global Analytics Button
+            if (globalAnalyticsBtn) globalAnalyticsBtn.addEventListener('click', () => {
+                closeModal(addImageModal); // Close add image modal first
+                showGlobalAnalytics(); // Calculate and show stats
+            });
+            
             if (confirmModalCancel) confirmModalCancel.addEventListener('click', () => {
                 closeModal(confirmModal);
                 confirmCallback = null;
@@ -1107,13 +1497,26 @@
             
             // --- File Input UI ---
             if (fileUpload) fileUpload.addEventListener('change', () => {
-                if (fileUpload.files.length > 0) {
-                    const filename = fileUpload.files[0].name;
+                const files = fileUpload.files;
+                if (files.length > 1) {
+                    // Bulk Upload
+                    if (fileUploadFilename) fileUploadFilename.textContent = `${files.length} files selected`;
+                    if (fileUploadText) fileUploadText.textContent = "Change files";
+                    if (imageTitleWrapper) imageTitleWrapper.classList.add('hidden'); // Hide title input
+                    if (imageTitleInput) imageTitleInput.required = false;
+                } else if (files.length === 1) {
+                    // Single File
+                    const filename = files[0].name;
                     if (fileUploadFilename) fileUploadFilename.textContent = filename;
                     if (fileUploadText) fileUploadText.textContent = "Change file";
+                    if (imageTitleWrapper) imageTitleWrapper.classList.remove('hidden'); // Show title input
+                    if (imageTitleInput) imageTitleInput.required = true;
                 } else {
+                    // No files
                     if (fileUploadFilename) fileUploadFilename.textContent = "";
-                    if (fileUploadText) fileUploadText.textContent = "Click to choose a file";
+                    if (fileUploadText) fileUploadText.textContent = "Click to choose file(s)";
+                    if (imageTitleWrapper) imageTitleWrapper.classList.remove('hidden');
+                    if (imageTitleInput) imageTitleInput.required = true;
                 }
             });
 
@@ -1123,9 +1526,10 @@
             if (addAlbumForm) addAlbumForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const name = newAlbumNameInput.value.trim();
+                const isSecret = newAlbumSecretInput.checked;
                 if (name) {
-                    addAlbum(name);
-                    newAlbumNameInput.value = '';
+                    addAlbum(name, isSecret);
+                    addAlbumForm.reset();
                 }
             });
             
@@ -1134,8 +1538,9 @@
                 const id = editCategoryId.value;
                 const type = editCategoryType.value; // Will be 'albums'
                 const newName = editCategoryName.value.trim();
+                const isSecret = editAlbumSecretInput.checked;
                 if (id && type === 'albums' && newName) {
-                    updateAlbum(id, newName);
+                    updateAlbum(id, newName, isSecret);
                     closeModal(editCategoryModal);
                 }
             });
@@ -1164,12 +1569,13 @@
                 const deleteBtn = e.target.closest('[data-delete-id]');
                 
                 if (editBtn) {
-                    const { editId, editName } = editBtn.dataset;
+                    const { editId, editName, isSecret } = editBtn.dataset;
                     // Action: Open edit modal (NO passcode)
                     if (editModalTitle) editModalTitle.textContent = `Edit Album`;
                     if (editCategoryId) editCategoryId.value = editId;
                     if (editCategoryType) editCategoryType.value = 'albums';
                     if (editCategoryName) editCategoryName.value = editName;
+                    if (editAlbumSecretInput) editAlbumSecretInput.checked = (isSecret === 'true');
                     if (editCategoryModal) openModal(editCategoryModal);
                 }
                 
@@ -1191,6 +1597,7 @@
                 const deleteBtn = e.target.closest('[data-delete-image-id]');
                 const viewBtn = e.target.closest('[data-view-image-url]');
                 const downloadBtn = e.target.closest('[data-download-image-url]');
+                const analyticsBtn = e.target.closest('[data-analytics-image-id]');
 
                 if (deleteBtn) {
                     const { deleteImageId } = deleteBtn.dataset;
@@ -1216,8 +1623,94 @@
                     const { downloadImageUrl } = downloadBtn.dataset;
                     forceDownload(downloadImageUrl);
                 }
+                
+                if (analyticsBtn) {
+                    // Viewing analytics is not an admin action
+                    const { analyticsImageId } = analyticsBtn.dataset;
+                    // Find from allImages (which is already filtered for secret)
+                    const image = allImages.find(img => img.id === analyticsImageId);
+                    if (image) {
+                        const album = albums.find(a => a.id === image.albumId);
+                        showAnalyticsModal(image, album);
+                    }
+                }
             });
             
+            // --- Analytics Modal Listeners ---
+            if (analyticsModal) analyticsModal.addEventListener('change', (e) => {
+                // Listener for album select change
+                const select = e.target.closest('.analytics-album-select');
+                if (select) {
+                    const imageId = select.dataset.imageId;
+                    const newAlbumId = select.value;
+                    runWithPasscodeCheck(() => {
+                        updateImageAlbum(imageId, newAlbumId);
+                    });
+                }
+            });
+            
+            if (analyticsModal) analyticsModal.addEventListener('click', (e) => {
+                 // Listener for buttons inside the modal
+                const deleteBtn = e.target.closest('[data-delete-image-id]');
+                const downloadBtn = e.target.closest('[data-download-image-url]');
+                
+                if (deleteBtn) {
+                    const { deleteImageId } = deleteBtn.dataset;
+                    closeModal(analyticsModal); // Close this modal first
+                    runWithPasscodeCheck(() => {
+                        openConfirmModal(
+                            'Delete Image',
+                            'Are you sure you want to delete this image? This action cannot be undone.',
+                            () => { deleteImage(deleteImageId); }
+                        );
+                    });
+                }
+                
+                if (downloadBtn) {
+                    const { downloadImageUrl } = downloadBtn.dataset;
+                    forceDownload(downloadImageUrl);
+                }
+            });
+            
+            // --- NEW: Global Analytics Modal Listeners ---
+            if (globalAnalyticsModal) globalAnalyticsModal.addEventListener('change', (e) => {
+                // Listener for album select change (Mirrors analyticsModal)
+                const select = e.target.closest('.analytics-album-select');
+                if (select) {
+                    const imageId = select.dataset.imageId;
+                    const newAlbumId = select.value;
+                    runWithPasscodeCheck(() => {
+                        updateImageAlbum(imageId, newAlbumId);
+                    });
+                }
+            });
+            
+            if (globalAnalyticsModal) globalAnalyticsModal.addEventListener('click', (e) => {
+                 // Listener for buttons inside the modal (Mirrors analyticsModal, but doesn't close modal)
+                const deleteBtn = e.target.closest('[data-delete-image-id]');
+                const downloadBtn = e.target.closest('[data-download-image-url]');
+                
+                if (deleteBtn) {
+                    const { deleteImageId } = deleteBtn.dataset;
+                    // Don't close this modal, just open confirm
+                    runWithPasscodeCheck(() => {
+                        openConfirmModal(
+                            'Delete Image',
+                            'Are you sure you want to delete this image? This action cannot be undone.',
+                            () => { 
+                                deleteImage(deleteImageId); 
+                                // The onSnapshot listener in showGlobalAnalytics will auto-update the table
+                            }
+                        );
+                    });
+                }
+                
+                if (downloadBtn) {
+                    const { downloadImageUrl } = downloadBtn.dataset;
+                    forceDownload(downloadImageUrl);
+                }
+            });
+
             // --- Dropdown Toggle Logic ---
             document.addEventListener('click', (e) => {
                 const toggleBtn = e.target.closest('[data-dropdown-toggle]');
@@ -1235,20 +1728,29 @@
             });
             
             // --- Dropdown Filter Click Logic ---
-            // This listener handles the filtering
             if (albumsDropdownList) albumsDropdownList.addEventListener('click', (e) => {
                 const filterBtn = e.target.closest('[data-filter-id]');
                 if (filterBtn) {
-                    const { filterType, filterId, filterName } = filterBtn.dataset;
+                    const { filterType, filterId, filterName, isSecret } = filterBtn.dataset;
                     
-                    if (filterType === 'albums') {
-                        // 1. Set the global filter state
-                        currentFilters.albumId = filterId || null;
-                        if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "Albums";
+                    const applyFilter = () => {
+                        if (filterType === 'albums') {
+                            currentFilters.albumId = filterId || null;
+                            if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "Albums";
+                        }
+                        loadImages();
+                        if (isSecret === 'true') {
+                            showToast(`Unlocked album: ${filterName}`, 'success');
+                        }
+                    };
+
+                    if (isSecret === 'true') {
+                        // This is a secret album, ask for passcode
+                        runWithPasscodeCheck(applyFilter);
+                    } else {
+                        // Not secret, just apply filter
+                        applyFilter();
                     }
-                    
-                    // 2. Reload images using the new filter
-                    loadImages();
                 }
             });
 
@@ -1264,4 +1766,3 @@
 
 </body>
 </html>
-
