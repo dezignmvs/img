@@ -44,20 +44,23 @@
                 @apply absolute top-2.5 right-2.5;
             }
 
+            /* MODIFIED: Changed positioning and added gradient for new design */
             .bottom-row {
-                @apply absolute bottom-2.5 left-0 right-0 flex justify-between items-end px-3;
+                @apply absolute bottom-0 left-0 right-0 flex justify-between items-end p-4 pt-12 bg-gradient-to-t from-black/80 to-transparent;
             }
 
             .text-group {
-                @apply flex flex-col leading-tight;
+                @apply flex flex-col items-start leading-tight; /* MODIFIED: align-items-start */
             }
 
+            /* MODIFIED: Changed text to white and bold */
             .text-group .title {
-                @apply text-lg font-bold;
+                @apply text-xl font-bold text-white mt-1; /* Added mt-1 */
             }
 
+            /* MODIFIED: Removed pill bg, just green text */
             .text-group .subtitle {
-                @apply text-sm font-light opacity-80;
+                @apply text-sm font-medium text-green-400  tracking-wide;
             }
 
             /* Icon Styles */
@@ -65,12 +68,14 @@
                 @apply flex gap-2.5;
             }
 
+            /* MODIFIED: Removed background for a cleaner icon-only look */
             .icon-btn {
-                @apply bg-black/50 text-white p-1.5 rounded-md cursor-pointer transition-colors duration-200 text-base;
+                @apply text-white/70 cursor-pointer transition-colors duration-200 text-base hover:text-white;
             }
             
+            /* MODIFIED: Removed background hover effect */
             .icon-btn:hover {
-                @apply bg-white/30;
+                /* @apply bg-white/30; */ /* Removed */
             }
             
             .icon-btn iconify-icon {
@@ -86,7 +91,7 @@
                 @apply block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer;
             }
             
-            /* UPDATED: Changed from yellow to primary (violet) */
+            /* UPDATED: Changed from yellow to primary (green) */
             .dropdown-item-all-albums {
                 @apply bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 font-medium;
             }
@@ -169,22 +174,16 @@
                 @apply w-5 h-5 border-2 border-current border-r-transparent rounded-full animate-spin;
             }
             
-            /* Toast Notification */
+            /* MODIFIED: Re-styled toast notification */
             #toast-notification {
-                @apply fixed top-0 left-1/2 -translate-x-1/2 z-[200]
-                        mt-4 px-6 py-3 rounded-lg shadow-lg text-white
-                        transform -translate-y-20 opacity-0 transition-all duration-300;
+                @apply fixed top-4 left-1/2 -translate-x-1/2 z-[200]
+                        flex items-center gap-3 p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 shadow-xl rounded-lg
+                        transform translate-y-[-150%] transition-all duration-300;
             }
             #toast-notification.show {
-                @apply transform-none opacity-100;
+                @apply transform -translate-x-1/2 translate-y-0 opacity-100;
             }
-            /* UPDATED: Success toast is now green */
-            .toast-success {
-                @apply bg-green-600;
-            }
-            .toast-error {
-                @apply bg-red-600;
-            }
+            /* REMOVED: Old toast color classes */
         }
     </style>
     
@@ -197,9 +196,9 @@
             darkMode: 'class', // Enable dark mode using a class
             theme: {
                 extend: {
-                    // NEW: Set primary color to Violet
+                    // MODIFIED: Set primary color to Green
                     colors: {
-                        primary: colors.violet
+                        primary: colors.green
                     },
                     // NEW: Set default font to Inter
                     fontFamily: {
@@ -213,7 +212,7 @@
 <body class="min-h-screen">
 
     <!-- ================================== -->
-    <!--            NAVBAR (Updated)            -->
+    <!--          NAVBAR (Updated)          -->
     <!-- ================================== -->
     <nav class="bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-lg text-gray-900 dark:text-white px-4 sm:px-6 py-3 flex justify-between items-center sticky top-0 z-50 rounded-b-2xl transition-all duration-500">
         <!-- Left Side: Logo/Title -->
@@ -222,7 +221,7 @@
             <span class="text-3xl text-primary-600 dark:text-primary-400">
                 <iconify-icon icon="mdi:image-gallery"></iconify-icon>
             </span>
-            <span class="font-heading text-xl sm:text-2xl font-semibold tracking-wide">Dezign.mvs</span>
+            <span class="font-heading text-xl sm:text-2xl font-semibold ">Dezign.mvs</span>
         </div>
         
         <!-- Right Side: Icons -->
@@ -251,7 +250,7 @@
     </nav>
 
     <!-- ================================== -->
-    <!--           GALLERY CONTENT           -->
+    <!--        GALLERY CONTENT         -->
     <!-- ================================== -->
     <div class="container max-w-7xl mx-auto px-4 py-12">
 
@@ -284,12 +283,13 @@
                 
                 <!-- Albums Dropdown -->
                 <div class="relative w-full md:w-auto">
+                    <!-- MODIFIED: Reverted to original white button style -->
                     <button id="albums-filter-btn" data-dropdown-toggle="albums-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
                                         dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
                         <!-- UPDATED: Changed icon color to primary -->
                         <iconify-icon icon="mdi:image-album" class="text-primary-500"></iconify-icon>
                         <span id="albums-filter-text">Albums</span>
-                        <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+                        <!-- <iconify-icon icon="mdi:chevron-down"></iconify-icon> --> <!-- MODIFIED: Removed icon -->
                     </button>
                     <!-- Dropdown Menu -->
                     <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full md:w-48 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
@@ -312,14 +312,15 @@
 
 
     <!-- ================================== -->
-    <!--              MODALS                 -->
+    <!--           MODALS           -->
     <!-- ================================== -->
 
     <!-- Modal Overlay -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[90] hidden"></div>
     
-    <!-- Toast Notification -->
+    <!-- MODIFIED: Toast Notification HTML -->
     <div id="toast-notification" class="">
+        <span id="toast-icon" class="text-2xl"></span>
         <span id="toast-message"></span>
     </div>
 
@@ -625,7 +626,7 @@
 
 
     <!-- ================================== -->
-    <!--           JAVASCRIPT               -->
+    <!--          JAVASCRIPT          -->
     <!-- ================================== -->
     <!-- Firebase SDKs -->
     <script type="module">
@@ -680,6 +681,7 @@
         // --- APP STATE ---
         let confirmCallback = null;
         let passcodeCallback = null; 
+        let passcodeCancelCallback = null; // NEW
         
         let currentFilters = {
             albumId: null
@@ -745,7 +747,7 @@
             openModal(confirmModal);
         }
         
-        function openPasscodeModal(onSuccess) {
+        function openPasscodeModal(onSuccess, onCancel) { // MODIFIED
             const passcodeModal = document.getElementById('passcode-modal');
             const passcodeError = document.getElementById('passcode-error');
             const passcodeForm = document.getElementById('passcode-form');
@@ -754,13 +756,14 @@
             if (passcodeForm) passcodeForm.reset();
             
             passcodeCallback = onSuccess; 
+            passcodeCancelCallback = onCancel || null; // NEW
             openModal(passcodeModal);
             
             setTimeout(() => document.getElementById('passcode-input')?.focus(), 100);
         }
 
-        function runWithPasscodeCheck(actionToPerform) {
-            openPasscodeModal(actionToPerform);
+        function runWithPasscodeCheck(actionToPerform, actionOnCancel) { // MODIFIED
+            openPasscodeModal(actionToPerform, actionOnCancel); // MODIFIED
         }
         
         function showToast(message, type = 'success') {
@@ -773,9 +776,22 @@
                 clearTimeout(toastTimeout);
             }
 
+            // --- NEW: Add icon based on type ---
+            const toastIcon = document.getElementById('toast-icon');
+            if(toastIcon) {
+                if (type === 'success') {
+                    toastIcon.innerHTML = `<iconify-icon icon="mdi:check-circle" class="text-green-500"></iconify-icon>`;
+                } else {
+                    // MODIFIED: Use close-circle icon for error
+                    toastIcon.innerHTML = `<iconify-icon icon="mdi:close-circle" class="text-red-500"></iconify-icon>`;
+                }
+            }
+            // --- End new icon logic ---
+
             toastMessage.textContent = message;
-            toast.className = 'toast-error'; // Reset
-            toast.classList.add(type === 'success' ? 'toast-success' : 'toast-error', 'show');
+            // MODIFIED: Remove old classes, just add 'show'
+            toast.className = ''; // Reset
+            toast.classList.add('show');
 
             // Hide after 3 seconds
             toastTimeout = setTimeout(() => {
@@ -999,10 +1015,12 @@
                     </div>
                     <div class="bottom-row">
                         <div class="text-group">
-                            <span class="title">${titleName}</span>
+                            <!-- MODIFIED: Swapped order of subtitle and title -->
                             <span class="subtitle">${albumName}</span>
+                            <span class="title">${titleName}</span>
                         </div>
-                       
+                        <!-- MODIFIED: Cleaned up icon group -->
+                        
                     </div>
                 </div>
                 `;
@@ -1030,6 +1048,25 @@
             } catch (e) {
                 console.error("Error updating image album: ", e);
                 showToast("Error updating album", "error");
+            }
+        }
+
+        // NEW: Function to update image title
+        async function updateImageTitle(id, newTitle) {
+            if (!db || !userId) return;
+            if (!newTitle.trim()) {
+                showToast("Title cannot be empty", "error");
+                return false; // Indicate failure
+            }
+            const docPath = `artifacts/${appId}/public/data/images/${id}`;
+            try {
+                await updateDoc(doc(db, docPath), { title: newTitle.trim() });
+                showToast("Image title updated!", "success");
+                return true; // Indicate success
+            } catch (e) {
+                console.error("Error updating image title: ", e);
+                showToast("Error updating title", "error");
+                return false; // Indicate failure
             }
         }
 
@@ -1175,13 +1212,25 @@
                         </option>`
                     ).join('');
 
+                    // Sort by timestamp, newest first
+                    allImagesForStats.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
                     allImagesTableBody.innerHTML = allImagesForStats.map(image => {
                         // Set the selected attribute for the correct album
                         const finalAlbumOptions = albumOptions.replace(`value="${image.albumId}"`, `value="${image.albumId}" selected`);
 
                         return `
                             <tr>
-                                <td class="font-medium text-gray-900 dark:text-white">${image.title || 'Untitled'}</td>
+                                <!-- MODIFIED: Changed static text to an input field -->
+                                <td class="font-medium text-gray-900 dark:text-white">
+                                    <input 
+                                        type="text" 
+                                        value="${image.title || 'Untitled'}" 
+                                        class="analytics-title-input w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                                        data-image-id="${image.id}"
+                                        data-old-title="${image.title || 'Untitled'}"
+                                    >
+                                </td>
                                 <td>
                                     <select class="analytics-album-select w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" data-image-id="${image.id}">
                                         ${finalAlbumOptions}
@@ -1479,7 +1528,13 @@
                     if (modalToClose) {
                         closeModal(modalToClose);
                         if (modalId === 'confirm-modal') confirmCallback = null;
-                        if (modalId === 'passcode-modal') passcodeCallback = null;
+                        if (modalId === 'passcode-modal') {
+                            if (typeof passcodeCancelCallback === 'function') {
+                                passcodeCancelCallback(); // NEW
+                            }
+                            passcodeCallback = null;
+                            passcodeCancelCallback = null; // NEW
+                        }
                     }
                 });
             });
@@ -1546,6 +1601,7 @@
                         passcodeCallback(); // Run the stored action
                     }
                     passcodeCallback = null; // Clear callback
+                    passcodeCancelCallback = null; // NEW
                 } else {
                     if (passcodeError) passcodeError.classList.remove('hidden');
                 }
@@ -1587,6 +1643,7 @@
                 const viewBtn = e.target.closest('[data-view-image-url]');
                 const downloadBtn = e.target.closest('[data-download-image-url]');
                 const analyticsBtn = e.target.closest('[data-analytics-image-id]');
+                const shareBtn = e.target.closest('[data-share-url]'); // NEW
 
                 if (deleteBtn) {
                     const { deleteImageId } = deleteBtn.dataset;
@@ -1608,9 +1665,18 @@
                 }
 
                 if (downloadBtn) {
-                    // Downloading is not an admin action
+                    // This button is no longer on the card, but listener is kept for analytics modal
                     const { downloadImageUrl } = downloadBtn.dataset;
                     forceDownload(downloadImageUrl);
+                }
+
+                // NEW: Share button logic (placeholder)
+                if (shareBtn) {
+                    const { shareUrl } = shareBtn.dataset;
+                    // You can implement sharing logic here, e.g., copy to clipboard
+                    // For now, it just shows a toast
+                    showToast("Share functionality not yet implemented.", "success");
+                    console.log("Share URL:", shareUrl);
                 }
                 
                 if (analyticsBtn) {
@@ -1674,6 +1740,36 @@
                 }
             });
             
+            // NEW: Add 'blur' event listener for title inputs
+            if (globalAnalyticsModal) globalAnalyticsModal.addEventListener('blur', (e) => {
+                const titleInput = e.target.closest('.analytics-title-input');
+                if (titleInput) {
+                    const imageId = titleInput.dataset.imageId;
+                    const oldTitle = titleInput.dataset.oldTitle;
+                    const newTitle = titleInput.value.trim();
+
+                    if (imageId && newTitle && newTitle !== oldTitle) {
+                        // Run with passcode check
+                        runWithPasscodeCheck(
+                            async () => { // onSuccess
+                                const success = await updateImageTitle(imageId, newTitle);
+                                if (success) {
+                                    titleInput.dataset.oldTitle = newTitle;
+                                } else {
+                                    titleInput.value = oldTitle;
+                                }
+                            },
+                            () => { // onCancel
+                                titleInput.value = oldTitle;
+                            }
+                        );
+                    } else if (newTitle !== oldTitle) {
+                        // Revert if empty or no change
+                        titleInput.value = oldTitle;
+                    }
+                }
+            }, true); // Use capture phase
+            
             if (globalAnalyticsModal) globalAnalyticsModal.addEventListener('click', (e) => {
                  // Listener for buttons inside the modal (Mirrors analyticsModal, but doesn't close modal)
                 const deleteBtn = e.target.closest('[data-delete-image-id]');
@@ -1725,7 +1821,8 @@
                     const applyFilter = () => {
                         if (filterType === 'albums') {
                             currentFilters.albumId = filterId || null;
-                            if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "Albums";
+                            // MODIFIED: Update text format
+                            if (albumsFilterText) albumsFilterText.textContent = filterId ? `Album: ${filterName}` : "All Albums";
                         }
                         loadImages();
                         if (isSecret === 'true') {
@@ -1755,4 +1852,3 @@
 
 </body>
 </html>
-
