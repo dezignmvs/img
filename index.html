@@ -177,7 +177,7 @@
             /* MODIFIED: Re-styled toast notification */
             #toast-notification {
                 @apply fixed top-4 left-1/2 -translate-x-1/2 z-[200]
-                        flex items-center gap-3 p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 shadow-xl rounded-lg
+                        flex items-center gap-3 p-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 shadow-xl rounded-lg
                         transform translate-y-[-150%] transition-all duration-300;
             }
             #toast-notification.show {
@@ -1101,7 +1101,7 @@
                 albumsDropdownList.innerHTML += `
                     <button class="dropdown-item flex items-center justify-between" data-filter-type="albums" data-filter-id="${item.id}" data-filter-name="${item.name}" data-is-secret="${item.isSecret || false}">
                         <span>${item.name}</span>
-                        ${item.isSecret ? '<iconify-icon icon="mingcute:safe-lock-fill" class="text-yellow-500"></iconify-icon>' : ''}
+                        ${item.isSecret ? '<iconify-icon icon="mingcute:safe-lock-fill" class="text-emerald-500"></iconify-icon>' : ''}
                     </button>
                 `;
             });
@@ -1821,8 +1821,8 @@
                     const applyFilter = () => {
                         if (filterType === 'albums') {
                             currentFilters.albumId = filterId || null;
-                            // MODIFIED: Update text format
-                            if (albumsFilterText) albumsFilterText.textContent = filterId ? `Album: ${filterName}` : "All Albums";
+                            // MODIFIED: Removed "Album: " prefix
+                            if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "All Albums";
                         }
                         loadImages();
                         if (isSecret === 'true') {
