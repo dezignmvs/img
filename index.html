@@ -8,8 +8,11 @@
     <!-- 1. Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
     
     <!-- 2. Iconify CDN --><script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+
+    <!-- 3. NEW: Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     
-    <!-- 3. Font Imports and Tailwind Configuration --><style type="text/tailwindcss">
+    <!-- 4. Font Imports and Tailwind Configuration --><style type="text/tailwindcss">
         /* NEW: Import Inter font from Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -60,7 +63,7 @@
 
             /* MODIFIED: Removed pill bg, just green text */
             .text-group .subtitle {
-                @apply text-sm font-medium text-green-400  tracking-wide;
+                @apply text-sm font-medium text-primary-400 tracking-wide; /* MODIFIED: green-400 to primary-400 */
             }
 
             /* Icon Styles */
@@ -131,6 +134,11 @@
             .form-checkbox {
                 @apply w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
             }
+
+            /* NEW: Class for edited inputs (using green for 'good') */
+            .input-changed {
+                @apply border-green-500 ring-2 ring-green-200 dark:border-green-400 dark:ring-green-800/60;
+            }
         }
         
         @layer utilities {
@@ -188,9 +196,6 @@
     </style>
     
     <script>
-        // NEW: Import Tailwind colors for config
-        const colors = tailwind.colors; // MODIFIED: Changed from `tailwind.presets.default`
-
         // Configure Tailwind to recognize our custom fonts
         tailwind.config = {
             darkMode: 'class', // Enable dark mode using a class
@@ -198,7 +203,7 @@
                 extend: {
                     // MODIFIED: Set primary color to Green
                     colors: {
-                        primary: colors.green
+                        primary: tailwind.colors.green
                     },
                     // NEW: Set default font to Inter
                     fontFamily: {
@@ -212,7 +217,7 @@
 <body class="min-h-screen">
 
     <!-- ================================== -->
-    <!--          NAVBAR (Updated)          -->
+    <!--           NAVBAR (Updated)           -->
     <!-- ================================== -->
     <nav class="bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-lg text-gray-900 dark:text-white px-4 sm:px-6 py-3 flex justify-between items-center sticky top-0 z-50 rounded-b-2xl transition-all duration-500">
         <!-- Left Side: Logo/Title -->
@@ -250,69 +255,174 @@
     </nav>
 
     <!-- ================================== -->
-    <!--        GALLERY CONTENT         -->
+    <!--     MAIN CONTENT WRAPPER         -->
     <!-- ================================== -->
     <div class="container max-w-7xl mx-auto px-4 py-12">
 
-        <!-- Header Section -->
-        <header class="text-center mb-10">
-            <h1 class="font-heading text-4xl md:text-5xl mb-2 tracking-tight">GALLERY</h1>
-            <p class="font-body text-lg text-gray-600 dark:text-gray-400">Capturing the moments</p>
-        </header>
+        <!-- 1. GALLERY PAGE (Default View) -->
+        <div id="gallery-page">
+            <!-- Header Section -->
+            <header class="text-center mb-10">
+                <h1 class="font-heading text-4xl md:text-5xl mb-2 tracking-tight">GALLERY</h1>
+                <p class="font-body text-lg text-gray-600 dark:text-gray-400">Capturing the moments</p>
+            </header>
 
-        <!-- Filter and Search Section -->
-        <div class="flex flex-col md:flex-row gap-4 mb-8 items-center">
-            
-            <!-- Search Bar -->
-            <div class="relative w-full md:flex-grow">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
-                    <iconify-icon icon="mdi:magnify"></iconify-icon>
-                </span>
-                <!-- UPDATED: Changed focus ring to primary -->
-                <input 
-                    id="search-input"
-                    type="text" 
-                    placeholder="Search images by title, album..." 
-                    class="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition
-                           dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-primary-500"
-                >
+            <!-- Filter and Search Section -->
+            <div class="flex flex-col md:flex-row gap-4 mb-8 items-center">
+                
+                <!-- Search Bar -->
+                <div class="relative w-full md:flex-grow">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+                        <iconify-icon icon="mdi:magnify"></iconify-icon>
+                    </span>
+                    <!-- UPDATED: Changed focus ring to primary -->
+                    <input 
+                        id="search-input"
+                        type="text" 
+                        placeholder="Search images by title, album..." 
+                        class="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition
+                               dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-primary-500"
+                    >
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="flex-shrink-0 grid grid-cols-1 md:flex gap-3 w-full md:w-auto">
+                    
+                    <!-- Albums Dropdown -->
+                    <div class="relative w-full md:w-auto">
+                        <!-- MODIFIED: Reverted to original white button style -->
+                        <button id="albums-filter-btn" data-dropdown-toggle="albums-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
+                                        dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
+                            <!-- UPDATED: Changed icon color to primary -->
+                            <iconify-icon icon="mdi:image-album" class="text-primary-500"></iconify-icon>
+                            <span id="albums-filter-text">Albums</span>
+                            <!-- <iconify-icon icon="mdi:chevron-down"></iconify-icon> --> <!-- MODIFIED: Removed icon -->
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full md:w-48 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
+                            <div id="albums-dropdown-list" class="py-1 max-h-60 overflow-y-auto">
+                                <span class="dropdown-item">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
 
-            <!-- Filter Buttons -->
-            <div class="flex-shrink-0 grid grid-cols-1 md:flex gap-3 w-full md:w-auto">
-                
-                <!-- Albums Dropdown -->
-                <div class="relative w-full md:w-auto">
-                    <!-- MODIFIED: Reverted to original white button style -->
-                    <button id="albums-filter-btn" data-dropdown-toggle="albums-dropdown" class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-5 py-3 flex items-center justify-center gap-2 hover:bg-gray-100 transition text-gray-700 font-medium
-                                        dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600">
-                        <!-- UPDATED: Changed icon color to primary -->
-                        <iconify-icon icon="mdi:image-album" class="text-primary-500"></iconify-icon>
-                        <span id="albums-filter-text">Albums</span>
-                        <!-- <iconify-icon icon="mdi:chevron-down"></iconify-icon> --> <!-- MODIFIED: Removed icon -->
+            <!-- Gallery Grid -->
+            <div id="gallery-grid">
+                <!-- Gallery items will be dynamically inserted here by Firebase -->
+                <p id="gallery-loading" class="text-gray-500 dark:text-gray-400 col-span-full text-center">Loading images...</p>
+            </div> <!-- End Gallery Grid -->
+        </div> <!-- End Gallery Page -->
+
+
+        <!-- 2. ANALYTICS PAGE (Hidden by default) -->
+        <div id="analytics-page" class="hidden">
+            <!-- Page Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-3">
+                    <button id="analytics-back-btn" class="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300/40 dark:border-gray-700/60 bg-white/50 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:scale-105 hover:bg-white/70 dark:hover:bg-gray-600/70 transition-all duration-300 shadow-sm" title="Back to Gallery">
+                        <iconify-icon icon="mdi:arrow-left" class="text-xl"></iconify-icon>
                     </button>
-                    <!-- Dropdown Menu -->
-                    <div id="albums-dropdown" class="absolute top-full left-0 mt-2 w-full md:w-48 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-lg shadow-lg z-20 hidden overflow-hidden">
-                        <div id="albums-dropdown-list" class="py-1 max-h-60 overflow-y-auto">
-                            <span class="dropdown-item">Loading...</span>
+                    <h1 class="font-heading text-4xl md:text-5xl tracking-tight">Gallery Analytics</h1>
+                </div>
+                <button type="button" id="save-analytics-btn" class="px-5 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition flex items-center justify-center min-w-[140px] shadow-sm">
+                    <span id="save-analytics-btn-text">Save Changes</span>
+                    <div id="save-analytics-spinner" class="spinner hidden"></div>
+                </button>
+            </div>
+
+            <!-- Page Body -->
+            <div class="space-y-6">
+                 <!-- Stat Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Card 1: Total Images (Green) -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-green-500">
+                            <iconify-icon icon="mdi:image-multiple"></iconify-icon>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-title">Total Images</span>
+                            <span id="stats-total-images" class="stat-card-value">0</span>
+                        </div>
+                    </div>
+                    <!-- Card 2: Total Albums (Violet) -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-violet-500">
+                            <iconify-icon icon="mdi:image-album"></iconify-icon>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-title">Total Albums</span>
+                            <span id="stats-total-albums" class="stat-card-value">0</span>
+                        </div>
+                    </div>
+                    <!-- Card 3: Public Albums (Yellow/Orange) -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-yellow-500">
+                            <iconify-icon icon="mdi:folder-open-outline"></iconify-icon>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-title">Public Albums</span>
+                            <span id="stats-public-albums" class="stat-card-value">0</span>
+                        </div>
+                    </div>
+                    <!-- Card 4: Secret Albums (Red) -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-red-500">
+                            <iconify-icon icon="mdi:lock-outline"></iconify-icon>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-title">Secret Albums</span>
+                            <span id="stats-secret-albums" class="stat-card-value">0</span>
                         </div>
                     </div>
                 </div>
-                
-            </div>
-        </div>
 
-        <!-- Gallery Grid -->
-        <div id="gallery-grid">
-            <!-- Gallery items will be dynamically inserted here by Firebase -->
-            <p id="gallery-loading" class="text-gray-500 dark:text-gray-400 col-span-full text-center">Loading images...</p>
-        </div> <!-- End Gallery Grid -->
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left: Donut Chart -->
+                    <div class="lg:col-span-1 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                        <h4 class="font-heading text-base mb-2">Images by Type</h4>
+                        <div class="h-64 flex items-center justify-center">
+                            <canvas id="image-type-chart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Right: Bar Chart -->
+                    <div class="lg:col-span-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                         <h4 class="font-heading text-base mb-2">Uploads per Month</h4>
+                        <div class="h-64">
+                            <canvas id="uploads-per-month-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Images Table -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                    <h4 class="font-heading text-base mb-2">All Images</h4>
+                    <div class="max-h-96 overflow-y-auto relative rounded-lg border dark:border-gray-700">
+                        <table class="data-table">
+                            <thead class="sticky top-0">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Album (Click to edit)</th>
+                                    <th scope="col" class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="global-analytics-all-images-body">
+                                <!-- All images will be injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End Analytics Page -->
 
     </div> <!-- End Container -->
 
 
     <!-- ================================== -->
-    <!--           MODALS           -->
+    <!--             MODALS                 -->
     <!-- ================================== -->
 
     <!-- Modal Overlay -->
@@ -401,7 +511,13 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-lg transform transition-all scale-95 opacity-0">
             <!-- Modal Header -->
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 class="font-heading text-lg">Manage Albums</h3>
+                <!-- NEW: Back Button -->
+                <div class="flex items-center gap-2">
+                    <button id="manage-albums-back-btn" class="text-gray-500 hover:text-primary-600 dark:hover:text-primary-400 text-2xl" title="Back to Add Image">
+                        <iconify-icon icon="mdi:arrow-left"></iconify-icon>
+                    </button>
+                    <h3 class="font-heading text-lg">Manage Albums</h3>
+                </div>
                 <button data-close-modal="manage-categories-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
             </div>
             <!-- Modal Body -->
@@ -548,85 +664,11 @@
         </div>
     </div>
     
-    <!-- 8. Global Analytics Modal -->
-    <div id="global-analytics-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-2xl transform transition-all scale-95 opacity-0">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                <h3 class="font-heading text-lg">Gallery Analytics</h3>
-                <button data-close-modal="global-analytics-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl">&times;</button>
-            </div>
-            <!-- Modal Body -->
-            <div class="p-6 space-y-6">
-                <!-- Stat Cards (RE-STYLED to match inspiration) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Card 1: Total Images (Green) -->
-                    <div class="stat-card">
-                        <div class="stat-card-icon bg-green-500">
-                            <iconify-icon icon="mdi:image-multiple"></iconify-icon>
-                        </div>
-                        <div class="stat-card-content">
-                            <span class="stat-card-title">Total Images</span>
-                            <span id="stats-total-images" class="stat-card-value">0</span>
-                        </div>
-                    </div>
-                    <!-- Card 2: Total Albums (Violet) -->
-                    <div class="stat-card">
-                        <div class="stat-card-icon bg-violet-500">
-                            <iconify-icon icon="mdi:image-album"></iconify-icon>
-                        </div>
-                        <div class="stat-card-content">
-                            <span class="stat-card-title">Total Albums</span>
-                            <span id="stats-total-albums" class="stat-card-value">0</span>
-                        </div>
-                    </div>
-                    <!-- Card 3: Public Albums (Yellow/Orange) -->
-                    <div class="stat-card">
-                        <div class="stat-card-icon bg-yellow-500">
-                            <iconify-icon icon="mdi:folder-open-outline"></iconify-icon>
-                        </div>
-                        <div class="stat-card-content">
-                            <span class="stat-card-title">Public Albums</span>
-                            <span id="stats-public-albums" class="stat-card-value">0</span>
-                        </div>
-                    </div>
-                    <!-- Card 4: Secret Albums (Red) -->
-                    <div class="stat-card">
-                        <div class="stat-card-icon bg-red-500">
-                            <iconify-icon icon="mdi:lock-outline"></iconify-icon>
-                        </div>
-                        <div class="stat-card-content">
-                            <span class="stat-card-title">Secret Albums</span>
-                            <span id="stats-secret-albums" class="stat-card-value">0</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- MODIFIED: Replaced 'Images per Album' with 'All Images' table -->
-                <div>
-                    <h4 class="font-heading text-base mb-2">All Images</h4>
-                    <div class="max-h-60 overflow-y-auto relative rounded-lg border dark:border-gray-700">
-                        <table class="data-table">
-                            <thead class="sticky top-0">
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Album (Click to edit)</th>
-                                    <th scope="col" class="text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="global-analytics-all-images-body">
-                                <!-- All images will be injected by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- 8. Global Analytics Modal (REMOVED - Now a page) -->
 
 
     <!-- ================================== -->
-    <!--          JAVASCRIPT          -->
+    <!--           JAVASCRIPT             -->
     <!-- ================================== -->
     <!-- Firebase SDKs -->
     <script type="module">
@@ -681,7 +723,10 @@
         // --- APP STATE ---
         let confirmCallback = null;
         let passcodeCallback = null; 
-        let passcodeCancelCallback = null; // NEW
+        let passcodeCancelCallback = null;
+        let stagedChanges = {}; // For analytics page edits
+        let imageTypeChart = null; // Chart instance
+        let uploadsChart = null; // Chart instance
         
         let currentFilters = {
             albumId: null
@@ -689,9 +734,34 @@
         let allImages = []; // Cache for search filtering
         let toastTimeout = null; // For the notification
 
-        // --- MODAL & TOAST UTILITIES ---
+        // --- PAGE/MODAL UTILITIES ---
+        const galleryPage = document.getElementById('gallery-page');
+        const analyticsPage = document.getElementById('analytics-page');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+
+        function showGalleryPage() {
+            if (galleryPage) galleryPage.classList.remove('hidden');
+            if (analyticsPage) analyticsPage.classList.add('hidden');
+            
+            // Destroy charts when leaving analytics page
+            if (imageTypeChart) {
+                imageTypeChart.destroy();
+                imageTypeChart = null;
+            }
+            if (uploadsChart) {
+                uploadsChart.destroy();
+                uploadsChart = null;
+            }
+        }
+
+        function showAnalyticsPage() {
+            if (galleryPage) galleryPage.classList.add('hidden');
+            if (analyticsPage) analyticsPage.classList.remove('hidden');
+            stagedChanges = {}; // Clear any old changes
+            showGlobalAnalytics(); // Fetch data and draw charts
+        }
+
         function openModal(modal) {
-            const modalBackdrop = document.getElementById('modal-backdrop');
             if (!modalBackdrop || !modal) return;
             
             modalBackdrop.classList.remove('hidden');
@@ -706,7 +776,6 @@
         }
 
         function closeModal(modal) {
-            const modalBackdrop = document.getElementById('modal-backdrop');
             if (!modalBackdrop || !modal) return;
 
             if (modal.id !== 'lightbox-modal') {
@@ -718,8 +787,8 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 
-                // UPDATED: Added new global-analytics-modal to the list
-                const allModals = document.querySelectorAll('#add-image-modal, #manage-categories-modal, #edit-category-modal, #confirm-modal, #lightbox-modal, #passcode-modal, #analytics-modal, #global-analytics-modal');
+                // Check if any *other* modals are still open
+                const allModals = document.querySelectorAll('#add-image-modal, #manage-categories-modal, #edit-category-modal, #confirm-modal, #lightbox-modal, #passcode-modal, #analytics-modal');
                 
                 let aModalIsStillOpen = false;
                 allModals.forEach(m => {
@@ -747,7 +816,7 @@
             openModal(confirmModal);
         }
         
-        function openPasscodeModal(onSuccess, onCancel) { // MODIFIED
+        function openPasscodeModal(onSuccess, onCancel) {
             const passcodeModal = document.getElementById('passcode-modal');
             const passcodeError = document.getElementById('passcode-error');
             const passcodeForm = document.getElementById('passcode-form');
@@ -756,14 +825,14 @@
             if (passcodeForm) passcodeForm.reset();
             
             passcodeCallback = onSuccess; 
-            passcodeCancelCallback = onCancel || null; // NEW
+            passcodeCancelCallback = onCancel || null;
             openModal(passcodeModal);
             
             setTimeout(() => document.getElementById('passcode-input')?.focus(), 100);
         }
 
-        function runWithPasscodeCheck(actionToPerform, actionOnCancel) { // MODIFIED
-            openPasscodeModal(actionToPerform, actionOnCancel); // MODIFIED
+        function runWithPasscodeCheck(actionToPerform, actionOnCancel) {
+            openPasscodeModal(actionToPerform, actionOnCancel);
         }
         
         function showToast(message, type = 'success') {
@@ -771,29 +840,23 @@
             const toastMessage = document.getElementById('toast-message');
             if (!toast || !toastMessage) return;
 
-            // Clear existing timeout if one exists
             if (toastTimeout) {
                 clearTimeout(toastTimeout);
             }
 
-            // --- NEW: Add icon based on type ---
             const toastIcon = document.getElementById('toast-icon');
             if(toastIcon) {
                 if (type === 'success') {
                     toastIcon.innerHTML = `<iconify-icon icon="mdi:check-circle" class="text-green-500"></iconify-icon>`;
                 } else {
-                    // MODIFIED: Use close-circle icon for error
                     toastIcon.innerHTML = `<iconify-icon icon="mdi:close-circle" class="text-red-500"></iconify-icon>`;
                 }
             }
-            // --- End new icon logic ---
 
             toastMessage.textContent = message;
-            // MODIFIED: Remove old classes, just add 'show'
             toast.className = ''; // Reset
             toast.classList.add('show');
 
-            // Hide after 3 seconds
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
                 toastTimeout = null;
@@ -804,7 +867,6 @@
         // --- FIREBASE FUNCTIONS ---
         async function initializeFirebase() {
             try {
-                // Enabled debug logging per guidelines
                 setLogLevel('Debug');
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
@@ -898,9 +960,11 @@
             if (!db || !userId) return;
             const collectionPath = `artifacts/${appId}/public/data/albums`;
             try {
-                await addDoc(collection(db, collectionPath), { name, isSecret });
+                await addDoc(collection(db, collectionPath), { name, isSecret, createdAt: serverTimestamp() });
+                showToast("Album added successfully", "success");
             } catch (e) {
                 console.error("Error adding document: ", e);
+                showToast("Error adding album", "error");
             }
         }
         
@@ -909,8 +973,10 @@
             const docPath = `artifacts/${appId}/public/data/albums/${id}`;
             try {
                 await updateDoc(doc(db, docPath), { name: newName, isSecret: isSecret });
+                showToast("Album updated successfully", "success");
             } catch (e) {
                 console.error("Error updating document: ", e);
+                showToast("Error updating album", "error");
             }
         }
 
@@ -919,8 +985,10 @@
             const docPath = `artifacts/${appId}/public/data/albums/${id}`;
             try {
                 await deleteDoc(doc(db, docPath));
+                showToast("Album deleted", "success");
             } catch (e) {
                 console.error("Error deleting document: ", e);
+                showToast("Error deleting album", "error");
             }
         }
 
@@ -935,10 +1003,8 @@
 
             const collectionPath = `artifacts/${appId}/public/data/images`;
             
-            // Sorting will be done in memory.
             let q = query(collection(db, collectionPath));
 
-            // --- FILTERING LOGIC (Firestore) ---
             if (currentFilters.albumId) {
                 q = query(q, where("albumId", "==", currentFilters.albumId));
             }
@@ -947,27 +1013,17 @@
                 let list = [];
                 snap.forEach(d => list.push({id: d.id, ...d.data()}));
                 
-                // NEW LOGIC: Filter out secret images if "All Albums" is selected
                 const secretAlbumIds = new Set(albums.filter(a => a.isSecret).map(a => a.id));
                 let imagesToShow = list;
 
                 if (!currentFilters.albumId) {
-                    // "All Albums" is active. Filter out secret images from the `list`.
                     imagesToShow = list.filter(image => !secretAlbumIds.has(image.albumId));
                 }
-                // ELSE: A specific album is selected. The 'list' only contains images for that album.
-                // We don't need to filter, as the user passed the passcode check to get here.
                 
-                // Sort in memory by createdAt timestamp (newest first)
-                imagesToShow.sort((a, b) => {
-                    const timeA = a.createdAt?.seconds || 0;
-                    const timeB = b.createdAt?.seconds || 0;
-                    return timeB - timeA; // Descending order
-                });
+                imagesToShow.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
                 allImages = imagesToShow; // Cache the (potentially filtered) list
 
-                // --- SEARCH LOGIC (Client-side) ---
                 const filtered = search
                     ? imagesToShow.filter(image => {
                         const alb = albums.find(x => x.id === image.albumId);
@@ -975,13 +1031,13 @@
                         const title = (image.title || "").toLowerCase();
                         return albName.includes(search) || title.includes(search);
                     })
-                    : imagesToShow; // If no search term, show all images from the album
+                    : imagesToShow;
 
                 renderGallery(filtered);
                 if (galleryLoading) galleryLoading.classList.add('hidden');
             }, (error) => {
                 console.error("Error loading images: ", error);
-                if (galleryGrid) galleryGrid.innerHTML = `<p class="text-red-500 col-span-full text-center">Error loading images. (Have you enabled Firestore and added data?)</p>`;
+                if (galleryGrid) galleryGrid.innerHTML = `<p class="text-red-500 col-span-full text-center">Error loading images.</p>`;
             });
         }
         
@@ -998,7 +1054,7 @@
                 const album = albums.find(a => a.id === image.albumId);
                 
                 const albumName = album ? album.name : "Uncategorized";
-                const titleName = image.title || "Untitled"; // Use image title
+                const titleName = image.title || "Untitled";
                 
                 return `
                 <div class="image-card">
@@ -1015,12 +1071,17 @@
                     </div>
                     <div class="bottom-row">
                         <div class="text-group">
-                            <!-- MODIFIED: Swapped order of subtitle and title -->
                             <span class="subtitle">${albumName}</span>
                             <span class="title">${titleName}</span>
                         </div>
-                        <!-- MODIFIED: Cleaned up icon group -->
-                        
+                        <div class="icon-group">
+                            <button class="icon-btn analytics" title="Details" data-analytics-image-id="${image.id}">
+                                <iconify-icon icon="mdi:chart-bar"></iconify-icon>
+                            </button>
+                            <button class="icon-btn share" title="Share" data-share-url="${image.imageUrl}">
+                                <iconify-icon icon="mdi:share-variant-outline"></iconify-icon>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 `;
@@ -1044,40 +1105,61 @@
             const docPath = `artifacts/${appId}/public/data/images/${id}`;
             try {
                 await updateDoc(doc(db, docPath), { albumId: newAlbumId });
-                showToast("Image album updated!", "success");
+                return true;
             } catch (e) {
                 console.error("Error updating image album: ", e);
                 showToast("Error updating album", "error");
+                return false;
             }
         }
 
-        // NEW: Function to update image title
         async function updateImageTitle(id, newTitle) {
             if (!db || !userId) return;
             if (!newTitle.trim()) {
                 showToast("Title cannot be empty", "error");
-                return false; // Indicate failure
+                return false;
             }
             const docPath = `artifacts/${appId}/public/data/images/${id}`;
             try {
                 await updateDoc(doc(db, docPath), { title: newTitle.trim() });
-                showToast("Image title updated!", "success");
-                return true; // Indicate success
+                return true;
             } catch (e) {
                 console.error("Error updating image title: ", e);
                 showToast("Error updating title", "error");
-                return false; // Indicate failure
+                return false;
             }
         }
 
 
         // --- HELPER FUNCTIONS ---
+
+        function copyToClipboard(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.top = 0;
+            ta.style.left = 0;
+            ta.style.opacity = 0;
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("Image URL copied to clipboard!", "success");
+                } else {
+                    showToast("Failed to copy URL", "error");
+                }
+            } catch (err) {
+                showToast("Failed to copy URL", "error");
+            }
+            document.body.removeChild(ta);
+        }
         
         function populateDropdowns() {
             const albumSelect = document.getElementById('album-select');
             if (!albumSelect) return;
 
-            // Populate Album Dropdown (for Add Image Modal)
             albumSelect.innerHTML = '<option value="" disabled selected>Select an album</option>';
             albums.forEach(album => {
                 albumSelect.innerHTML += `<option value="${album.id}">${album.name} ${album.isSecret ? '(Secret)' : ''}</option>`;
@@ -1101,7 +1183,7 @@
                 albumsDropdownList.innerHTML += `
                     <button class="dropdown-item flex items-center justify-between" data-filter-type="albums" data-filter-id="${item.id}" data-filter-name="${item.name}" data-is-secret="${item.isSecret || false}">
                         <span>${item.name}</span>
-                        ${item.isSecret ? '<iconify-icon icon="mingcute:safe-lock-fill" class="text-emerald-500"></iconify-icon>' : ''}
+                        ${item.isSecret ? '<iconify-icon icon="mingcute:safe-lock-fill" class="text-yellow-500"></iconify-icon>' : ''}
                     </button>
                 `;
             });
@@ -1140,19 +1222,16 @@
             const tableBody = document.getElementById('analytics-table-body');
             if (!modal || !tableBody) return;
 
-            // Create album options
             const albumOptions = albums.map(a => 
                 `<option value="${a.id}" ${a.id === image.albumId ? 'selected' : ''}>
                     ${a.name} ${a.isSecret ? '(Secret)' : ''}
                 </option>`
             ).join('');
 
-            // Create table row
             tableBody.innerHTML = `
                 <tr>
                     <td class="font-medium text-gray-900 dark:text-white">${image.title}</td>
                     <td>
-                        <!-- UPDATED: Changed focus ring to primary -->
                         <select class="analytics-album-select w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" data-image-id="${image.id}">
                             ${albumOptions}
                         </select>
@@ -1173,66 +1252,200 @@
             openModal(modal);
         }
         
-        // NEW: Function to show Global Analytics
+        // --- CHART Drawing Functions ---
+        function drawImageTypeChart(publicCount, secretCount) {
+            const ctx = document.getElementById('image-type-chart');
+            if (!ctx) return;
+
+            if (imageTypeChart) {
+                imageTypeChart.destroy();
+            }
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#e5e7eb' : '#374151';
+            const borderColor = isDark ? tailwind.colors.gray[800] : tailwind.colors.white;
+
+            imageTypeChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Public Images', 'Secret Images'],
+                    datasets: [{
+                        label: 'Image Type',
+                        data: [publicCount, secretCount],
+                        backgroundColor: [
+                            tailwind.colors.green[500], // Public
+                            tailwind.colors.red[500]    // Secret
+                        ],
+                        borderColor: borderColor,
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                boxWidth: 12,
+                                padding: 20,
+                                font: {
+                                    family: 'Inter, sans-serif'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawUploadsChart(allImagesForStats) {
+            const ctx = document.getElementById('uploads-per-month-chart');
+            if (!ctx) return;
+
+            if (uploadsChart) {
+                uploadsChart.destroy();
+            }
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#e5e7eb' : '#374151';
+            const gridColor = isDark ? tailwind.colors.gray[700] : tailwind.colors.gray[200];
+
+            const monthLabels = [];
+            const counts = [];
+            const now = new Date();
+            
+            for (let i = 11; i >= 0; i--) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const month = d.toLocaleString('default', { month: 'short' });
+                const year = d.getFullYear().toString().slice(-2);
+                monthLabels.push(`${month} '${year}`);
+                
+                const count = allImagesForStats.filter(img => {
+                    if (!img.createdAt || !img.createdAt.seconds) return false;
+                    const imgDate = new Date(img.createdAt.seconds * 1000);
+                    return imgDate.getMonth() === d.getMonth() && imgDate.getFullYear() === d.getFullYear();
+                }).length;
+                counts.push(count);
+            }
+
+            uploadsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: monthLabels,
+                    datasets: [{
+                        label: 'Uploads',
+                        data: counts,
+                        backgroundColor: tailwind.colors.green[500],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: textColor,
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: gridColor
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: textColor
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // --- Analytics Page Logic ---
         function showGlobalAnalytics() {
-            const modal = document.getElementById('global-analytics-modal');
             const totalImagesEl = document.getElementById('stats-total-images');
             const totalAlbumsEl = document.getElementById('stats-total-albums');
-            const publicAlbumsEl = document.getElementById('stats-public-albums'); // NEW
-            const secretAlbumsEl = document.getElementById('stats-secret-albums'); // NEW
-            const allImagesTableBody = document.getElementById('global-analytics-all-images-body'); // MODIFIED
+            const publicAlbumsEl = document.getElementById('stats-public-albums');
+            const secretAlbumsEl = document.getElementById('stats-secret-albums');
+            const allImagesTableBody = document.getElementById('global-analytics-all-images-body');
             
-            if (!modal || !totalImagesEl || !totalAlbumsEl || !allImagesTableBody || !publicAlbumsEl || !secretAlbumsEl) return; // MODIFIED
+            if (!totalImagesEl || !totalAlbumsEl || !allImagesTableBody || !publicAlbumsEl || !secretAlbumsEl) return;
             
-            // 1. Get all images, including secret ones for this count
             const collectionPath = `artifacts/${appId}/public/data/images`;
             const q = query(collection(db, collectionPath));
             
-            onSnapshot(q, (snap) => {
+            // This snapshot listener will automatically update the charts and table
+            // whenever data changes, even if the user deletes an image while on this page.
+            const unsubscribe = onSnapshot(q, (snap) => {
                 const allImagesForStats = [];
                 snap.forEach(d => allImagesForStats.push({id: d.id, ...d.data()}));
                 
-                // Calculate stats
+                const secretAlbumIds = new Set(albums.filter(a => a.isSecret).map(a => a.id));
                 const secretAlbumsCount = albums.filter(a => a.isSecret).length;
                 const publicAlbumsCount = albums.length - secretAlbumsCount;
+
+                const secretImagesCount = allImagesForStats.filter(img => secretAlbumIds.has(img.albumId)).length;
+                const publicImagesCount = allImagesForStats.length - secretImagesCount;
                 
                 totalImagesEl.textContent = allImagesForStats.length;
                 totalAlbumsEl.textContent = albums.length;
                 publicAlbumsEl.textContent = publicAlbumsCount;
                 secretAlbumsEl.textContent = secretAlbumsCount;
                 
-                // --- MODIFIED: Populate 'All Images' table instead of 'Images per Album' ---
+                drawImageTypeChart(publicImagesCount, secretImagesCount);
+                drawUploadsChart(allImagesForStats);
+                
                 if (allImagesForStats.length === 0) {
                     allImagesTableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-gray-500 dark:text-gray-400">No images found in the gallery.</td></tr>`;
                 } else {
-                    // Create album options string once
                     const albumOptions = albums.map(a => 
                         `<option value="${a.id}">
                             ${a.name} ${a.isSecret ? '(Secret)' : ''}
                         </option>`
                     ).join('');
 
-                    // Sort by timestamp, newest first
                     allImagesForStats.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
                     allImagesTableBody.innerHTML = allImagesForStats.map(image => {
-                        // Set the selected attribute for the correct album
-                        const finalAlbumOptions = albumOptions.replace(`value="${image.albumId}"`, `value="${image.albumId}" selected`);
+                        // Check if there's a staged change for this image
+                        const staged = stagedChanges[image.id] || {};
+                        const currentTitle = staged.title !== undefined ? staged.title : (image.title || 'Untitled');
+                        const currentAlbumId = staged.albumId !== undefined ? staged.albumId : image.albumId;
+
+                        const finalAlbumOptions = albumOptions.replace(`value="${currentAlbumId}"`, `value="${currentAlbumId}" selected`);
+                        
+                        // Check if inputs should be highlighted
+                        const titleChanged = staged.title !== undefined && staged.title !== (image.title || 'Untitled');
+                        const albumChanged = staged.albumId !== undefined && staged.albumId !== image.albumId;
 
                         return `
                             <tr>
-                                <!-- MODIFIED: Changed static text to an input field -->
                                 <td class="font-medium text-gray-900 dark:text-white">
                                     <input 
                                         type="text" 
-                                        value="${image.title || 'Untitled'}" 
-                                        class="analytics-title-input w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                                        value="${currentTitle}" 
+                                        class="analytics-title-input w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 ${titleChanged ? 'input-changed' : ''}" 
                                         data-image-id="${image.id}"
                                         data-old-title="${image.title || 'Untitled'}"
                                     >
                                 </td>
                                 <td>
-                                    <select class="analytics-album-select w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500" data-image-id="${image.id}">
+                                    <select class="analytics-album-select w-full p-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 ${albumChanged ? 'input-changed' : ''}" 
+                                        data-image-id="${image.id}" 
+                                        data-old-album="${image.albumId}">
                                         ${finalAlbumOptions}
                                     </select>
                                 </td>
@@ -1253,10 +1466,13 @@
                 
             }, (error) => {
                 console.error("Error loading all images for stats: ", error);
-                allImagesTableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-red-500">Error loading stats.</td></tr>`; // MODIFIED colspan
+                allImagesTableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-red-500">Error loading stats.</td></tr>`;
             });
             
-            openModal(modal);
+            // NOTE: We don't call unsubscribe() here. It will stay active
+            // as long as the user is on the analytics page.
+            // It will be "orphaned" when we leave, but a new one
+            // will be created when we come back.
         }
 
         async function handleImageUpload(e) {
@@ -1321,9 +1537,8 @@
                         return response.json();
                     })
                     .then(data => {
-                        // For bulk, use filename as title. For single, use provided title.
                         const imageTitle = isBulkUpload 
-                            ? file.name.split('.').slice(0, -1).join('.') // Filename without extension
+                            ? file.name.split('.').slice(0, -1).join('.')
                             : title;
                         
                         return {
@@ -1338,10 +1553,8 @@
             }
 
             try {
-                // Wait for all uploads to finish
                 const uploadedImages = await Promise.all(uploadPromises);
                 
-                // Add all to Firestore
                 const collectionPath = `artifacts/${appId}/public/data/images`;
                 for (const imageData of uploadedImages) {
                     await addDoc(collection(db, collectionPath), imageData);
@@ -1370,13 +1583,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             // --- DOM ELEMENTS ---
-            const modalBackdrop = document.getElementById('modal-backdrop');
-            
-            // Add Image Modal
             const addImageBtn = document.getElementById('add-image-btn');
             const addImageModal = document.getElementById('add-image-modal');
             const customizeBtn = document.getElementById('customize-btn');
-            const globalAnalyticsBtn = document.getElementById('global-analytics-btn'); // NEW
+            const globalAnalyticsBtn = document.getElementById('global-analytics-btn');
             const uploadForm = document.getElementById('upload-form');
             const fileUpload = document.getElementById('file-upload');
             const fileUploadText = document.getElementById('file-upload-text');
@@ -1384,14 +1594,13 @@
             const imageTitleWrapper = document.getElementById('image-title-wrapper');
             const imageTitleInput = document.getElementById('image-title');
             
-            // Manage Categories Modal
             const manageCategoriesModal = document.getElementById('manage-categories-modal');
             const addAlbumForm = document.getElementById('add-album-form');
             const newAlbumNameInput = document.getElementById('new-album-name');
             const newAlbumSecretInput = document.getElementById('new-album-secret');
             const albumsListBody = document.getElementById('albums-list-body');
+            const manageAlbumsBackBtn = document.getElementById('manage-albums-back-btn');
 
-            // Edit Category Modal
             const editCategoryModal = document.getElementById('edit-category-modal');
             const editCategoryForm = document.getElementById('edit-category-form');
             const editModalTitle = document.getElementById('edit-modal-title');
@@ -1400,34 +1609,29 @@
             const editCategoryName = document.getElementById('edit-category-name');
             const editAlbumSecretInput = document.getElementById('edit-album-secret');
             
-            // Confirm Modal
             const confirmModal = document.getElementById('confirm-modal');
             const confirmModalCancel = document.getElementById('confirm-modal-cancel');
             const confirmModalConfirm = document.getElementById('confirm-modal-confirm');
             
-            // Lightbox Modal
             const lightboxModal = document.getElementById('lightbox-modal');
             const lightboxImage = document.getElementById('lightbox-image');
 
-            // Passcode Modal
             const passcodeModal = document.getElementById('passcode-modal');
             const passcodeForm = document.getElementById('passcode-form');
             const passcodeError = document.getElementById('passcode-error');
             
-            // Analytics Modal
             const analyticsModal = document.getElementById('analytics-modal');
             const analyticsTableBody = document.getElementById('analytics-table-body');
-            const globalAnalyticsModal = document.getElementById('global-analytics-modal'); // NEW
+            const analyticsPageContainer = document.getElementById('analytics-page');
+            const saveAnalyticsBtn = document.getElementById('save-analytics-btn');
+            const analyticsBackBtn = document.getElementById('analytics-back-btn');
 
-            // Gallery
             const galleryGrid = document.getElementById('gallery-grid');
             
-            // Filters
             const searchInput = document.getElementById('search-input');
             const albumsFilterText = document.getElementById('albums-filter-text');
             const albumsDropdownList = document.getElementById('albums-dropdown-list');
 
-            // Theme & Fullscreen
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
             const themeIconLight = document.getElementById('theme-icon-light');
             const themeIconDark = document.getElementById('theme-icon-dark');
@@ -1451,6 +1655,9 @@
                     themeIconLight.classList.remove('hidden');
                     themeIconDark.classList.add('hidden');
                     localStorage.setItem('theme', 'light');
+                }
+                if (analyticsPage && !analyticsPage.classList.contains('hidden')) {
+                    showGlobalAnalytics(); // Redraw charts
                 }
             }
             const savedTheme = localStorage.getItem('theme');
@@ -1487,25 +1694,31 @@
                 if (fullscreenIconExit) fullscreenIconExit.classList.remove('hidden');
             }
 
-            // --- Modal Listeners ---
+            // --- Page & Modal Listeners ---
             
-            // Add Image button (Requires Passcode)
             if (addImageBtn) addImageBtn.addEventListener('click', () => {
                 runWithPasscodeCheck(() => openModal(addImageModal));
             });
             
-            // Customize Albums button (No Passcode)
             if (customizeBtn) customizeBtn.addEventListener('click', () => {
-                closeModal(addImageModal); // Close add image modal first
-                openModal(manageCategoriesModal); // Then open manage categories modal
+                closeModal(addImageModal);
+                openModal(manageCategoriesModal);
             });
             
-            // NEW: Global Analytics Button
             if (globalAnalyticsBtn) globalAnalyticsBtn.addEventListener('click', () => {
-                closeModal(addImageModal); // Close add image modal first
-                showGlobalAnalytics(); // Calculate and show stats
+                closeModal(addImageModal);
+                showAnalyticsPage(); // Show the analytics page
             });
             
+            if (manageAlbumsBackBtn) manageAlbumsBackBtn.addEventListener('click', () => {
+                closeModal(manageCategoriesModal);
+                openModal(addImageModal);
+            });
+
+            if (analyticsBackBtn) analyticsBackBtn.addEventListener('click', () => {
+                showGalleryPage(); // Show the main gallery page
+            });
+
             if (confirmModalCancel) confirmModalCancel.addEventListener('click', () => {
                 closeModal(confirmModal);
                 confirmCallback = null;
@@ -1519,7 +1732,6 @@
                 confirmCallback = null;
             });
             
-            // Close buttons
             document.querySelectorAll('[data-close-modal]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1530,10 +1742,10 @@
                         if (modalId === 'confirm-modal') confirmCallback = null;
                         if (modalId === 'passcode-modal') {
                             if (typeof passcodeCancelCallback === 'function') {
-                                passcodeCancelCallback(); // NEW
+                                passcodeCancelCallback();
                             }
                             passcodeCallback = null;
-                            passcodeCancelCallback = null; // NEW
+                            passcodeCancelCallback = null;
                         }
                     }
                 });
@@ -1543,20 +1755,17 @@
             if (fileUpload) fileUpload.addEventListener('change', () => {
                 const files = fileUpload.files;
                 if (files.length > 1) {
-                    // Bulk Upload
                     if (fileUploadFilename) fileUploadFilename.textContent = `${files.length} files selected`;
                     if (fileUploadText) fileUploadText.textContent = "Change files";
-                    if (imageTitleWrapper) imageTitleWrapper.classList.add('hidden'); // Hide title input
+                    if (imageTitleWrapper) imageTitleWrapper.classList.add('hidden');
                     if (imageTitleInput) imageTitleInput.required = false;
                 } else if (files.length === 1) {
-                    // Single File
                     const filename = files[0].name;
                     if (fileUploadFilename) fileUploadFilename.textContent = filename;
                     if (fileUploadText) fileUploadText.textContent = "Change file";
-                    if (imageTitleWrapper) imageTitleWrapper.classList.remove('hidden'); // Show title input
+                    if (imageTitleWrapper) imageTitleWrapper.classList.remove('hidden');
                     if (imageTitleInput) imageTitleInput.required = true;
                 } else {
-                    // No files
                     if (fileUploadFilename) fileUploadFilename.textContent = "";
                     if (fileUploadText) fileUploadText.textContent = "Click to choose file(s)";
                     if (imageTitleWrapper) imageTitleWrapper.classList.remove('hidden');
@@ -1572,24 +1781,27 @@
                 const name = newAlbumNameInput.value.trim();
                 const isSecret = newAlbumSecretInput.checked;
                 if (name) {
-                    addAlbum(name, isSecret);
-                    addAlbumForm.reset();
+                    runWithPasscodeCheck(() => {
+                        addAlbum(name, isSecret);
+                        addAlbumForm.reset();
+                    });
                 }
             });
             
             if (editCategoryForm) editCategoryForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const id = editCategoryId.value;
-                const type = editCategoryType.value; // Will be 'albums'
+                const type = editCategoryType.value;
                 const newName = editCategoryName.value.trim();
                 const isSecret = editAlbumSecretInput.checked;
                 if (id && type === 'albums' && newName) {
-                    updateAlbum(id, newName, isSecret);
-                    closeModal(editCategoryModal);
+                    runWithPasscodeCheck(() => {
+                        updateAlbum(id, newName, isSecret);
+                        closeModal(editCategoryModal);
+                    });
                 }
             });
             
-            // Passcode Form Submission
             if (passcodeForm) passcodeForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const input = document.getElementById('passcode-input');
@@ -1598,10 +1810,10 @@
                     closeModal(passcodeModal);
                     
                     if (typeof passcodeCallback === 'function') {
-                        passcodeCallback(); // Run the stored action
+                        passcodeCallback();
                     }
-                    passcodeCallback = null; // Clear callback
-                    passcodeCancelCallback = null; // NEW
+                    passcodeCallback = null;
+                    passcodeCancelCallback = null;
                 } else {
                     if (passcodeError) passcodeError.classList.remove('hidden');
                 }
@@ -1615,7 +1827,6 @@
                 
                 if (editBtn) {
                     const { editId, editName, isSecret } = editBtn.dataset;
-                    // Action: Open edit modal (NO passcode)
                     if (editModalTitle) editModalTitle.textContent = `Edit Album`;
                     if (editCategoryId) editCategoryId.value = editId;
                     if (editCategoryType) editCategoryType.value = 'albums';
@@ -1626,7 +1837,6 @@
                 
                 if (deleteBtn) {
                     const { deleteId, deleteName } = deleteBtn.dataset;
-                    // Action: Open confirm modal (WITH passcode)
                     runWithPasscodeCheck(() => {
                         openConfirmModal(
                             `Delete Album`,
@@ -1637,52 +1847,24 @@
                 }
             });
             
-            // For Gallery Grid
             if (galleryGrid) galleryGrid.addEventListener('click', (e) => {
-                const deleteBtn = e.target.closest('[data-delete-image-id]');
                 const viewBtn = e.target.closest('[data-view-image-url]');
-                const downloadBtn = e.target.closest('[data-download-image-url]');
                 const analyticsBtn = e.target.closest('[data-analytics-image-id]');
-                const shareBtn = e.target.closest('[data-share-url]'); // NEW
+                const shareBtn = e.target.closest('[data-share-url]');
 
-                if (deleteBtn) {
-                    const { deleteImageId } = deleteBtn.dataset;
-                    // Use the confirm modal *with* a passcode check
-                    runWithPasscodeCheck(() => {
-                        openConfirmModal(
-                            'Delete Image',
-                            'Are you sure you want to delete this image? This action cannot be undone.',
-                            () => { deleteImage(deleteImageId); }
-                        );
-                    });
-                }
-                
                 if (viewBtn) {
-                    // Viewing is not an admin action
                     const { viewImageUrl } = viewBtn.dataset;
                     if (lightboxImage) lightboxImage.setAttribute('src', viewImageUrl);
                     if (lightboxModal) openModal(lightboxModal);
                 }
 
-                if (downloadBtn) {
-                    // This button is no longer on the card, but listener is kept for analytics modal
-                    const { downloadImageUrl } = downloadBtn.dataset;
-                    forceDownload(downloadImageUrl);
-                }
-
-                // NEW: Share button logic (placeholder)
                 if (shareBtn) {
                     const { shareUrl } = shareBtn.dataset;
-                    // You can implement sharing logic here, e.g., copy to clipboard
-                    // For now, it just shows a toast
-                    showToast("Share functionality not yet implemented.", "success");
-                    console.log("Share URL:", shareUrl);
+                    copyToClipboard(shareUrl);
                 }
                 
                 if (analyticsBtn) {
-                    // Viewing analytics is not an admin action
                     const { analyticsImageId } = analyticsBtn.dataset;
-                    // Find from allImages (which is already filtered for secret)
                     const image = allImages.find(img => img.id === analyticsImageId);
                     if (image) {
                         const album = albums.find(a => a.id === image.albumId);
@@ -1691,27 +1873,29 @@
                 }
             });
             
-            // --- Analytics Modal Listeners ---
+            // --- Analytics Modal Listeners (Old one) ---
             if (analyticsModal) analyticsModal.addEventListener('change', (e) => {
-                // Listener for album select change
                 const select = e.target.closest('.analytics-album-select');
                 if (select) {
                     const imageId = select.dataset.imageId;
                     const newAlbumId = select.value;
                     runWithPasscodeCheck(() => {
                         updateImageAlbum(imageId, newAlbumId);
+                        showToast("Image album updated!", "success");
+                    }, () => {
+                        const originalAlbumId = allImages.find(img => img.id === imageId)?.albumId;
+                        if(originalAlbumId) select.value = originalAlbumId;
                     });
                 }
             });
             
             if (analyticsModal) analyticsModal.addEventListener('click', (e) => {
-                 // Listener for buttons inside the modal
                 const deleteBtn = e.target.closest('[data-delete-image-id]');
                 const downloadBtn = e.target.closest('[data-download-image-url]');
                 
                 if (deleteBtn) {
                     const { deleteImageId } = deleteBtn.dataset;
-                    closeModal(analyticsModal); // Close this modal first
+                    closeModal(analyticsModal);
                     runWithPasscodeCheck(() => {
                         openConfirmModal(
                             'Delete Image',
@@ -1727,64 +1911,54 @@
                 }
             });
             
-            // --- NEW: Global Analytics Modal Listeners ---
-            if (globalAnalyticsModal) globalAnalyticsModal.addEventListener('change', (e) => {
-                // Listener for album select change (Mirrors analyticsModal)
-                const select = e.target.closest('.analytics-album-select');
-                if (select) {
-                    const imageId = select.dataset.imageId;
-                    const newAlbumId = select.value;
-                    runWithPasscodeCheck(() => {
-                        updateImageAlbum(imageId, newAlbumId);
-                    });
+            // --- Analytics Page Listeners ---
+            if (analyticsPageContainer) analyticsPageContainer.addEventListener('input', (e) => {
+                const target = e.target;
+                const imageId = target.dataset.imageId;
+                if (!imageId) return;
+
+                const oldTitle = target.dataset.oldTitle;
+                const oldAlbum = target.dataset.oldAlbum;
+
+                if (target.classList.contains('analytics-title-input')) {
+                    const newTitle = target.value;
+                    if (!stagedChanges[imageId]) stagedChanges[imageId] = {};
+                    stagedChanges[imageId].title = newTitle;
+                    
+                    if (newTitle !== oldTitle) {
+                        target.classList.add('input-changed');
+                    } else {
+                        target.classList.remove('input-changed');
+                        if (stagedChanges[imageId].albumId === undefined) delete stagedChanges[imageId];
+                    }
+                }
+
+                if (target.classList.contains('analytics-album-select')) {
+                    const newAlbum = target.value;
+                    if (!stagedChanges[imageId]) stagedChanges[imageId] = {};
+                    stagedChanges[imageId].albumId = newAlbum;
+                    
+                    if (newAlbum !== oldAlbum) {
+                        target.classList.add('input-changed');
+                    } else {
+                        target.classList.remove('input-changed');
+                        if (stagedChanges[imageId].title === undefined) delete stagedChanges[imageId];
+                    }
                 }
             });
             
-            // NEW: Add 'blur' event listener for title inputs
-            if (globalAnalyticsModal) globalAnalyticsModal.addEventListener('blur', (e) => {
-                const titleInput = e.target.closest('.analytics-title-input');
-                if (titleInput) {
-                    const imageId = titleInput.dataset.imageId;
-                    const oldTitle = titleInput.dataset.oldTitle;
-                    const newTitle = titleInput.value.trim();
-
-                    if (imageId && newTitle && newTitle !== oldTitle) {
-                        // Run with passcode check
-                        runWithPasscodeCheck(
-                            async () => { // onSuccess
-                                const success = await updateImageTitle(imageId, newTitle);
-                                if (success) {
-                                    titleInput.dataset.oldTitle = newTitle;
-                                } else {
-                                    titleInput.value = oldTitle;
-                                }
-                            },
-                            () => { // onCancel
-                                titleInput.value = oldTitle;
-                            }
-                        );
-                    } else if (newTitle !== oldTitle) {
-                        // Revert if empty or no change
-                        titleInput.value = oldTitle;
-                    }
-                }
-            }, true); // Use capture phase
-            
-            if (globalAnalyticsModal) globalAnalyticsModal.addEventListener('click', (e) => {
-                 // Listener for buttons inside the modal (Mirrors analyticsModal, but doesn't close modal)
+            if (analyticsPageContainer) analyticsPageContainer.addEventListener('click', (e) => {
                 const deleteBtn = e.target.closest('[data-delete-image-id]');
                 const downloadBtn = e.target.closest('[data-download-image-url]');
                 
                 if (deleteBtn) {
                     const { deleteImageId } = deleteBtn.dataset;
-                    // Don't close this modal, just open confirm
                     runWithPasscodeCheck(() => {
                         openConfirmModal(
                             'Delete Image',
                             'Are you sure you want to delete this image? This action cannot be undone.',
                             () => { 
                                 deleteImage(deleteImageId); 
-                                // The onSnapshot listener in showGlobalAnalytics will auto-update the table
                             }
                         );
                     });
@@ -1793,6 +1967,56 @@
                 if (downloadBtn) {
                     const { downloadImageUrl } = downloadBtn.dataset;
                     forceDownload(downloadImageUrl);
+                }
+            });
+
+            if (saveAnalyticsBtn) saveAnalyticsBtn.addEventListener('click', async () => {
+                const btnText = document.getElementById('save-analytics-btn-text');
+                const spinner = document.getElementById('save-analytics-spinner');
+
+                if (!btnText || !spinner) return;
+
+                btnText.classList.add('hidden');
+                spinner.classList.remove('hidden');
+                saveAnalyticsBtn.disabled = true;
+
+                let promises = [];
+                let changedCount = 0;
+
+                for (const imageId in stagedChanges) {
+                    const changes = stagedChanges[imageId];
+                    
+                    const titleInput = analyticsPageContainer.querySelector(`.analytics-title-input[data-image-id="${imageId}"]`);
+                    const albumSelect = analyticsPageContainer.querySelector(`.analytics-album-select[data-image-id="${imageId}"]`);
+
+                    if (changes.title !== undefined && changes.title !== titleInput.dataset.oldTitle) {
+                        promises.push(updateImageTitle(imageId, changes.title));
+                        changedCount++;
+                    }
+                    if (changes.albumId !== undefined && changes.albumId !== albumSelect.dataset.oldAlbum) {
+                        promises.push(updateImageAlbum(imageId, changes.albumId));
+                        changedCount++;
+                    }
+                }
+
+                try {
+                    await Promise.all(promises);
+                    if (changedCount > 0) {
+                        showToast(`Successfully saved ${changedCount} change(s).`, 'success');
+                    } else {
+                        showToast('No changes to save.', 'success');
+                    }
+                    
+                    stagedChanges = {};
+                    showGalleryPage(); // Return to gallery on success
+
+                } catch (error) {
+                    console.error("Error saving changes: ", error);
+                    showToast("An error occurred while saving.", "error");
+                } finally {
+                    btnText.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                    saveAnalyticsBtn.disabled = false;
                 }
             });
 
@@ -1809,6 +2033,7 @@
                 if (toggleBtn) {
                     const dropdown = document.getElementById(toggleBtn.dataset.dropdownToggle);
                     if (dropdown) dropdown.classList.toggle('hidden');
+
                 }
             });
             
@@ -1821,7 +2046,6 @@
                     const applyFilter = () => {
                         if (filterType === 'albums') {
                             currentFilters.albumId = filterId || null;
-                            // MODIFIED: Removed "Album: " prefix
                             if (albumsFilterText) albumsFilterText.textContent = filterId ? filterName : "All Albums";
                         }
                         loadImages();
@@ -1831,10 +2055,8 @@
                     };
 
                     if (isSecret === 'true') {
-                        // This is a secret album, ask for passcode
                         runWithPasscodeCheck(applyFilter);
                     } else {
-                        // Not secret, just apply filter
                         applyFilter();
                     }
                 }
@@ -1842,8 +2064,6 @@
 
             // --- Search Input Logic ---
             if (searchInput) searchInput.addEventListener('input', () => {
-                // This triggers a reload, which will read the searchInput.value
-                // and apply it *on top of* the existing album filter.
                 loadImages();
             });
             
